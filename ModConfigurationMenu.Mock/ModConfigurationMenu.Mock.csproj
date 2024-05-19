@@ -3,20 +3,13 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <AssemblyName>ModConfigurationMenu</AssemblyName>
+    <AssemblyName>ModConfigurationMenuMock</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <LangVersion>12.0</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ReferencePath>$(ChronoArkGamePath)/ChronoArk_Data/Managed</ReferencePath>
-    <ProjectGuid>{AA659CC5-37F7-434A-A8D1-36AAAA8D1AD6}</ProjectGuid>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <ProjectGuid>{6CD69E77-4476-443D-8C5F-C22BA6FB9D72}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <OutputPath>$(ChronoArkGamePath)\Mod\$(AssemblyName)\Assemblies\</OutputPath>
@@ -27,8 +20,29 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <Reference Include="0Harmony, Version=2.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\bin\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\bin\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\bin\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\bin\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\bin\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour, Version=22.1.29.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\bin\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
     <Reference Include="Accessibility">
       <Private>False</Private>
@@ -45,22 +59,8 @@
     <Reference Include="DOTween">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\Common\bin\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\Common\bin\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\Common\bin\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\..\Common\bin\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>..\..\Common\bin\MonoMod.RuntimeDetour.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.Utils">
+    <Reference Include="MonoMod.Utils, Version=22.1.29.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\bin\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
@@ -94,6 +94,9 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Configuration.Install">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Data">
@@ -408,61 +411,19 @@
     <Reference Include="UnityEngine.XRModule">
       <Private>False</Private>
     </Reference>
+    <!-- Extra Reference Start-->
+    <!-- Extra Reference End-->
   </ItemGroup>
   <!-- Compile ItemGroup Start-->
   <ItemGroup>
-    <PackageReference Include="PeanutButter.DuckTyping">
-      <Version>3.0.298</Version>
-    </PackageReference>
-    <PackageReference Include="PolySharp">
-      <Version>1.14.1</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <Compile Include="ModConfigurationMenuMock_Plugin.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Common\Helper\BezierLineSmoother.cs">
-      <Link>Helper\BezierLineSmoother.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\Helper\ChildrenIterator.cs">
-      <Link>Helper\ChildrenIterator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\Helper\ComponentFetch.cs">
-      <Link>Helper\ComponentFetch.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\Helper\DeferredCoroutine.cs">
-      <Link>Helper\DeferredCoroutine.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\Helper\EventTriggerMerge.cs">
-      <Link>Helper\EventTriggerMerge.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\Helper\GameObjectFactory.cs">
-      <Link>Helper\GameObjectFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\Helper\SkillTargetTypeCheck.cs">
-      <Link>Helper\SkillTargetTypeCheck.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\Helper\TextureBlitter.cs">
-      <Link>Helper\TextureBlitter.cs</Link>
-    </Compile>
-    <Compile Include="Api\Displayables\IButton.cs" />
-    <Compile Include="Api\Displayables\IModLayout.cs" />
-    <Compile Include="Api\Displayables\IText.cs" />
-    <Compile Include="Api\IConfigurable.cs" />
-    <Compile Include="Api\Displayables\IDisplayable.cs" />
-    <Compile Include="Api\Displayables\IPage.cs" />
-    <Compile Include="Implementation\Components\McmWindow.cs" />
-    <Compile Include="Implementation\Displayables\ModLayout.cs" />
-    <Compile Include="Implementation\Displayables\StandardPage.cs" />
-    <Compile Include="Implementation\MainOptionsPatch.cs" />
-    <Compile Include="Implementation\PageSizeFitter.cs" />
-    <Compile Include="ThirdParty\IModConfigurationMenu.cs" />
-    <Compile Include="Api\IPatch.cs" />
-    <Compile Include="Implementation\McmManager.cs" />
-    <Compile Include="ModConfigurationMenuMod.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\" />
+    <ProjectReference Include="..\ModConfigurationMenu\ModConfigurationMenu.csproj">
+      <Project>{aa659cc5-37f7-434a-a8d1-36aaaa8d1ad6}</Project>
+      <Name>ModConfigurationMenu</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- Compile ItemGroup End-->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
