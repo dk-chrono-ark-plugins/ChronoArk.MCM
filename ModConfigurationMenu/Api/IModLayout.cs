@@ -1,17 +1,18 @@
 ﻿using ChronoArkMod.ModData;
+using MCM.Api.Displayables;
 
-namespace ModConfigurationMenu.Api.Displayables;
+namespace MCM.Api;
 
 #nullable enable
 
-public interface IModLayout
+internal interface IModLayout
 {
-    IPage IndexPage { get; }
-    IPage? CurrentPage { get; }
+    IPage IndexPage { get; init; }
+    IPage CurrentPage { get; }
     ModInfo Owner { get; init; }
 
     void ChangeToPage(string name);
     IPage? GetPage(string name);
-    void AddPage(string name, IPage page);
+    IPage AddPage(string name, IPage page);
     void RemovePage(string name);
 }

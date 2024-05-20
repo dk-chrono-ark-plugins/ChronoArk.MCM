@@ -1,4 +1,4 @@
-﻿namespace ModConfigurationMenu.Api;
+﻿namespace MCM.Api;
 
 internal interface IConfigurable
 {

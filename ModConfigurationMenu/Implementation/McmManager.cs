@@ -1,16 +1,23 @@
-﻿using ChronoArkMod.Plugin;
+﻿using ChronoArkMod;
+using ChronoArkMod.ModData;
+using ChronoArkMod.Plugin;
+using MCM.Api.Displayables;
+using MCM.Implementation.Displayables;
 
-namespace ModConfigurationMenu.Implementation;
+namespace MCM.Implementation;
 
 #nullable enable
 
 internal class McmManager : IModConfigurationMenu
 {
-    public const int McmInstanceVersion = 1;
+    public sealed record McmRegistry(IModLayout Layout, Action Save, Action Reset);
+
+    public const IModConfigurationMenu.Version McmInstanceVersion = IModConfigurationMenu.Version.V1;
 
     private static readonly Lazy<McmManager> _instance = new(() => new());
-    private readonly HashSet<ChronoArkPlugin> _plugins = [];
+    private readonly Dictionary<ModInfo, McmRegistry> _registries = [];
 
+    public Dictionary<ModInfo, McmRegistry> Registries => _registries;
     public static McmManager Instance => _instance.Value;
 
     private McmManager()
@@ -19,34 +26,44 @@ internal class McmManager : IModConfigurationMenu
 
     // General api
 
-    public int GetVersion()
+    public IModConfigurationMenu.Version GetVersion()
     {
         return McmInstanceVersion;
     }
 
-    public void Register(ChronoArkPlugin mod, Action apply, Action reset)
+    public IPage Register(ChronoArkPlugin mod, Action apply, Action reset)
     {
-        if (_plugins.Add(mod)) {
-            Debug.Log($"registered mod {mod.PluginName} @ {mod.ModId}");
+        var modInfo = ModManager.getModInfo(mod.ModId);
+        if (_registries.TryAdd(modInfo, new(new ModLayout(new GridLayoutPage(modInfo), modInfo), null, null))) {
+            Debug.Log($"registered {mod}");
+            return _registries[modInfo].Layout.IndexPage;
+        } else {
+            throw new InvalidOperationException($"failed to register {mod}");
         }
     }
 
     public void Unregister(ChronoArkPlugin mod)
     {
-        if (_plugins.Remove(mod)) {
-            Debug.Log($"unregistered mod {mod.PluginName}");
+        var modInfo = ModManager.getModInfo(mod.ModId);
+        if (_registries.Remove(modInfo)) {
+            Debug.Log($"unregistered {mod}");
         }
     }
 
     // UI elements
 
-    public void AddPage(ChronoArkPlugin mod, string pageName)
+    public void AddText(ChronoArkPlugin mod, Func<string> text)
     {
         throw new NotImplementedException();
     }
 
-    public void AddText(ChronoArkPlugin mod, Func<string> text)
+    public IPage AddPage(ChronoArkPlugin mod, string name)
     {
-        throw new NotImplementedException();
+        var modInfo = ModManager.getModInfo(mod.ModId);
+        if (_registries.TryGetValue(modInfo, out var registry)) {
+            return registry.Layout.AddPage(name, new VerticalLayoutPage(modInfo));
+        } else {
+            throw new InvalidOperationException($"{mod} must be registerd with MCM first");
+        }
     }
 }

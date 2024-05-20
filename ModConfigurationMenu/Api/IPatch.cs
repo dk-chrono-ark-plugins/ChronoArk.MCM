@@ -1,4 +1,4 @@
-﻿namespace ModConfigurationMenu.Api;
+﻿namespace MCM.Api;
 
 /// <summary>
 /// IPatch is a irreversible config, commit on enable

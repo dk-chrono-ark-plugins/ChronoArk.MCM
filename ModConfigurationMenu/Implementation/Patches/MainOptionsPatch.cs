@@ -1,11 +1,11 @@
 ﻿using ChronoArkMod.Helper;
 using I2.Loc;
-using ModConfigurationMenu.Implementation.Components;
+using MCM.Implementation.Components;
 using TMPro;
 using UnityEngine.EventSystems;
 using Object = UnityEngine.Object;
 
-namespace ModConfigurationMenu.Implementation;
+namespace MCM.Implementation;
 
 #nullable enable
 

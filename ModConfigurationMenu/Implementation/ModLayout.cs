@@ -1,28 +1,34 @@
 ﻿using ChronoArkMod.ModData;
-using ModConfigurationMenu.Api.Displayables;
+using MCM.Api.Displayables;
 
-namespace ModConfigurationMenu.Implementation.Displayables;
+namespace MCM.Implementation;
 
 #nullable enable
 
-internal class ModLayout(IPage InitPage) : IModLayout
+internal class ModLayout : IModLayout
 {
     private readonly Dictionary<string, IPage> _pages = [];
+    private IPage _currentPage;
 
-    public IPage IndexPage => InitPage;
-    public IPage? CurrentPage { get; private set; }
-    public required ModInfo Owner { get; init; }
+    public IPage IndexPage { get; init; }
+    public IPage CurrentPage => _currentPage;
+    public ModInfo Owner { get; init; }
 
-    public void Init()
+    public ModLayout(IPage index, ModInfo modInfo)
     {
-        _pages[SanitizedName("init")] = InitPage;
+        Owner = modInfo;
+        var name = SanitizedName("index");
+        _pages[name] = index;
+        IndexPage = _pages[name];
+        _currentPage = _pages[name];
     }
 
     public void ChangeToPage(string name)
     {
         name = SanitizedName(name);
         if (_pages.TryGetValue(name, out IPage page)) {
-            CurrentPage = page;
+            _currentPage = page;
+
             Debug.Log($"changed current page to {name}");
         } else {
             Debug.Log($"can't change current page {name}, it's null");
@@ -37,16 +43,22 @@ internal class ModLayout(IPage InitPage) : IModLayout
         return page;
     }
 
-    public void AddPage(string name, IPage page)
+    public IPage AddPage(string name, IPage page)
     {
         name = SanitizedName(name);
-        var success = _pages.TryAdd(name, page);
-        Debug.Log($"added page {name}, " + (success ? "success" : "duplicate"));
+        if (_pages.TryAdd(name, page)) {
+            Debug.Log($"{page.Owner.Title} added page {name}");
+            _pages[name].Title = name;
+        }
+        return _pages[name];
     }
 
     public void RemovePage(string name)
     {
         name = SanitizedName(name);
+        if (GetPage(name) == CurrentPage) {
+            _currentPage = IndexPage;
+        }
         var success = _pages.Remove(name);
         Debug.Log($"removed page {name}, " + (success ? "success" : "nonexist"));
     }

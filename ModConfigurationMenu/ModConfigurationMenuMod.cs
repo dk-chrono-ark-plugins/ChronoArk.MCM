@@ -1,13 +1,13 @@
 ﻿global using HarmonyLib;
-global using ModConfigurationMenu.Api;
-global using ModConfigurationMenu.Implementation;
+global using MCM.Api;
+global using MCM.Implementation;
 global using System;
 global using System.Collections.Generic;
 global using System.Linq;
 global using UnityEngine;
 using ChronoArkMod.Plugin;
 
-namespace ModConfigurationMenu;
+namespace MCM;
 
 #nullable enable
 
@@ -38,5 +38,8 @@ public class ModConfigurationMenuMod : ChronoArkPlugin
                 Debug.Log("success!");
             }
         }
+
+        var mcm = McmProxy.GetInstance();
+        var index = mcm.Register(this, null, null);
     }
 }
