@@ -1,23 +1,29 @@
 ﻿using ChronoArkMod.Helper;
+using UnityEngine.UI;
 
 namespace Mcm.Api.Displayables;
 
 /// <summary>
 /// Basic renderable component
 /// </summary>
-public interface IDisplayable
+public interface IDisplayable : IScriptRef
 {
     /// <summary>
-    /// The call to render!
+    /// The call to render! This is called to instantiate the displayable
     /// </summary>
     /// <param name="parent">Parent transform</param>
     /// <returns>If this displayable is not meant to be chained, return itself;<br/>Otherwise return next available parent</returns>
     Transform Render(Transform parent);
 
     /// <summary>
-    /// Unrender? Surrender!
+    /// Set inactive
     /// </summary>
     void Hide();
+
+    /// <summary>
+    /// Set active
+    /// </summary>
+    void Show();
 }
 
 

@@ -17,6 +17,8 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : Scri
         }
 
         var layout = parent.AttachRectTransformObject($"Mcm{Layout}Composite");
+        Ref = layout.gameObject;
+
         var contentSizeFitter = layout.AddComponent<ContentSizeFitter>();
         contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
         contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
@@ -43,7 +45,6 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : Scri
 
         RenderComposites(layout);
 
-        Ref = layout.gameObject;
         return layout;
     }
 

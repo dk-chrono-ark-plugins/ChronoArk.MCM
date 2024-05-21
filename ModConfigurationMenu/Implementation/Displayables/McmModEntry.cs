@@ -1,6 +1,5 @@
-﻿using ChronoArkMod.Helper;
-using ChronoArkMod.ModData;
-using UnityEngine.UI;
+﻿using ChronoArkMod.ModData;
+using Mcm.Implementation.Components;
 
 namespace Mcm.Implementation.Displayables;
 
@@ -8,15 +7,11 @@ namespace Mcm.Implementation.Displayables;
 
 internal class McmModEntry : ScriptRef
 {
-    private static Sprite? _defaultCover;
-    private static bool _onceFlag;
-    private readonly McmButton _modEntry;
+    public readonly McmButton ModEntry;
 
     public McmModEntry(ModInfo modInfo)
     {
-        LookupOnce();
-
-        var cover = new McmImage() { MainSprite = modInfo.CoverSprite ?? _defaultCover! };
+        var cover = new McmImage() { MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover };
         var text = new McmText() { Content = $"{modInfo.Title}\nv{modInfo.Version}" };
         var bar = new McmImage() {
             MaskColor = Color.blue,
@@ -29,9 +24,9 @@ internal class McmModEntry : ScriptRef
                 new(bar, new(0f, 80f)),
             ]
         };
-        _modEntry = new() {
+        ModEntry = new() {
             Content = modEntryInternal,
-            OnClick = () => ClickEachEntry(modInfo)
+            OnClick = () => McmWindow.Instance?.RenderIndexPage(modInfo)
         };
     }
 
@@ -41,24 +36,11 @@ internal class McmModEntry : ScriptRef
             return Ref.transform;
         }
 
-        var modEntry = _modEntry.Render<RectTransform>(parent);
+        var modEntry = ModEntry.Render<RectTransform>(parent);
+        Ref = modEntry.gameObject;
+
         modEntry.sizeDelta = new(320f, 480f);
 
-        Ref = modEntry.gameObject;
         return modEntry;
-    }
-
-    private void ClickEachEntry(ModInfo info)
-    {
-        Debug.Log($"Clicked {info.id}, {info.Author}, {info.Version}");
-    }
-
-    private void LookupOnce()
-    {
-        if (_defaultCover == null && !_onceFlag &&
-            ComponentFetch.TryFindObject<Image>("ModeImage", out var image)) {
-            _defaultCover = image.sprite;
-        }
-        _onceFlag = true;
     }
 }

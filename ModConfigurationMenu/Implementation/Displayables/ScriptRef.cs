@@ -1,14 +1,14 @@
 ﻿namespace Mcm.Implementation.Displayables;
 
-internal class ScriptRef : IDisplayable, IScriptRef
+#nullable enable
+
+internal class ScriptRef : IDisplayable
 {
-    public GameObject Ref { get; protected set; }
+    public GameObject? Ref { get; protected set; }
 
     ~ScriptRef()
     {
-        if (Ref != null) {
-            UnityEngine.Object.DestroyImmediate(Ref);
-        }
+        Destroy();
     }
 
     public virtual void Hide()
@@ -18,10 +18,18 @@ internal class ScriptRef : IDisplayable, IScriptRef
 
     public virtual Transform Render(Transform parent)
     {
-        if (Ref != null) {
-            return Ref.transform;
-        }
-
         throw new NotImplementedException();
+    }
+
+    public virtual void Show()
+    {
+        Ref?.SetActive(true);
+    }
+
+    public void Destroy()
+    {
+        if (Ref != null) {
+            UnityEngine.Object.DestroyImmediate(Ref);
+        }
     }
 }

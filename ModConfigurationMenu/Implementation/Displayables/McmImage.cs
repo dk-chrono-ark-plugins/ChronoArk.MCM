@@ -20,6 +20,8 @@ internal class McmImage : ScriptRef, IImage
         }
 
         var image = parent.AttachRectTransformObject("McmImage");
+        Ref = image.gameObject;
+
         if (Stretch.GetValueOrDefault()) {
             image.SetToStretch();
         }
@@ -38,7 +40,6 @@ internal class McmImage : ScriptRef, IImage
             image.gameObject.GetOrAddComponent<Outline>().effectDistance = BorderThickness.Value;
         }
 
-        Ref = image.gameObject;
         return image;
     }
 }

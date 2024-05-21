@@ -24,7 +24,7 @@ internal class MainOptionsPatch : IPatch
 
     public void Commit()
     {
-        var harmony = ModConfigurationMenuMod.Instance!._harmony!;
+        var harmony = McmMod.Instance!._harmony!;
         harmony.Patch(
             original: AccessTools.Method(
                 typeof(MainOptionMenu),

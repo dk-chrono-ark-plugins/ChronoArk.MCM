@@ -23,6 +23,11 @@ internal class McmManager : IModConfigurationMenu
     {
     }
 
+    public static McmRegistry? GetMcmRegistry(ModInfo modInfo)
+    {
+        return Instance.Registries.GetValueOrDefault(modInfo);
+    }
+
     // General api
 
     public IModConfigurationMenu.Version GetVersion()
@@ -34,7 +39,7 @@ internal class McmManager : IModConfigurationMenu
     {
         var modInfo = ModManager.getModInfo(mod.ModId);
         if (_registries.TryAdd(modInfo, new(new ModLayout(new McmGridPage(modInfo), modInfo), apply, reset))) {
-            $"registered {mod}".Log();
+            Debug.Log($"registered {mod}");
             return _registries[modInfo].Layout.IndexPage;
         } else {
             throw new InvalidOperationException($"failed to register {mod}");
@@ -45,7 +50,7 @@ internal class McmManager : IModConfigurationMenu
     {
         var modInfo = ModManager.getModInfo(mod.ModId);
         if (_registries.Remove(modInfo)) {
-            $"unregistered {mod}".Log();
+            Debug.Log($"unregistered {mod}");
         }
     }
 
@@ -53,7 +58,7 @@ internal class McmManager : IModConfigurationMenu
 
     public void AddText(ChronoArkPlugin mod, Func<string> text)
     {
-        throw new NotImplementedException();
+        
     }
 
     public IPage AddPage(ChronoArkPlugin mod, string name, ICompositeLayout.LayoutGroup layout = ICompositeLayout.LayoutGroup.Vertical)

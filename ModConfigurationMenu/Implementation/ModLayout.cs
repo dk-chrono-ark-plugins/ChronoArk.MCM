@@ -27,7 +27,6 @@ internal class ModLayout : IModLayout
         name = SanitizedName(name);
         if (_pages.TryGetValue(name, out IPage page)) {
             _currentPage = page;
-
             Debug.Log($"changed current page to {name}");
         } else {
             Debug.Log($"can't change current page {name}, it's null");
@@ -38,7 +37,7 @@ internal class ModLayout : IModLayout
     {
         name = SanitizedName(name);
         var page = _pages.GetValueOrDefault(name);
-        Debug.Log($"retrieved page {name}" + (page is null ? ", but it's null" : ""));
+        Debug.Log($"retrieving page {name}" + (page is null ? ", but it's null" : ""));
         return page;
     }
 
@@ -47,7 +46,6 @@ internal class ModLayout : IModLayout
         name = SanitizedName(name);
         if (_pages.TryAdd(name, page)) {
             Debug.Log($"{page.Owner.Title} added page {name}");
-            _pages[name].Title = name;
         }
         return _pages[name];
     }

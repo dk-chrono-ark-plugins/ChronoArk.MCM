@@ -7,6 +7,6 @@
 /// </summary>
 public interface IText : IDisplayable
 {
-    string? Content { get; }
+    string Content { get; set; }
     float? FixedSize { get; }
 }

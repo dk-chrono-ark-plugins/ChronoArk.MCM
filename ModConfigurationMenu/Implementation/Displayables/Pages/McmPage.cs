@@ -1,7 +1,9 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
+using I2.Loc;
 using Mcm.Common;
 using Mcm.Implementation.Components;
+using TMPro;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
@@ -15,8 +17,9 @@ internal class McmPage : ScriptRef, IPage
 {
     protected readonly List<IDisplayable> _elements = [];
     protected readonly McmButton _apply;
+    protected readonly McmButton _back;
     protected readonly McmButton _reset;
-    private readonly McmText _titleText;
+    protected readonly McmText _titleText;
 
     public ModInfo Owner { get; init; }
     public string Title { get; set; }
@@ -29,15 +32,23 @@ internal class McmPage : ScriptRef, IPage
 
         _apply = new() {
             Content = new McmText() {
-                Content = "Apply",
+                Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Apply),
                 FixedSize = 26f,
             },
             OnClick = McmWindow.Save,
             Size = new(100f, 50f)
         };
+        _back = new() {
+            Content = new McmText() {
+                Content = "<b><<</b>",
+                FixedSize = 40f,
+            },
+            OnClick = McmWindow.Back,
+            Size = new(100f, 50f)
+        };
         _reset = new() {
             Content = new McmText() {
-                Content = "Reset",
+                Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Cancel),
                 FixedSize = 26f,
             },
             OnClick = McmWindow.Reset,
@@ -82,6 +93,9 @@ internal class McmPage : ScriptRef, IPage
 
         var apply = _apply.Render<RectTransform>(page);
         apply.AlignToBottom(new(-55f, -80f));
+
+        var back = _back.Render<RectTransform>(page);
+        back.AlignToBottom(new(-165f, -80f));
 
         var reset = _reset.Render<RectTransform>(page);
         reset.AlignToBottom(new(55f, -80f));

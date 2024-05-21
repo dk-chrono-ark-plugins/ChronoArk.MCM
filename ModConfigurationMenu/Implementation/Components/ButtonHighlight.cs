@@ -1,5 +1,7 @@
-﻿using Mcm.Implementation.Displayables;
+﻿using ChronoArkMod.Helper;
+using Mcm.Implementation.Displayables;
 using System.Collections;
+using TileTypes;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -12,11 +14,16 @@ internal class ButtonHighlight : HoverBehaviour
     private bool _cancel;
     private Color? _original;
 
-    public required McmImage ImageHolder { get; set; }
+    public required McmButton Button { get; set; }
 
     public override void OnPointerEnter(PointerEventData eventData)
     {
-        var outline = ImageHolder.Ref?.GetComponent<Outline>();
+        if (!Button.Interactable) {
+            _cancel = true;
+            return;
+        }
+
+        var outline = Button.Ref?.GetComponentInChildren<Outline>();
         if (outline == null) {
             return;
         }
@@ -28,11 +35,11 @@ internal class ButtonHighlight : HoverBehaviour
     public override void OnPointerExit(PointerEventData eventData)
     {
         _cancel = true;
-        var outline = ImageHolder.Ref?.GetComponent<Outline>();
+        var outline = Button.Ref?.GetComponentInChildren<Outline>();
         if (outline == null) {
             return;
         }
-        outline.effectColor = _original!.Value;
+        outline.effectColor = _original ?? Color.white;
     }
 
     internal IEnumerator GradientColor(Outline outline)

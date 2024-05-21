@@ -6,19 +6,21 @@ global using System;
 global using System.Collections.Generic;
 global using System.Linq;
 global using UnityEngine;
+using ChronoArkMod.Helper;
 using ChronoArkMod.Plugin;
 
 namespace Mcm;
 
 #nullable enable
 
-public class ModConfigurationMenuMod : ChronoArkPlugin
+public class McmMod : ChronoArkPlugin
 {
-    private static ModConfigurationMenuMod? _instance;
+    internal McmConfig? _config;
+    internal Harmony? _harmony;
+    private static McmMod? _instance;
     private readonly List<IPatch> _patches = [];
 
-    public static ModConfigurationMenuMod? Instance => _instance;
-    internal Harmony? _harmony;
+    public static McmMod? Instance => _instance;
 
     public override void Dispose()
     {
@@ -28,6 +30,7 @@ public class ModConfigurationMenuMod : ChronoArkPlugin
     public override void Initialize()
     {
         _instance = this;
+        _config = new();
         _harmony = new(GetGuid());
 
         _patches.Add(new MainOptionsPatch());
@@ -40,8 +43,15 @@ public class ModConfigurationMenuMod : ChronoArkPlugin
             }
         }
 
-        var mcm = McmProxy.GetInstance();
-        mcm.Register(this, null, null);
+        var mcm = McmProxy.GetInstance(IModConfigurationMenu.Version.V1);
+        mcm.Register(
+            mod: this,
+            apply: () => ConfigSerializer.WriteConfig(_config, this),
+            reset: () => _config = new()
+        );
+        mcm.AddText(this, () => PluginName);
+
+        // this is mcm window main entry
         mcm.AddPage(this, "McmEntry", ICompositeLayout.LayoutGroup.Grid);
     }
 }

@@ -52,7 +52,7 @@ public interface IModConfigurationMenu
     /// Add a page, note that this isn't the index page
     /// </summary>
     /// <param name="mod">Your mod, don't use others...</param>
-    /// <param name="name">Name of the page, don't use index</param>
+    /// <param name="name">Name of the page, don't use "index"</param>
     /// <param name="layout">Page layout, default to vertical</param>
     /// <returns>New <see cref="IPage"/> to use for custom rendering</returns>
     IPage AddPage(ChronoArkPlugin mod, string name, ICompositeLayout.LayoutGroup layout = ICompositeLayout.LayoutGroup.Vertical);
@@ -60,7 +60,7 @@ public interface IModConfigurationMenu
 
 public static class McmProxy
 {
-    public static IModConfigurationMenu GetInstance(IModConfigurationMenu.Version versionRequired = McmManager.McmInstanceVersion)
+    public static IModConfigurationMenu GetInstance(IModConfigurationMenu.Version versionRequired)
     {
         var mcm = McmManager.Instance;
         return mcm != null && mcm.GetVersion() >= versionRequired

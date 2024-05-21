@@ -1,5 +1,6 @@
 ﻿using ChronoArkMod.Helper;
 using Mcm.Implementation.Components;
+using System.Collections;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
@@ -9,11 +10,22 @@ namespace Mcm.Implementation.Displayables;
 internal class McmButton : ScriptRef, IButton
 {
     private readonly McmImage _buttonImg;
+    private Button? _button;
 
-    public required IDisplayable Content { get; set; }
-    public bool Interactable { get; set; }
-    public required Action OnClick { get; set; }
-    public Vector2? Size { get; set; }
+    public required IDisplayable Content { get; init; }
+    public bool Interactable 
+    { 
+        get => _button?.interactable ?? false;
+        set
+        {
+            CoroutineHelper.Deferred(
+                () => _button!.interactable = value,
+                () => _button != null
+            );
+        }
+    }
+    public required Action OnClick { get; init; }
+    public Vector2? Size { get; init; }
 
     public McmButton()
     {
@@ -36,6 +48,8 @@ internal class McmButton : ScriptRef, IButton
         }
 
         var button = parent.AttachRectTransformObject("McmButton");
+        Ref = button.gameObject;
+
         if (Size == null) {
             button.SetToStretch();
         } else {
@@ -45,16 +59,16 @@ internal class McmButton : ScriptRef, IButton
         var buttonHolder = _buttonImg.Render<RectTransform>(button);
         // button always stretch its content
         buttonHolder.SetToStretch();
-
-        button.AddComponent<ButtonHighlight>().ImageHolder = _buttonImg;
+        var @delegate = button.AddComponent<ButtonHighlight>();
+        @delegate.Button = this;
         var content = Content.Render<RectTransform>(buttonHolder);
         // button always stretch its content
         content.SetToStretch();
 
         var component = buttonHolder.AddComponent<Button>();
         component.onClick.AddListener(Click);
+        _button = component;
 
-        Ref = button.gameObject;
         return button;
     }
 }
