@@ -1,22 +1,26 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
-using MCM.Common;
+using Mcm.Common;
 using UnityEngine.UI;
 
-namespace MCM.Implementation.Displayables;
+namespace Mcm.Implementation.Displayables;
 
 /// <summary>
-/// Scroll rect page, will pass a content holder to the render pipe
+/// Scroll rect page, will return a content holder to the render pipe
 /// </summary>
-internal class ScrollViewPage(ModInfo Info) : McmPage(Info)
+internal class McmScrollPage(ModInfo Info) : McmPage(Info)
 {
     public override Transform Render(Transform parent)
     {
+        if (Ref != null) {
+            return Ref.transform;
+        }
+
         parent = base.Render(parent);
 
         var scrollView = parent.AttachRectTransformObject("ScrollView", false);
         scrollView.sizeDelta = PageSizeFitter.Normal - PageSizeFitter.BorderThickness;
-        scrollView.UseMaxAnchor();
+        scrollView.SetToStretch();
         scrollView.localScale = Vector3.one;
 
         var scrollViewImage = scrollView.AddComponent<Image>();
@@ -26,7 +30,7 @@ internal class ScrollViewPage(ModInfo Info) : McmPage(Info)
         scrollRect.horizontal = false;
 
         var viewport = scrollView.AttachRectTransformObject("Viewport");
-        viewport.UseMaxAnchor();
+        viewport.SetToStretch();
         viewport.AddComponent<RectMask2D>();
         scrollRect.viewport = viewport;
 
@@ -34,23 +38,22 @@ internal class ScrollViewPage(ModInfo Info) : McmPage(Info)
         viewportImage.color = Color.clear;
 
         var scrollbar = scrollView.AttachRectTransformObject("Scrollbar", false);
-        scrollbar.sizeDelta = new(5f, 0f);
 
         var scrollbarComponent = scrollbar.AddComponent<Scrollbar>();
         scrollbarComponent.direction = Scrollbar.Direction.BottomToTop;
 
         var scrollbarImage = scrollbar.AddComponent<Image>();
-        scrollbarImage.StartCoroutine(scrollbarImage.GradientColor());
+        scrollbarImage.color = new(0.6f, 0.85f, 0.92f, 1f);
 
         var slidingArea = scrollbar.AttachRectTransformObject("Slider", false);
-        slidingArea.anchorMin = Vector2.zero;
+        slidingArea.anchorMin = new(0.05f, 0.05f);
         slidingArea.anchorMax = new(0.95f, 0.95f);
         slidingArea.sizeDelta = Vector2.zero;
         slidingArea.pivot = new(0.5f, 0.5f);
 
         var handle = slidingArea.AttachRectTransformObject("SliderHandle", false);
         handle.anchorMin = Vector2.zero;
-        handle.anchorMax = Vector2.one;
+        handle.anchorMax = Vector2.zero;
         handle.pivot = new(0.5f, 0.5f);
         handle.sizeDelta = new(5f, 5f);
 
@@ -60,11 +63,11 @@ internal class ScrollViewPage(ModInfo Info) : McmPage(Info)
         scrollbarComponent.handleRect = handle;
 
         scrollbar.anchorMin = new(1f, 0f);
-        scrollbar.anchorMax = new(1f, 1f);
+        scrollbar.anchorMax = Vector2.one;
         scrollbar.pivot = new(1f, 0.5f);
-        scrollbar.offsetMin = new(-20f, 0f);
+        scrollbar.offsetMin = new(-8f, 0f);
         scrollbar.offsetMax = Vector2.zero;
-        scrollbar.sizeDelta = new(20f, 0f);
+        scrollbar.sizeDelta = new(8f, 0f);
 
         scrollRect.verticalScrollbar = scrollbarComponent;
         scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;

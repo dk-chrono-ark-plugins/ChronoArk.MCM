@@ -1,4 +1,4 @@
-﻿namespace MCM.Common;
+﻿namespace Mcm.Common;
 
 internal static class PageSizeFitter
 {

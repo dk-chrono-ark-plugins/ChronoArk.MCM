@@ -1,4 +1,4 @@
-﻿namespace MCM.Api;
+﻿namespace Mcm.Api;
 
 internal interface IConfigurable
 {

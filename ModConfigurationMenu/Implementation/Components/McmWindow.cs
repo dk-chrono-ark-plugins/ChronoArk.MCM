@@ -1,26 +1,22 @@
 ﻿using ChronoArkMod;
 using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
-using MCM.Api.Displayables;
-using MCM.Implementation.Displayables;
+using Mcm.Implementation.Displayables;
+using Microsoft.Win32;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace MCM.Implementation.Components;
+namespace Mcm.Implementation.Components;
 
 #nullable enable
 
 internal class McmWindow : UIBehaviour
 {
-    public const string ButtonEntryName = "MCM Button";
-    public const string ButtonEntryText = "Mods";
-
     private bool _shouldReturn = true;
-
     private Canvas? _canvas;
-    private IModLayout? _currentRendering;
 
-    public static McmWindow? Instance;
+    public IModLayout? CurrentRendering { get; set; }
+    public static McmWindow? Instance { get; private set; }
 
     private void Start()
     {
@@ -72,9 +68,8 @@ internal class McmWindow : UIBehaviour
         if (!gameObject.activeInHierarchy || _canvas == null) {
             return;
         }
-
         _shouldReturn = false;
-        _currentRendering?.CurrentPage.Hide();
+        CurrentRendering?.CurrentPage.Hide();
         page.Render(_canvas.transform);
     }
 
@@ -82,22 +77,43 @@ internal class McmWindow : UIBehaviour
     {
         var registry = McmManager.Instance.Registries[mod];
         RenderPage(registry.Layout.IndexPage);
-        _currentRendering = registry.Layout;
+        CurrentRendering = registry.Layout;
+    }
+
+    public static void Save()
+    {
+        if (Instance is null || Instance.CurrentRendering is null) {
+            return;
+        }
+        var modInfo = Instance.CurrentRendering.Owner;
+        $"Saving {modInfo.Title}".Log();
+        McmManager.Instance.Registries[modInfo].Save?.Invoke();
+    }
+
+    public static void Reset()
+    {
+        if (Instance is null || Instance.CurrentRendering is null) {
+            return;
+        }
+        var modInfo = Instance.CurrentRendering.Owner;
+        $"Applying {modInfo.Title}".Log();
+        McmManager.Instance.Registries[modInfo].Reset?.Invoke();
     }
 
     private void RenderSelf()
     {
         var modInfo = ModManager.getModInfo(ModConfigurationMenuMod.Instance!.ModId);
-        var myPage = McmManager.Instance.Registries[modInfo].Layout.IndexPage;
+        var layout = McmManager.Instance.Registries[modInfo].Layout;
+        var myPage = layout.GetPage("McmEntry") ?? throw new InvalidOperationException($"MCM cannot render the entry page...");
         myPage.Clear();
 
+        // populate mod entries
         ModManager.LoadedMods
             .Select(ModManager.getModInfo)
-            .Do(mod => myPage.Add(new McmModEntry(mod)));
-        myPage.Add(new McmButton() {
-            Content = new McmImage() { MaskColor = Color.red },
-            OnClick = () => Debug.Log("Clicked!")
-        });
+            .Select(mod => new McmModEntry(mod))
+            .Do(myPage.Add);
+
         RenderPage(myPage);
+        CurrentRendering = layout;
     }
 }

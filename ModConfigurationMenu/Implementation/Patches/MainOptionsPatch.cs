@@ -1,17 +1,20 @@
 ﻿using ChronoArkMod.Helper;
 using I2.Loc;
-using MCM.Implementation.Components;
+using Mcm.Implementation.Components;
 using TMPro;
 using UnityEngine.EventSystems;
 using Object = UnityEngine.Object;
 
-namespace MCM.Implementation;
+namespace Mcm.Implementation;
 
 #nullable enable
 
 internal class MainOptionsPatch : IPatch
 {
+    public const string ButtonEntryName = "MCM Button";
+    public const string ButtonEntryText = "Mods";
     private const string _layoutHierarchy = "Image/Layout";
+
     private static GameObject? _mcm;
 
     public string Id => "main-options-layout";
@@ -39,14 +42,14 @@ internal class MainOptionsPatch : IPatch
         }
 
         var button = Object.Instantiate(layout.GetChild(0), layout);
-        button.name = McmWindow.ButtonEntryName;
+        button.name = ButtonEntryName;
         var option = button.GetComponent<OptionButton>();
         var tmp = option.Content.GetComponentsInChildren<TextMeshProUGUI>().FirstOrDefault();
         if (tmp == null) {
             Object.DestroyImmediate(button);
             return;
         }
-        tmp.text = McmWindow.ButtonEntryText;
+        tmp.text = ButtonEntryText;
         Object.DestroyImmediate(tmp.GetComponent<Localize>());
 
         var @event = option.gameObject.GetOrAddComponent<EventTrigger>();

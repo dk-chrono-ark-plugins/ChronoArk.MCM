@@ -1,7 +1,14 @@
 ﻿using ChronoArkMod.ModData;
 
-namespace MCM.Api.Displayables;
+namespace Mcm.Api.Displayables;
 
+#nullable enable
+
+/// <summary>
+/// Main displayable used in MCM<br/>
+/// Responsible for rendering its child elements<br/>
+/// Instantiated as vertical layout group by default
+/// </summary>
 public interface IPage : IDisplayable
 {
     /// <summary>

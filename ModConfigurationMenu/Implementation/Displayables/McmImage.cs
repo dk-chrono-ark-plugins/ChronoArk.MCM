@@ -1,8 +1,7 @@
 ﻿using ChronoArkMod.Helper;
-using MCM.Api.Displayables;
 using UnityEngine.UI;
 
-namespace MCM.Implementation.Displayables;
+namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
@@ -12,16 +11,26 @@ internal class McmImage : ScriptRef, IImage
     public Vector2? BorderThickness { get; set; }
     public Color? MaskColor { get; set; }
     public Sprite? MainSprite { get; set; }
+    public bool? Stretch { get; set; }
 
     public override Transform Render(Transform parent)
     {
+        if (Ref != null) {
+            return Ref.transform;
+        }
+
         var image = parent.AttachRectTransformObject("McmImage");
+        if (Stretch.GetValueOrDefault()) {
+            image.SetToStretch();
+        }
+
         var component = image.AddComponent<Image>();
         if (MainSprite != null) {
             component.sprite = MainSprite;
         } else if (MaskColor != null) {
             component.color = MaskColor.Value;
         }
+
         if (BorderColor != null) {
             image.gameObject.GetOrAddComponent<Outline>().effectColor = BorderColor.Value;
         }

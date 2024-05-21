@@ -1,10 +1,9 @@
 ﻿using ChronoArkMod;
 using ChronoArkMod.ModData;
 using ChronoArkMod.Plugin;
-using MCM.Api.Displayables;
-using MCM.Implementation.Displayables;
+using Mcm.Implementation.Displayables;
 
-namespace MCM.Implementation;
+namespace Mcm.Implementation;
 
 #nullable enable
 
@@ -34,8 +33,8 @@ internal class McmManager : IModConfigurationMenu
     public IPage Register(ChronoArkPlugin mod, Action apply, Action reset)
     {
         var modInfo = ModManager.getModInfo(mod.ModId);
-        if (_registries.TryAdd(modInfo, new(new ModLayout(new GridLayoutPage(modInfo), modInfo), null, null))) {
-            Debug.Log($"registered {mod}");
+        if (_registries.TryAdd(modInfo, new(new ModLayout(new McmGridPage(modInfo), modInfo), apply, reset))) {
+            $"registered {mod}".Log();
             return _registries[modInfo].Layout.IndexPage;
         } else {
             throw new InvalidOperationException($"failed to register {mod}");
@@ -46,7 +45,7 @@ internal class McmManager : IModConfigurationMenu
     {
         var modInfo = ModManager.getModInfo(mod.ModId);
         if (_registries.Remove(modInfo)) {
-            Debug.Log($"unregistered {mod}");
+            $"unregistered {mod}".Log();
         }
     }
 
@@ -57,11 +56,16 @@ internal class McmManager : IModConfigurationMenu
         throw new NotImplementedException();
     }
 
-    public IPage AddPage(ChronoArkPlugin mod, string name)
+    public IPage AddPage(ChronoArkPlugin mod, string name, ICompositeLayout.LayoutGroup layout = ICompositeLayout.LayoutGroup.Vertical)
     {
         var modInfo = ModManager.getModInfo(mod.ModId);
         if (_registries.TryGetValue(modInfo, out var registry)) {
-            return registry.Layout.AddPage(name, new VerticalLayoutPage(modInfo));
+            return registry.Layout.AddPage(name, layout switch {
+                ICompositeLayout.LayoutGroup.Grid => new McmGridPage(modInfo),
+                ICompositeLayout.LayoutGroup.Horizontal => new McmGridPage(modInfo),
+                ICompositeLayout.LayoutGroup.Vertical => new McmVerticalPage(modInfo),
+                _ => throw new NotImplementedException()
+            });
         } else {
             throw new InvalidOperationException($"{mod} must be registerd with MCM first");
         }

@@ -1,10 +1,12 @@
 ﻿using ChronoArkMod.ModData;
-using MCM.Api.Displayables;
 
-namespace MCM.Api;
+namespace Mcm.Api;
 
 #nullable enable
 
+/// <summary>
+/// Holds a registered mcm mod and its pages
+/// </summary>
 internal interface IModLayout
 {
     IPage IndexPage { get; init; }

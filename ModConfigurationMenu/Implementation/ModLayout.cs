@@ -1,7 +1,6 @@
 ﻿using ChronoArkMod.ModData;
-using MCM.Api.Displayables;
 
-namespace MCM.Implementation;
+namespace Mcm.Implementation;
 
 #nullable enable
 

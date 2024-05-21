@@ -2,25 +2,30 @@
 using ChronoArkMod.ModData;
 using UnityEngine.UI;
 
-namespace MCM.Implementation.Displayables;
+namespace Mcm.Implementation.Displayables;
 
+#nullable enable
 
 /// <summary>
-/// Grid layout page, will pass the same content holder to the render pipe
+/// Grid layout page, will return the grid content holder to the render pipe
 /// </summary>
-internal sealed class GridLayoutPage(ModInfo Info) : ScrollViewPage(Info)
+internal class McmGridPage(ModInfo Info) : McmScrollPage(Info)
 {
     public Vector2 CellSize = new(320f, 480f);
 
     public override Transform Render(Transform parent)
     {
+        if (Ref != null) {
+            return Ref.transform;
+        }
+
         var content = base.Render(parent);
 
-        var gridLayoutGroup = content.AddComponent<GridLayoutGroup>();
-        gridLayoutGroup.cellSize = CellSize;
-        gridLayoutGroup.spacing = new(20f, 20f);
-        gridLayoutGroup.padding = new(20, 20, 20, 20);
-        gridLayoutGroup.childAlignment = TextAnchor.MiddleCenter;
+        var grid = content.AddComponent<GridLayoutGroup>();
+        grid.cellSize = CellSize;
+        grid.spacing = new(20f, 20f);
+        grid.padding = new(20, 20, 20, 20);
+        grid.childAlignment = TextAnchor.MiddleCenter;
 
         var contentSizeFitter = content.AddComponent<ContentSizeFitter>();
         contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -34,7 +39,8 @@ internal sealed class GridLayoutPage(ModInfo Info) : ScrollViewPage(Info)
     protected override void RenderPageElements(Transform parent)
     {
         foreach (var element in _elements) {
-            var grid = element.Render(parent).AddComponent<LayoutElement>();
+            var grid = element.Render<LayoutElement>(parent);
+            grid.GetComponent<RectTransform>().SetToStretch();
             grid.preferredWidth = CellSize.x;
             grid.preferredHeight = CellSize.y;
         }

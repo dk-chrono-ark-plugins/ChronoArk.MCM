@@ -1,8 +1,12 @@
-﻿namespace MCM.Api.Displayables;
+﻿namespace Mcm.Api.Displayables;
 
 #nullable enable
 
+/// <summary>
+/// Text component
+/// </summary>
 public interface IText : IDisplayable
 {
-    public string? Content { get; }
+    string? Content { get; }
+    float? FixedSize { get; }
 }

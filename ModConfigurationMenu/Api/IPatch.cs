@@ -1,4 +1,4 @@
-﻿namespace MCM.Api;
+﻿namespace Mcm.Api;
 
 /// <summary>
 /// IPatch is a irreversible config, commit on enable

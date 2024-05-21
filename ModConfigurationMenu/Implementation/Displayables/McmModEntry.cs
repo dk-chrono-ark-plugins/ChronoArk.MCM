@@ -1,9 +1,8 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
-using MCM.Api.Displayables;
 using UnityEngine.UI;
 
-namespace MCM.Implementation.Displayables;
+namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
@@ -11,34 +10,47 @@ internal class McmModEntry : ScriptRef
 {
     private static Sprite? _defaultCover;
     private static bool _onceFlag;
-    private readonly McmImage _cover;
-    private readonly McmText _text;
+    private readonly McmButton _modEntry;
 
     public McmModEntry(ModInfo modInfo)
     {
         LookupOnce();
 
-        _cover = new() { MainSprite = modInfo.CoverSprite ?? _defaultCover! };
-        _text = new() { Content = $"{modInfo.Title}\nv{modInfo.Version}" };
+        var cover = new McmImage() { MainSprite = modInfo.CoverSprite ?? _defaultCover! };
+        var text = new McmText() { Content = $"{modInfo.Title}\nv{modInfo.Version}" };
+        var bar = new McmImage() {
+            MaskColor = Color.blue,
+            Stretch = true,
+        };
+        var modEntryInternal = new McmComposite(ICompositeLayout.LayoutGroup.Vertical) {
+            Composites = [
+                new(cover, new(0f, 320f)),
+                new(text, new(0f, 80f)),
+                new(bar, new(0f, 80f)),
+            ]
+        };
+        _modEntry = new() {
+            Content = modEntryInternal,
+            OnClick = () => ClickEachEntry(modInfo)
+        };
     }
 
     public override Transform Render(Transform parent)
     {
-        var modEntry = parent.AttachRectTransformObject("McmModEntry");
+        if (Ref != null) {
+            return Ref.transform;
+        }
 
-        var vert = modEntry.AddComponent<VerticalLayoutGroup>();
-        vert.childAlignment = TextAnchor.MiddleCenter;
-        vert.childControlHeight = true;
-        vert.childForceExpandHeight = false;
-
-        _cover.Render<LayoutElement>(modEntry).preferredHeight = 320f;
-        _text.Render<LayoutElement>(modEntry).preferredHeight = 80f;
-
-        var image = new McmImage() { MaskColor = Color.blue };
-        image.Render<LayoutElement>(modEntry).preferredHeight = 80f;
+        var modEntry = _modEntry.Render<RectTransform>(parent);
+        modEntry.sizeDelta = new(320f, 480f);
 
         Ref = modEntry.gameObject;
         return modEntry;
+    }
+
+    private void ClickEachEntry(ModInfo info)
+    {
+        Debug.Log($"Clicked {info.id}, {info.Author}, {info.Version}");
     }
 
     private void LookupOnce()

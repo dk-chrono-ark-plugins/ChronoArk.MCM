@@ -1,18 +1,14 @@
 ﻿using ChronoArkMod.Helper;
-using MCM.Api.Displayables;
-using MCM.Implementation.Components;
+using Mcm.Implementation.Components;
 using UnityEngine.UI;
 
-namespace MCM.Implementation.Displayables;
+namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
 internal class McmButton : ScriptRef, IButton
 {
-    private static Animator? _animator;
-    private static RuntimeAnimatorController? _aniController;
-    private static bool _onceFlag;
-    private McmImage _buttonImg;
+    private readonly McmImage _buttonImg;
 
     public required IDisplayable Content { get; set; }
     public bool Interactable { get; set; }
@@ -21,8 +17,6 @@ internal class McmButton : ScriptRef, IButton
 
     public McmButton()
     {
-        LookUpOnce();
-
         _buttonImg = new() {
             BorderColor = Color.white,
             BorderThickness = new(3f, 3f),
@@ -37,32 +31,30 @@ internal class McmButton : ScriptRef, IButton
 
     public override Transform Render(Transform parent)
     {
-        LookUpOnce();
+        if (Ref != null) {
+            return Ref.transform;
+        }
 
         var button = parent.AttachRectTransformObject("McmButton");
         if (Size == null) {
-            button.UseMaxAnchor();
+            button.SetToStretch();
         } else {
             button.sizeDelta = Size.Value;
         }
 
-        var buttonHolder = _buttonImg.Render(button);
+        var buttonHolder = _buttonImg.Render<RectTransform>(button);
+        // button always stretch its content
+        buttonHolder.SetToStretch();
+
         button.AddComponent<ButtonHighlight>().ImageHolder = _buttonImg;
-        Content.Render(buttonHolder);
+        var content = Content.Render<RectTransform>(buttonHolder);
+        // button always stretch its content
+        content.SetToStretch();
 
         var component = buttonHolder.AddComponent<Button>();
         component.onClick.AddListener(Click);
 
         Ref = button.gameObject;
-        return buttonHolder;
-    }
-
-    private void LookUpOnce()
-    {
-        if (!_onceFlag && _aniController == null &&
-            ComponentFetch.TryFindObject<RuntimeAnimatorController>("OptionButton", out var ani)) {
-            _aniController = ani;
-        }
-        _onceFlag = true;
+        return button;
     }
 }

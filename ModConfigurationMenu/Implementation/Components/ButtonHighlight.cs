@@ -1,10 +1,9 @@
-﻿using Mcm.Implementation.Components;
-using MCM.Implementation.Displayables;
+﻿using Mcm.Implementation.Displayables;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace MCM.Implementation.Components;
+namespace Mcm.Implementation.Components;
 
 #nullable enable
 

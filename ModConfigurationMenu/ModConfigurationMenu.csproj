@@ -440,15 +440,14 @@
       <Link>Helper\TextureBlitter.cs</Link>
     </Compile>
     <Compile Include="Api\Displayables\IButton.cs" />
-    <Compile Include="Api\Displayables\IComposite.cs" />
-    <Compile Include="Api\Displayables\IScriptRef.cs" />
+    <Compile Include="Api\Displayables\ICompositeLayout.cs" />
+    <Compile Include="Api\IScriptRef.cs" />
     <Compile Include="Api\Displayables\IImage.cs" />
     <Compile Include="Api\IModLayout.cs" />
     <Compile Include="Api\Displayables\IText.cs" />
     <Compile Include="Api\IConfigurable.cs" />
     <Compile Include="Api\Displayables\IDisplayable.cs" />
     <Compile Include="Api\Displayables\IPage.cs" />
-    <Compile Include="Common\GradientColor.cs" />
     <Compile Include="Implementation\Components\ButtonHighlight.cs" />
     <Compile Include="Implementation\Components\HoverBehaviour.cs" />
     <Compile Include="Implementation\Components\McmWindow.cs" />
@@ -458,10 +457,11 @@
     <Compile Include="Implementation\Displayables\McmModEntry.cs" />
     <Compile Include="Implementation\Displayables\Pages\McmPage.cs" />
     <Compile Include="Implementation\ModLayout.cs" />
-    <Compile Include="Implementation\Displayables\Pages\VerticalLayoutPage.cs" />
-    <Compile Include="Implementation\Displayables\Pages\GridLayoutPage.cs" />
-    <Compile Include="Implementation\Displayables\Pages\ScrollViewPage.cs" />
+    <Compile Include="Implementation\Displayables\Pages\McmVerticalPage.cs" />
+    <Compile Include="Implementation\Displayables\Pages\McmGridPage.cs" />
+    <Compile Include="Implementation\Displayables\Pages\McmScrollPage.cs" />
     <Compile Include="Implementation\Displayables\McmText.cs" />
+    <Compile Include="Implementation\ModLog.cs" />
     <Compile Include="Implementation\Patches\MainOptionsPatch.cs" />
     <Compile Include="Common\PageSizeFitter.cs" />
     <Compile Include="Api\IModConfigurationMenu.cs" />

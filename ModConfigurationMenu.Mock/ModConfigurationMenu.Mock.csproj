@@ -24,6 +24,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\bin\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="ModConfigurationMenu">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Chrono Ark\Mod\ModConfigurationMenu\Assemblies\ModConfigurationMenu.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\bin\Mono.Cecil.dll</HintPath>
@@ -417,13 +420,6 @@
   <!-- Compile ItemGroup Start-->
   <ItemGroup>
     <Compile Include="ModConfigurationMenuMock_Plugin.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ModConfigurationMenu\ModConfigurationMenu.csproj">
-      <Project>{aa659cc5-37f7-434a-a8d1-36aaaa8d1ad6}</Project>
-      <Name>ModConfigurationMenu</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <!-- Compile ItemGroup End-->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
