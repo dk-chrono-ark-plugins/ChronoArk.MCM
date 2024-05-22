@@ -9,6 +9,11 @@
 public interface IScriptRef
 {
     /// <summary>
+    /// Ref needs updating
+    /// </summary>
+    bool Dirty { get; }
+
+    /// <summary>
     /// Ref to itself
     /// </summary>
     GameObject? Ref { get; }

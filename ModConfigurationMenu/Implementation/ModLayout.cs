@@ -37,7 +37,7 @@ internal class ModLayout : IModLayout
     {
         name = SanitizedName(name);
         var page = _pages.GetValueOrDefault(name);
-        Debug.Log($"retrieving page {name}" + (page is null ? ", but it's null" : ""));
+        Debug.Log($"retrieving page {name}" + (page == null ? ", but it's null" : ""));
         return page;
     }
 

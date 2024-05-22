@@ -1,15 +1,18 @@
-﻿using ChronoArkMod;
+﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
-using ChronoArkMod.Plugin;
-using Mcm.Implementation.Displayables;
+using Mcm.Api.Configurables;
 
 namespace Mcm.Implementation;
 
 #nullable enable
 
-internal class McmManager : IModConfigurationMenu
+internal partial class McmManager : IModConfigurationMenu
 {
-    public sealed record McmRegistry(IModLayout Layout, Action Save, Action Reset);
+    public sealed record McmRegistry(IModLayout Layout)
+    {
+        public Dictionary<string, McmSettingEntry> Settings = [];
+        public bool Dirty = false;
+    }
 
     public const IModConfigurationMenu.Version McmInstanceVersion = IModConfigurationMenu.Version.V1;
 
@@ -28,51 +31,62 @@ internal class McmManager : IModConfigurationMenu
         return Instance.Registries.GetValueOrDefault(modInfo);
     }
 
-    // General api
-
-    public IModConfigurationMenu.Version GetVersion()
+    public static void AddModSetting(ModInfo modInfo, string key, McmSettingEntry entry)
     {
-        return McmInstanceVersion;
+        if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
+            return;
+        }
+        registry.Settings.TryAdd(key, entry);
     }
 
-    public IPage Register(ChronoArkPlugin mod, Action apply, Action reset)
+    public static T GetModSetting<T>(ModInfo modInfo, string key)
     {
-        var modInfo = ModManager.getModInfo(mod.ModId);
-        if (_registries.TryAdd(modInfo, new(new ModLayout(new McmGridPage(modInfo), modInfo), apply, reset))) {
-            Debug.Log($"registered {mod}");
-            return _registries[modInfo].Layout.IndexPage;
-        } else {
-            throw new InvalidOperationException($"failed to register {mod}");
+        if (Instance.Registries.TryGetValue(modInfo, out var registry) &&
+            registry.Settings.TryGetValue(key, out var entry) &&
+            entry.Value is T parsed) {
+            return parsed;
+        }
+        return default!;
+    }
+
+    public static void UpdateModSetting<T>(ModInfo modInfo, IConfigurable<T> configurable)
+    {
+        UpdateModSetting(modInfo, configurable.Id, configurable.Value!);
+    }
+
+    public static void UpdateModSetting(ModInfo modInfo, string key, object value)
+    {
+        if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
+            return;
+        }
+        if (registry.Settings.TryGetValue(key, out var settings)) {
+            settings.Value = value;
+        }
+        registry.Dirty = true;
+    }
+
+    public static void SaveModSetting(ModInfo modInfo)
+    {
+        if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
+            return;
+        }
+        if (registry.Dirty) {
+            // force update?
+            modInfo.settings = registry.Settings
+                .ToDictionary(kv => kv.Key, kv => kv.Value.Value);
+            ConfigSerializer.WriteConfig(modInfo.settings, modInfo.modSettingsPath);
+            modInfo.ReadModSetting();
+            modInfo.WriteMcmConfig(modInfo.settings);
+            registry.Dirty = false;
         }
     }
 
-    public void Unregister(ChronoArkPlugin mod)
+    public static void ResetModSetting(ModInfo modInfo)
     {
-        var modInfo = ModManager.getModInfo(mod.ModId);
-        if (_registries.Remove(modInfo)) {
-            Debug.Log($"unregistered {mod}");
+        if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
+            return;
         }
-    }
-
-    // UI elements
-
-    public void AddText(ChronoArkPlugin mod, Func<string> text)
-    {
-        
-    }
-
-    public IPage AddPage(ChronoArkPlugin mod, string name, ICompositeLayout.LayoutGroup layout = ICompositeLayout.LayoutGroup.Vertical)
-    {
-        var modInfo = ModManager.getModInfo(mod.ModId);
-        if (_registries.TryGetValue(modInfo, out var registry)) {
-            return registry.Layout.AddPage(name, layout switch {
-                ICompositeLayout.LayoutGroup.Grid => new McmGridPage(modInfo),
-                ICompositeLayout.LayoutGroup.Horizontal => new McmGridPage(modInfo),
-                ICompositeLayout.LayoutGroup.Vertical => new McmVerticalPage(modInfo),
-                _ => throw new NotImplementedException()
-            });
-        } else {
-            throw new InvalidOperationException($"{mod} must be registerd with MCM first");
-        }
+        registry.Settings = modInfo.ReadMcmConfig<Dictionary<string, McmSettingEntry>>() ?? [];
+        registry.Dirty = false;
     }
 }

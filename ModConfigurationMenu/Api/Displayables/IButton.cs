@@ -23,9 +23,9 @@ public interface IButton : IDisplayable
     Action OnClick { get; }
 
     /// <summary>
-    /// Button size, null to use max anchor
+    /// Back layer of button
     /// </summary>
-    Vector2? Size { get; }
+    IImage Background { get; }
 
     /// <summary>
     /// click the button

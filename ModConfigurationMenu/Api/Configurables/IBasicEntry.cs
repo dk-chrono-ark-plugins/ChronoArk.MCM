@@ -1,7 +1,19 @@
-﻿namespace Mcm.Api;
+﻿namespace Mcm.Api.Configurables;
 
-internal interface IConfigurable
+public interface IBasicEntry
 {
+    enum EntryType
+    {
+        // Mcm specializeed
+        Patch,
+        // CARK supported
+        Dropdown,
+        Input,
+        Slider,
+        Toggle,
+        // Mcm added
+    }
+
     /// <summary>
     /// The unique ID of this configuration
     /// </summary>
@@ -18,7 +30,7 @@ internal interface IConfigurable
     string Description { get; }
 
     /// <summary>
-    /// Whether this config is mandatory
+    /// Self explainatory
     /// </summary>
-    bool Mandatory { get; }
+    EntryType SettingType { get; }
 }

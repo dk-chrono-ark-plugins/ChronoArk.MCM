@@ -1,6 +1,4 @@
 ﻿using ChronoArkMod.Helper;
-using Mcm.Implementation.Components;
-using System.Collections;
 using TMPro;
 
 namespace Mcm.Implementation.Displayables;
@@ -10,19 +8,28 @@ namespace Mcm.Implementation.Displayables;
 internal class McmText : ScriptRef, IText
 {
     private TextMeshProUGUI? _text;
+    private string? _content;
+    private float? _fontsize;
 
     public required string Content
     {
-        get => _text?.text ?? string.Empty;
+        get => _content ?? string.Empty;
         set
         {
-            CoroutineHelper.Deferred(
-                () => _text!.text = value,
-                () => _text != null
-            );
+            _content = value;
+            DeferredUpdate();
         }
     }
-    public float? FixedSize { get; set; }
+    public float? FontSize
+    {
+        get => _fontsize;
+        set
+        {
+            _fontsize = value;
+            DeferredUpdate();
+        }
+    }
+    public IImage? Bg { get; init; }
 
     public override Transform Render(Transform parent)
     {
@@ -31,20 +38,42 @@ internal class McmText : ScriptRef, IText
         }
 
         var text = parent.AttachRectTransformObject("McmText");
-        Ref = text.gameObject;
-
-        var tmp = text.AddComponent<TextMeshProUGUI>();
-        if (FixedSize != null) {
-            tmp.fontSize = FixedSize.Value;
+        if (Size == null) {
+            text.SetToStretch();
         } else {
-            tmp.fontSizeMin = 10f;
-            tmp.fontSizeMax = 40f;
-            tmp.enableAutoSizing = true;
-            tmp.autoSizeTextContainer = true;
+            text.sizeDelta = Size.Value;
         }
-        tmp.alignment = TextAlignmentOptions.Center;
-        _text = tmp;
 
-        return text;
+        _text = text.AddComponent<TextMeshProUGUI>();
+        _text.alignment = TextAlignmentOptions.Center;
+        DeferredUpdate();
+
+        return base.Render(text);
+    }
+
+    public override void DeferredUpdate()
+    {
+        if (_deferred) {
+            return;
+        }
+        _deferred = true;
+        CoroutineHelper.Deferred(
+            () => {
+                if (_fontsize != null) {
+                    _text!.fontSize = _fontsize!.Value;
+                } else {
+                    _text!.fontSizeMin = 10f;
+                    _text.fontSizeMax = 40f;
+                    _text.enableAutoSizing = true;
+                    _text.autoSizeTextContainer = true;
+                }
+                if (_content != null) {
+                    _text!.text = _content;
+                }
+                _dirty = true;
+                _deferred = false;
+            },
+            () => _text != null
+        );
     }
 }

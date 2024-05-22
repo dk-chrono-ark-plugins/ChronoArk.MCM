@@ -1,6 +1,8 @@
 ﻿using ChronoArkMod;
 using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
+using Mcm.Api.Configurables;
+using Mcm.Implementation.Configurables;
 using Mcm.Implementation.Displayables;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -71,6 +73,7 @@ internal class McmWindow : UIBehaviour
     public void Close()
     {
         _shouldReturn = true;
+        CoroutineHelper.HaltAll();
         this.StartDeferredCoroutine(() => gameObject.SetActive(false));
     }
 
@@ -81,8 +84,13 @@ internal class McmWindow : UIBehaviour
         }
         _shouldReturn = false;
 
-        TopPage?.Hide();
-        page.Render(_canvas.transform);
+        try {
+            TopPage?.Hide();
+            page.Render(_canvas.transform);
+        } catch {
+            Debug.Log($"failed to render page {page.Title}");
+            throw;
+        }
         _pageHierarchy.Add(page);
     }
 
@@ -113,41 +121,55 @@ internal class McmWindow : UIBehaviour
 
     public static void Save()
     {
-        if (Instance is null || Instance.TopPage is null) {
+        if (Instance == null || Instance.TopPage == null) {
             return;
         }
-        var modInfo = Instance.TopPage.Owner;
-        McmManager.GetMcmRegistry(modInfo)!.Save?.Invoke();
+        McmManager.SaveModSetting(Instance.TopPage.Owner);
+        Instance.TopPage.Elements
+            .OfType<INotifyChanged>()
+            .Do(disp => disp.NotifyApplied());
     }
 
     public static void Reset()
     {
-        if (Instance is null || Instance.TopPage is null) {
+        if (Instance == null || Instance.TopPage == null) {
             return;
         }
-        var modInfo = Instance.TopPage.Owner;
-        McmManager.GetMcmRegistry(modInfo)!.Reset?.Invoke();
+        McmManager.ResetModSetting(Instance.TopPage.Owner);
+        Instance.TopPage.Elements
+            .OfType<INotifyChanged>()
+            .Do(disp => disp.NotifyApplied());
     }
 
     private void RenderSelf()
     {
         var modInfo = ModManager.getModInfo(McmMod.Instance!.ModId);
         var layout = McmManager.GetMcmRegistry(modInfo)!.Layout;
-        var myPage = layout.GetPage("McmEntry") ?? 
+        var myPage = layout.GetPage("McmEntry") ??
             throw new InvalidOperationException($"MCM cannot render the entry page...");
         myPage.Clear();
 
         // populate mod entries
         ModManager.LoadedMods
             .Select(ModManager.getModInfo)
-            .Select(mod => {
-                var entry = new McmModEntry(mod);
-                entry.ModEntry.Interactable = mod.ModSettingEntries.Any();
-                return entry;
-            })
+            .Select(mod => new McmModEntry(mod))
             .Do(myPage.Add);
 
         RenderPage(myPage);
+    }
+
+    private void RenderMockup2()
+    {
+        var modInfo = ModManager.getModInfo(McmMod.Instance!.ModId);
+        var registry = McmManager.GetMcmRegistry(modInfo);
+        var myPage = registry!.Layout.GetPage("index") ??
+            throw new InvalidOperationException($"MCM cannot render the entry page...");
+        myPage.Clear();
+
+        registry!.Settings = modInfo.StubMcmConfig();
+        var setting = registry.Settings;
+        var key = "TestToggleKey";
+        var entry = setting[key];
     }
 
     private void LookupOnce()

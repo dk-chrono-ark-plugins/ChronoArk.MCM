@@ -427,9 +427,6 @@
     <Compile Include="..\..\Common\Helper\ComponentFetch.cs">
       <Link>Helper\ComponentFetch.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Helper\ConfigSerializer.cs">
-      <Link>Helper\ConfigSerializer.cs</Link>
-    </Compile>
     <Compile Include="..\..\Common\Helper\CoroutineHelper.cs">
       <Link>Helper\CoroutineHelper.cs</Link>
     </Compile>
@@ -445,23 +442,35 @@
     <Compile Include="..\..\Common\Helper\TextureBlitter.cs">
       <Link>Helper\TextureBlitter.cs</Link>
     </Compile>
+    <Compile Include="Api\Configurables\IConfigurable.cs" />
+    <Compile Include="Api\Configurables\IDropdown.cs" />
+    <Compile Include="Api\Configurables\IDropdownEntry.cs" />
+    <Compile Include="Api\Configurables\INotifyChanged.cs" />
+    <Compile Include="Api\Configurables\IToggle.cs" />
     <Compile Include="Api\Displayables\IButton.cs" />
     <Compile Include="Api\Displayables\ICompositeLayout.cs" />
+    <Compile Include="Api\IDeferredUpdater.cs" />
     <Compile Include="Api\IScriptRef.cs" />
     <Compile Include="Api\Displayables\IImage.cs" />
     <Compile Include="Api\IModLayout.cs" />
     <Compile Include="Api\Displayables\IText.cs" />
-    <Compile Include="Api\IConfigurable.cs" />
+    <Compile Include="Api\Configurables\IBasicEntry.cs" />
     <Compile Include="Api\Displayables\IDisplayable.cs" />
     <Compile Include="Api\Displayables\IPage.cs" />
     <Compile Include="Implementation\Components\ButtonHighlight.cs" />
     <Compile Include="Implementation\Components\HoverBehaviour.cs" />
     <Compile Include="Implementation\Components\McmWindow.cs" />
+    <Compile Include="Implementation\ConfigSerializer.cs" />
+    <Compile Include="Implementation\Configurables\McmConfigurable.cs" />
+    <Compile Include="Implementation\Configurables\McmDropdown.cs" />
+    <Compile Include="Implementation\Configurables\McmToggle.cs" />
     <Compile Include="Implementation\Displayables\McmButton.cs" />
     <Compile Include="Implementation\Displayables\McmComposite.cs" />
     <Compile Include="Implementation\Displayables\McmImage.cs" />
     <Compile Include="Implementation\Displayables\McmModEntry.cs" />
     <Compile Include="Implementation\Displayables\Pages\McmPage.cs" />
+    <Compile Include="Implementation\McmManager_Api.cs" />
+    <Compile Include="Implementation\McmSettingEntry.cs" />
     <Compile Include="Implementation\ModStub.cs" />
     <Compile Include="McmConfig.cs" />
     <Compile Include="Implementation\ModLayout.cs" />
@@ -474,7 +483,7 @@
     <Compile Include="Api\IModConfigurationMenu.cs" />
     <Compile Include="Api\IPatch.cs" />
     <Compile Include="Implementation\McmManager.cs" />
-    <Compile Include="Implementation\Displayables\ScriptRef.cs" />
+    <Compile Include="Implementation\ScriptRef.cs" />
     <Compile Include="McmMod.cs" />
   </ItemGroup>
   <ItemGroup />

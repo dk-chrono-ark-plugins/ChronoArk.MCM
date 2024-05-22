@@ -1,12 +1,14 @@
-﻿namespace Mcm.Api;
+﻿using Mcm.Api.Configurables;
+
+namespace Mcm.Api;
 
 /// <summary>
 /// IPatch is a irreversible config, commit on enable
 /// </summary>
-internal interface IPatch : IConfigurable
+public interface IPatch : IBasicEntry
 {
     /// <summary>
     /// The patch itself
     /// </summary>
-    public void Commit();
+    void Commit();
 }

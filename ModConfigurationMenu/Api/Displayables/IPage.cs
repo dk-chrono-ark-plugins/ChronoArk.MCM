@@ -21,6 +21,8 @@ public interface IPage : IDisplayable
     /// </summary>
     string Title { get; set; }
 
+    List<IDisplayable> Elements { get; }
+
     /// <summary>
     /// Add element to current page.
     /// </summary>

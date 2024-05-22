@@ -3,7 +3,6 @@ using ChronoArkMod.ModData;
 using I2.Loc;
 using Mcm.Common;
 using Mcm.Implementation.Components;
-using TMPro;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
@@ -16,13 +15,12 @@ namespace Mcm.Implementation.Displayables;
 internal class McmPage : ScriptRef, IPage
 {
     protected readonly List<IDisplayable> _elements = [];
-    protected readonly McmButton _apply;
-    protected readonly McmButton _back;
-    protected readonly McmButton _reset;
+    protected readonly McmComposite _buttons;
     protected readonly McmText _titleText;
 
     public ModInfo Owner { get; init; }
     public string Title { get; set; }
+    public List<IDisplayable> Elements => _elements;
 
     public McmPage(ModInfo modInfo)
     {
@@ -30,29 +28,34 @@ internal class McmPage : ScriptRef, IPage
         Title = $"{Owner.Title}  v{Owner.Version}";
         _titleText = new() { Content = Title };
 
-        _apply = new() {
-            Content = new McmText() {
-                Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Apply),
-                FixedSize = 26f,
-            },
-            OnClick = McmWindow.Save,
-            Size = new(100f, 50f)
-        };
-        _back = new() {
+        var back = new McmButton() {
             Content = new McmText() {
                 Content = "<b><<</b>",
-                FixedSize = 40f,
+                FontSize = 40f,
             },
-            OnClick = McmWindow.Back,
-            Size = new(100f, 50f)
+            OnClick = McmWindow.Back
         };
-        _reset = new() {
+        var apply = new McmButton() {
+            Content = new McmText() {
+                Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Apply),
+                FontSize = 26f,
+            },
+            OnClick = McmWindow.Save
+        };
+        var reset = new McmButton() {
             Content = new McmText() {
                 Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Cancel),
-                FixedSize = 26f,
+                FontSize = 26f,
             },
-            OnClick = McmWindow.Reset,
-            Size = new(100f, 50f)
+            OnClick = McmWindow.Reset
+        };
+        _buttons = new(ICompositeLayout.LayoutGroup.Horizontal) {
+            Composites = [
+                new(back, new(100f, 50f)),
+                new(apply, new(100f, 50f)),
+                new(reset, new(100f, 50f)),
+            ],
+            Spacing = new(10f, 0f),
         };
     }
 
@@ -91,17 +94,11 @@ internal class McmPage : ScriptRef, IPage
         title.pivot = new(0.5f, 0f);
         title.sizeDelta = page.sizeDelta with { y = 50f };
 
-        var apply = _apply.Render<RectTransform>(page);
-        apply.AlignToBottom(new(-55f, -80f));
+        var buttons = _buttons.Render<RectTransform>(page);
+        buttons.sizeDelta = new(400f, 50f);
+        buttons.AlignToBottom(new(0f, -80f));
 
-        var back = _back.Render<RectTransform>(page);
-        back.AlignToBottom(new(-165f, -80f));
-
-        var reset = _reset.Render<RectTransform>(page);
-        reset.AlignToBottom(new(55f, -80f));
-
-        Ref = page.gameObject;
-        return page;
+        return base.Render(page);
     }
 
     protected virtual void RenderPageElements(Transform parent)

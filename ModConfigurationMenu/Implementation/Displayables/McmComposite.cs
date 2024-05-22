@@ -9,6 +9,8 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : Scri
 {
     public required ICompositeLayout.Composite[] Composites { get; set; }
     public ICompositeLayout.LayoutGroup Layout => CompositeLayout;
+    public Vector2? Spacing { get; init; }
+    public RectOffset? Padding { get; init; }
 
     public override Transform Render(Transform parent)
     {
@@ -17,7 +19,12 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : Scri
         }
 
         var layout = parent.AttachRectTransformObject($"Mcm{Layout}Composite");
-        Ref = layout.gameObject;
+
+        if (Size == null) {
+            layout.SetToStretch();
+        } else {
+            layout.sizeDelta = Size.Value;
+        }
 
         var contentSizeFitter = layout.AddComponent<ContentSizeFitter>();
         contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
@@ -27,31 +34,64 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : Scri
             case ICompositeLayout.LayoutGroup.Grid: {
                 var group = layout.AddComponent<GridLayoutGroup>();
                 group.childAlignment = TextAnchor.MiddleCenter;
+                if (Spacing != null) {
+                    group.spacing = Spacing.Value;
+                }
+                if (Padding != null) {
+                    group.padding = Padding;
+                }
                 break;
             }
             case ICompositeLayout.LayoutGroup.Horizontal: {
                 var group = layout.AddComponent<HorizontalLayoutGroup>();
                 group.childAlignment = TextAnchor.MiddleCenter;
+                if (Spacing != null) {
+                    group.spacing = Spacing.Value.x;
+                }
+                if (Padding != null) {
+                    group.padding = Padding;
+                }
                 contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
                 break;
             }
             case ICompositeLayout.LayoutGroup.Vertical: {
                 var group = layout.AddComponent<VerticalLayoutGroup>();
                 group.childAlignment = TextAnchor.MiddleCenter;
+                if (Spacing != null) {
+                    group.spacing = Spacing.Value.y;
+                }
+                if (Padding != null) {
+                    group.padding = Padding;
+                }
                 contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
                 break;
             }
         }
 
-        RenderComposites(layout);
+        if (Layout == ICompositeLayout.LayoutGroup.Overlap) {
+            UnityEngine.Object.DestroyImmediate(contentSizeFitter);
+            RenderOverlaps(layout);
+        } else {
+            RenderComposites(layout);
+        }
 
-        return layout;
+        return base.Render(layout);
     }
 
-    private void RenderComposites(Transform parent)
+    private void RenderOverlaps(Transform layout)
     {
         foreach (var (displayable, size) in Composites) {
-            var element = displayable.Render<LayoutElement>(parent);
+            var rect = displayable.Render<RectTransform>(layout);
+            rect.SetToStretch();
+            rect.sizeDelta = size;
+            rect.AlignToCenter();
+        }
+    }
+
+    private void RenderComposites(Transform layout)
+    {
+        foreach (var (displayable, size) in Composites) {
+            var element = displayable.Render<LayoutElement>(layout);
             element.GetComponent<RectTransform>().SetToStretch();
             if (!Mathf.Approximately(size.x, 0f)) {
                 element.preferredWidth = size.x;

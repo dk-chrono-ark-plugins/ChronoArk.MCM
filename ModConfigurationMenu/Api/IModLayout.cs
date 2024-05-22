@@ -7,7 +7,7 @@ namespace Mcm.Api;
 /// <summary>
 /// Holds a registered mcm mod and its pages
 /// </summary>
-internal interface IModLayout
+public interface IModLayout
 {
     IPage IndexPage { get; init; }
     IPage CurrentPage { get; }

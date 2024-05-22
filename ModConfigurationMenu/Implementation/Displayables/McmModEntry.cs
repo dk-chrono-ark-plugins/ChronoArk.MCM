@@ -8,14 +8,14 @@ namespace Mcm.Implementation.Displayables;
 internal class McmModEntry : ScriptRef
 {
     public readonly McmButton ModEntry;
+    public override Vector2? Size => new(320f, 640f);
 
     public McmModEntry(ModInfo modInfo)
     {
         var cover = new McmImage() { MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover };
         var text = new McmText() { Content = $"{modInfo.Title}\nv{modInfo.Version}" };
         var bar = new McmImage() {
-            MaskColor = Color.blue,
-            Stretch = true,
+            MaskColor = Color.blue
         };
         var modEntryInternal = new McmComposite(ICompositeLayout.LayoutGroup.Vertical) {
             Composites = [
@@ -26,7 +26,7 @@ internal class McmModEntry : ScriptRef
         };
         ModEntry = new() {
             Content = modEntryInternal,
-            OnClick = () => McmWindow.Instance?.RenderIndexPage(modInfo)
+            OnClick = () => McmWindow.Instance?.RenderIndexPage(modInfo),
         };
     }
 
@@ -37,10 +37,9 @@ internal class McmModEntry : ScriptRef
         }
 
         var modEntry = ModEntry.Render<RectTransform>(parent);
-        Ref = modEntry.gameObject;
 
-        modEntry.sizeDelta = new(320f, 480f);
+        modEntry.sizeDelta = Size!.Value;
 
-        return modEntry;
+        return base.Render(modEntry);
     }
 }

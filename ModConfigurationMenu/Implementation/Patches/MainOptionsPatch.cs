@@ -1,5 +1,6 @@
 ﻿using ChronoArkMod.Helper;
 using I2.Loc;
+using Mcm.Api.Configurables;
 using Mcm.Implementation.Components;
 using TMPro;
 using UnityEngine.EventSystems;
@@ -20,7 +21,7 @@ internal class MainOptionsPatch : IPatch
     public string Id => "main-options-layout";
     public string Name => Id;
     public string Description => Id;
-    public bool Mandatory => true;
+    public IBasicEntry.EntryType SettingType => IBasicEntry.EntryType.Patch;
 
     public void Commit()
     {

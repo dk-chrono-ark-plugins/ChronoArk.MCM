@@ -1,5 +1,4 @@
 ﻿using ChronoArkMod.Helper;
-using UnityEngine.UI;
 
 namespace Mcm.Api.Displayables;
 
@@ -8,6 +7,8 @@ namespace Mcm.Api.Displayables;
 /// </summary>
 public interface IDisplayable : IScriptRef
 {
+    Vector2? Size { get; }
+
     /// <summary>
     /// The call to render! This is called to instantiate the displayable
     /// </summary>

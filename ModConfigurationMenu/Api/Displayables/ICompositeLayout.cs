@@ -17,8 +17,11 @@ public interface ICompositeLayout : IDisplayable
         Grid,
         Horizontal,
         Vertical,
+        Overlap,
     }
 
     Composite[] Composites { get; }
     LayoutGroup Layout { get; }
+    Vector2? Spacing { get; }
+    RectOffset? Padding { get; }
 }

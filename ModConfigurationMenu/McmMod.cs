@@ -6,7 +6,6 @@ global using System;
 global using System.Collections.Generic;
 global using System.Linq;
 global using UnityEngine;
-using ChronoArkMod.Helper;
 using ChronoArkMod.Plugin;
 
 namespace Mcm;
@@ -36,22 +35,23 @@ public class McmMod : ChronoArkPlugin
         _patches.Add(new MainOptionsPatch());
 
         foreach (IPatch patch in _patches) {
-            if (patch.Mandatory) {
-                Debug.Log($"patching {patch.Id}");
-                patch.Commit();
-                Debug.Log("success!");
-            }
+            Debug.Log($"patching {patch.Id}");
+            patch.Commit();
+            Debug.Log("success!");
         }
 
         var mcm = McmProxy.GetInstance(IModConfigurationMenu.Version.V1);
-        mcm.Register(
-            mod: this,
-            apply: () => ConfigSerializer.WriteConfig(_config, this),
-            reset: () => _config = new()
-        );
-        mcm.AddText(this, () => PluginName);
+        var index = mcm.Register(this);
+        mcm.AddText(this, "Displayable here");
+        mcm.AddToggleOption(this, "TestToggleKey", "Test Key", "Description", true);
 
+        mcm.AddPage(this, "McmMockup");
         // this is mcm window main entry
         mcm.AddPage(this, "McmEntry", ICompositeLayout.LayoutGroup.Grid);
+    }
+
+    private void OnBtnClick()
+    {
+        Debug.Log("Option setting clicked");
     }
 }
