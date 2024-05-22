@@ -22,7 +22,7 @@ internal partial class McmManager : IModConfigurationMenu
     public IPage Register(string mod)
     {
         var modInfo = ModManager.getModInfo(mod);
-        var registry = new McmRegistry(new ModLayout(new McmVerticalPage(modInfo), modInfo));
+        var registry = new McmRegistry(new ModLayout(new McmVerticalPage(modInfo)));
         if (_registries.TryAdd(modInfo, registry)) {
             Debug.Log($"registered {mod}");
             return _registries[modInfo].Layout.IndexPage;

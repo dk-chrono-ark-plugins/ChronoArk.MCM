@@ -6,7 +6,7 @@ namespace ChronoArkMod.Helper;
 
 #nullable enable
 
-public static class ConfigSerializer
+public static class ConfigCereal
 {
     public static void WriteConfig<T>(T data, string path)
     {

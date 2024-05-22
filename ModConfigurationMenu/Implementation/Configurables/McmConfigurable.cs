@@ -10,8 +10,6 @@ namespace Mcm.Implementation.Configurables;
 
 internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
 {
-    public const string NotifyChangePrefix = "<b><color=yellow>!!</color></b>  ";
-
     private readonly McmComposite _entry;
     private McmText? _name;
     private bool _notified;
@@ -28,6 +26,8 @@ internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
         set => throw new NotImplementedException();
     }
     public IBasicEntry.EntryType SettingType { get; init; }
+
+    private static string _notifyChangePrefix => McmMod.ModInfo.I2Loc("Mcm/Page/Changed");
 
     protected McmConfigurable(string key, string name, string description)
     {
@@ -72,15 +72,15 @@ internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
     public void NotifyChange()
     {
         if (!_notified) {
-            _name!.Content = NotifyChangePrefix + _name.Content;
+            _name!.Content = _notifyChangePrefix + _name.Content;
             _notified = true;
         }
     }
 
     public void NotifyApply()
     {
-        if (_notified && _name!.Content.StartsWith(NotifyChangePrefix)) {
-            _name.Content = _name.Content[NotifyChangePrefix.Length..];
+        if (_notified && _name!.Content.StartsWith(_notifyChangePrefix)) {
+            _name.Content = _name.Content[_notifyChangePrefix.Length..];
             _notified = false;
         }
     }
@@ -89,8 +89,8 @@ internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
     {
         Value = Read();
         _notified = false;
-        if (_name!.Content.StartsWith(NotifyChangePrefix)) {
-            _name!.Content = _name.Content[NotifyChangePrefix.Length..];
+        if (_name!.Content.StartsWith(_notifyChangePrefix)) {
+            _name!.Content = _name.Content[_notifyChangePrefix.Length..];
         }
     }
 

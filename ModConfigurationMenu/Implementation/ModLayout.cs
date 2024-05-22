@@ -11,12 +11,13 @@ internal class ModLayout : IModLayout
     public IPage IndexPage { get; init; }
     public ModInfo Owner { get; init; }
 
-    public ModLayout(IPage index, ModInfo modInfo)
+    public ModLayout(IPage index)
     {
-        Owner = modInfo;
-        var name = SanitizedName("index");
-        _pages[name] = index;
-        IndexPage = _pages[name];
+        Owner = index.Owner;
+        index.Name = "index";
+        var key = SanitizedName("index");
+        _pages[key] = index;
+        IndexPage = _pages[key];
     }
 
     public IPage? GetPage(string name)
@@ -29,18 +30,19 @@ internal class ModLayout : IModLayout
 
     public IPage AddPage(string name, IPage page)
     {
-        name = SanitizedName(name);
-        if (_pages.TryAdd(name, page)) {
+        page.Name = name;
+        var key = SanitizedName(name);
+        if (_pages.TryAdd(key, page)) {
             Debug.Log($"{page.Owner.Title} added page {name}");
         }
-        return _pages[name];
+        return _pages[key];
     }
 
     public void RemovePage(string name)
     {
-        name = SanitizedName(name);
-        var success = _pages.Remove(name);
-        Debug.Log($"removed page {name}, " + (success ? "success" : "nonexist"));
+        var key = SanitizedName(name);
+        var success = _pages.Remove(key);
+        Debug.Log($"removed page {key}, " + (success ? "success" : "nonexist"));
     }
 
     private string SanitizedName(string name)

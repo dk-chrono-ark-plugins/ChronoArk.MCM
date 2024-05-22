@@ -1,6 +1,5 @@
 ﻿using ChronoArkMod.ModData;
 using Mcm.Implementation.Components;
-using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Mcm.Implementation.Displayables;
 
@@ -17,7 +16,10 @@ internal class McmModEntry : ScriptRef
         Owner = modInfo;
 
         var cover = new McmImage() { MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover };
-        var text = new McmText() { Content = $"{modInfo.Title}\nv{modInfo.Version}" };
+        var text = new McmText() { 
+            Content = $"{modInfo.Title}",
+            Size = new(320f, 320f),
+        };
         var bar = new McmImage() {
             MaskColor = Color.blue
         };

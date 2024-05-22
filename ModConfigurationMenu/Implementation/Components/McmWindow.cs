@@ -2,11 +2,9 @@
 using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
 using Mcm.Api.Configurables;
-using Mcm.Implementation.Configurables;
 using Mcm.Implementation.Displayables;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static ChronoArkMod.ModEditor.Console.ConsoleManager;
 
 namespace Mcm.Implementation.Components;
 

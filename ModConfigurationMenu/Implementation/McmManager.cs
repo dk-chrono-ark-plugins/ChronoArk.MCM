@@ -75,7 +75,7 @@ internal partial class McmManager : IModConfigurationMenu
             // force update?
             modInfo.settings = registry.Settings
                 .ToDictionary(kv => kv.Key, kv => kv.Value.Value);
-            ConfigSerializer.WriteConfig(modInfo.settings, modInfo.modSettingsPath);
+            ConfigCereal.WriteConfig(modInfo.settings, modInfo.modSettingsPath);
             modInfo.WriteMcmConfig(modInfo.settings);
             modInfo.ReadModSetting();
             modInfo.assemblyInfo.Plugins

@@ -7,7 +7,7 @@ namespace Mcm.Implementation.Displayables;
 
 internal class McmText : ScriptRef, IText
 {
-    private TextMeshProUGUI? _text;
+    public TextMeshProUGUI? Text;
     private string? _content;
     private float? _fontsize;
 
@@ -29,7 +29,6 @@ internal class McmText : ScriptRef, IText
             DeferredUpdate();
         }
     }
-    public IImage? Bg { get; init; }
 
     public override Transform Render(Transform parent)
     {
@@ -38,14 +37,15 @@ internal class McmText : ScriptRef, IText
         }
 
         var text = parent.AttachRectTransformObject("McmText");
+
         if (Size == null) {
             text.SetToStretch();
         } else {
             text.sizeDelta = Size.Value;
         }
 
-        _text = text.AddComponent<TextMeshProUGUI>();
-        _text.alignment = TextAlignmentOptions.Center;
+        Text = text.AddComponent<TextMeshProUGUI>();
+        Text.alignment = TextAlignmentOptions.Center;
         DeferredUpdate();
 
         return base.Render(text);
@@ -60,21 +60,21 @@ internal class McmText : ScriptRef, IText
         CoroutineHelper.Deferred(
             () => {
                 if (_fontsize != null) {
-                    _text!.fontSize = _fontsize!.Value;
+                    Text!.fontSize = _fontsize!.Value;
                 } else {
-                    _text!.fontSizeMin = 10f;
-                    _text.fontSizeMax = 40f;
-                    _text.enableAutoSizing = true;
-                    _text.autoSizeTextContainer = true;
+                    Text!.fontSizeMin = 10f;
+                    Text.fontSizeMax = 40f;
+                    Text.enableAutoSizing = true;
+                    Text.autoSizeTextContainer = true;
                 }
                 if (_content != null) {
-                    _text!.text = _content;
+                    Text!.text = _content;
                 }
                 
                 _dirty = true;
                 _deferred = false;
             },
-            () => _text != null
+            () => Text != null
         );
     }
 }

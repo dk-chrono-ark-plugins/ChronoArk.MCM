@@ -460,7 +460,7 @@
     <Compile Include="Implementation\Components\ButtonHighlight.cs" />
     <Compile Include="Implementation\Components\HoverBehaviour.cs" />
     <Compile Include="Implementation\Components\McmWindow.cs" />
-    <Compile Include="Implementation\ConfigSerializer.cs" />
+    <Compile Include="Implementation\ConfigCereal.cs" />
     <Compile Include="Implementation\Configurables\McmConfigurable.cs" />
     <Compile Include="Implementation\Configurables\McmDropdown.cs" />
     <Compile Include="Implementation\Configurables\McmToggle.cs" />

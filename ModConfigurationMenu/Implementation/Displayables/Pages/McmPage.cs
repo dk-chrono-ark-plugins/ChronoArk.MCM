@@ -21,9 +21,11 @@ internal class McmPage : ScriptRef, IPage
     public ModInfo Owner { get; init; }
     public string Title { get; set; }
     public List<IDisplayable> Elements => _elements;
+    public string Name { get; set; }
 
     public McmPage(ModInfo modInfo)
     {
+        Name = "";
         Owner = modInfo;
         Title = $"{Owner.Title}  v{Owner.Version}";
         _titleText = new() { Content = Title };
@@ -83,7 +85,7 @@ internal class McmPage : ScriptRef, IPage
 
         McmManager.ResetModSetting(Owner);
 
-        var page = parent.AttachRectTransformObject($"McmPage:{Owner.Title}");
+        var page = parent.AttachRectTransformObject($"McmPage:{Owner.Title}:{Name}");
         page.sizeDelta = PageSizeFitter.Normal + PageSizeFitter.BorderThickness;
 
         var imageBg = page.AddComponent<Image>();

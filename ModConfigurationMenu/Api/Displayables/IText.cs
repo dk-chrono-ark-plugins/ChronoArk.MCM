@@ -9,5 +9,4 @@ public interface IText : IDisplayable
 {
     string Content { get; set; }
     float? FontSize { get; }
-    IImage? Bg { get; }
 }

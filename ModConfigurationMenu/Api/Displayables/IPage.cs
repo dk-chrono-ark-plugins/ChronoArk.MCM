@@ -21,6 +21,11 @@ public interface IPage : IDisplayable
     /// </summary>
     string Title { get; set; }
 
+    /// <summary>
+    /// Page name, not title
+    /// </summary>
+    string Name { get; set; }
+
     List<IDisplayable> Elements { get; }
 
     /// <summary>
