@@ -41,13 +41,14 @@ public static class ConfigSerializer
         try {
             var path = modInfo.GetMcmConfigPath();
             if (File.Exists(path)) {
-                using var sr = new StreamReader(modInfo.GetMcmConfigPath());
+                using var sr = new StreamReader(path);
                 return JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
             } else if (modInfo.RestoreMcmConfig()) {
                 return modInfo.ReadMcmConfig<T>();
             }
         } catch {
             Debug.Log("failed to read config");
+            throw;
             // noexcept
         }
         return default;

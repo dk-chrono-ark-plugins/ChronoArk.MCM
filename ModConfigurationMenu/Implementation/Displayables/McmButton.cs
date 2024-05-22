@@ -10,7 +10,7 @@ internal class McmButton : ScriptRef, IButton
 {
     private bool _interactable = true;
     private readonly McmImage _buttonImg;
-    private Button? _button;
+    public Button? _button;
 
     public required IDisplayable Content { get; init; }
     public bool Interactable
@@ -58,8 +58,7 @@ internal class McmButton : ScriptRef, IButton
         // button always stretch its content
         buttonHolder.SetToStretch();
         if (!DisableGradient) {
-            var @delegate = button.AddComponent<ButtonHighlight>();
-            @delegate.Button = this;
+            button.AddComponent<ButtonHighlight>().Button = this;
         }
         var content = Content.Render<RectTransform>(buttonHolder);
         // button always stretch its content

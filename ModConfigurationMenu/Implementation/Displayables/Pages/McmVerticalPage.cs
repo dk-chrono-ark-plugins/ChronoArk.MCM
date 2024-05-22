@@ -1,5 +1,6 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
+using TMPro;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
@@ -42,7 +43,6 @@ internal class McmVerticalPage(ModInfo Info) : McmScrollPage(Info)
         foreach (var element in _elements) {
             var grid = element.Render<LayoutElement>(parent);
             grid.preferredWidth = parent.GetComponent<RectTransform>().rect.width - 40f;
-            grid.preferredHeight = grid.GetComponent<RectTransform>().rect.height;
         }
     }
 }

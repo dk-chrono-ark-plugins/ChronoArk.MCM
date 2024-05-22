@@ -6,6 +6,7 @@ using Mcm.Implementation.Configurables;
 using Mcm.Implementation.Displayables;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static ChronoArkMod.ModEditor.Console.ConsoleManager;
 
 namespace Mcm.Implementation.Components;
 
@@ -127,7 +128,7 @@ internal class McmWindow : UIBehaviour
         McmManager.SaveModSetting(Instance.TopPage.Owner);
         Instance.TopPage.Elements
             .OfType<INotifyChanged>()
-            .Do(disp => disp.NotifyApplied());
+            .Do(disp => disp.NotifyApply());
     }
 
     public static void Reset()
@@ -138,7 +139,7 @@ internal class McmWindow : UIBehaviour
         McmManager.ResetModSetting(Instance.TopPage.Owner);
         Instance.TopPage.Elements
             .OfType<INotifyChanged>()
-            .Do(disp => disp.NotifyApplied());
+            .Do(disp => disp.NotifyReset());
     }
 
     private void RenderSelf()
@@ -147,29 +148,43 @@ internal class McmWindow : UIBehaviour
         var layout = McmManager.GetMcmRegistry(modInfo)!.Layout;
         var myPage = layout.GetPage("McmEntry") ??
             throw new InvalidOperationException($"MCM cannot render the entry page...");
+        
         myPage.Clear();
-
-        // populate mod entries
-        ModManager.LoadedMods
-            .Select(ModManager.getModInfo)
-            .Select(mod => new McmModEntry(mod))
-            .Do(myPage.Add);
+        PopulateModIndexes(myPage);
 
         RenderPage(myPage);
     }
 
-    private void RenderMockup2()
+    private void PopulateModIndexes(IPage myPage)
     {
-        var modInfo = ModManager.getModInfo(McmMod.Instance!.ModId);
-        var registry = McmManager.GetMcmRegistry(modInfo);
-        var myPage = registry!.Layout.GetPage("index") ??
-            throw new InvalidOperationException($"MCM cannot render the entry page...");
-        myPage.Clear();
+        Debug.Log($"populating mcm index pages");
 
-        registry!.Settings = modInfo.StubMcmConfig();
-        var setting = registry.Settings;
-        var key = "TestToggleKey";
-        var entry = setting[key];
+        var indexes = new List<McmModEntry>();
+        foreach (var modInfo in ModManager.LoadedMods.Select(ModManager.getModInfo)) {
+            try {
+                var registry = McmManager.GetMcmRegistry(modInfo);
+                if (registry == null) {
+                    McmManager.Instance.Register(modInfo.id);
+                    if (modInfo.settings.Count > 0) {
+                        Debug.Log($"{modInfo.id} has legacy settings and is not registered with MCM");
+                        Debug.Log("attempt to generate a stub page...");
+                        modInfo.StubMcmPage();
+                    }
+                    registry = McmManager.GetMcmRegistry(modInfo)
+                        ?? throw new InvalidOperationException($"cannot populate mod index page for {modInfo.id}");
+                }
+                var modEntry = new McmModEntry(modInfo);
+                modEntry.ModEntry.Interactable = registry.Settings.Count > 0;
+                indexes.Add(modEntry);
+            } catch (Exception ex) {
+                Debug.Log($"failed: {ex.Message}");
+                // noexcept
+            }
+        }
+
+        indexes.OrderByDescending(e => e.ModEntry.Interactable)
+            .ThenBy(e => e.Owner.id)
+            .Do(myPage.Add);
     }
 
     private void LookupOnce()

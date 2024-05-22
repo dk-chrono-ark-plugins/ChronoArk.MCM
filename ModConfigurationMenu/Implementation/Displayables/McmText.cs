@@ -70,6 +70,7 @@ internal class McmText : ScriptRef, IText
                 if (_content != null) {
                     _text!.text = _content;
                 }
+                
                 _dirty = true;
                 _deferred = false;
             },

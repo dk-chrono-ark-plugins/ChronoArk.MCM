@@ -7,10 +7,8 @@ namespace Mcm.Implementation;
 internal class ModLayout : IModLayout
 {
     private readonly Dictionary<string, IPage> _pages = [];
-    private IPage _currentPage;
 
     public IPage IndexPage { get; init; }
-    public IPage CurrentPage => _currentPage;
     public ModInfo Owner { get; init; }
 
     public ModLayout(IPage index, ModInfo modInfo)
@@ -19,18 +17,6 @@ internal class ModLayout : IModLayout
         var name = SanitizedName("index");
         _pages[name] = index;
         IndexPage = _pages[name];
-        _currentPage = _pages[name];
-    }
-
-    public void ChangeToPage(string name)
-    {
-        name = SanitizedName(name);
-        if (_pages.TryGetValue(name, out IPage page)) {
-            _currentPage = page;
-            Debug.Log($"changed current page to {name}");
-        } else {
-            Debug.Log($"can't change current page {name}, it's null");
-        }
     }
 
     public IPage? GetPage(string name)
@@ -53,9 +39,6 @@ internal class ModLayout : IModLayout
     public void RemovePage(string name)
     {
         name = SanitizedName(name);
-        if (GetPage(name) == CurrentPage) {
-            _currentPage = IndexPage;
-        }
         var success = _pages.Remove(name);
         Debug.Log($"removed page {name}, " + (success ? "success" : "nonexist"));
     }

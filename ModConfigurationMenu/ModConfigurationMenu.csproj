@@ -469,6 +469,7 @@
     <Compile Include="Implementation\Displayables\McmImage.cs" />
     <Compile Include="Implementation\Displayables\McmModEntry.cs" />
     <Compile Include="Implementation\Displayables\Pages\McmPage.cs" />
+    <Compile Include="Implementation\I2LocFetch.cs" />
     <Compile Include="Implementation\McmManager_Api.cs" />
     <Compile Include="Implementation\McmSettingEntry.cs" />
     <Compile Include="Implementation\ModStub.cs" />

@@ -6,6 +6,8 @@ global using System;
 global using System.Collections.Generic;
 global using System.Linq;
 global using UnityEngine;
+using ChronoArkMod;
+using ChronoArkMod.ModData;
 using ChronoArkMod.Plugin;
 
 namespace Mcm;
@@ -19,6 +21,7 @@ public class McmMod : ChronoArkPlugin
     private static McmMod? _instance;
     private readonly List<IPatch> _patches = [];
 
+    public static ModInfo ModInfo => ModManager.getModInfo(Instance!.ModId);
     public static McmMod? Instance => _instance;
 
     public override void Dispose()
@@ -41,17 +44,12 @@ public class McmMod : ChronoArkPlugin
         }
 
         var mcm = McmProxy.GetInstance(IModConfigurationMenu.Version.V1);
-        var index = mcm.Register(this);
-        mcm.AddText(this, "Displayable here");
-        mcm.AddToggleOption(this, "TestToggleKey", "Test Key", "Description", true);
+        var index = mcm.Register(ModId);
+        mcm.AddText(ModId, "Displayable here, Displayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable here");
+        mcm.AddToggleOption(ModId, "TestToggleKey", "Test Key", "Description", true);
 
-        mcm.AddPage(this, "McmMockup");
+        mcm.AddPage(ModId, "McmMockup");
         // this is mcm window main entry
-        mcm.AddPage(this, "McmEntry", ICompositeLayout.LayoutGroup.Grid);
-    }
-
-    private void OnBtnClick()
-    {
-        Debug.Log("Option setting clicked");
+        mcm.AddPage(ModId, "McmEntry", ICompositeLayout.LayoutGroup.Grid);
     }
 }

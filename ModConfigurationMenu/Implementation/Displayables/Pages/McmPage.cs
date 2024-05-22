@@ -56,6 +56,7 @@ internal class McmPage : ScriptRef, IPage
                 new(reset, new(100f, 50f)),
             ],
             Spacing = new(10f, 0f),
+            Size = new(400f, 50f),
         };
     }
 
@@ -80,11 +81,14 @@ internal class McmPage : ScriptRef, IPage
             return Ref.transform;
         }
 
+        McmManager.ResetModSetting(Owner);
+
         var page = parent.AttachRectTransformObject($"McmPage:{Owner.Title}");
         page.sizeDelta = PageSizeFitter.Normal + PageSizeFitter.BorderThickness;
 
         var imageBg = page.AddComponent<Image>();
         imageBg.color = Color.black;
+
         var imageFg = page.AddComponent<Outline>();
         imageFg.effectColor = Color.white;
         imageFg.effectDistance = PageSizeFitter.BorderThickness;
@@ -95,7 +99,6 @@ internal class McmPage : ScriptRef, IPage
         title.sizeDelta = page.sizeDelta with { y = 50f };
 
         var buttons = _buttons.Render<RectTransform>(page);
-        buttons.sizeDelta = new(400f, 50f);
         buttons.AlignToBottom(new(0f, -80f));
 
         return base.Render(page);

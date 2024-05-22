@@ -10,7 +10,7 @@ namespace Mcm.Implementation.Configurables;
 
 internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
 {
-    public const string NotifyChangePrefix = "<b>*</b> ";
+    public const string NotifyChangePrefix = "<b><color=yellow>!!</color></b>  ";
 
     private readonly McmComposite _entry;
     private McmText? _name;
@@ -69,7 +69,7 @@ internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
         return base.Render(option);
     }
 
-    public void NotifyChanged()
+    public void NotifyChange()
     {
         if (!_notified) {
             _name!.Content = NotifyChangePrefix + _name.Content;
@@ -77,11 +77,20 @@ internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
         }
     }
 
-    public void NotifyApplied()
+    public void NotifyApply()
     {
         if (_notified && _name!.Content.StartsWith(NotifyChangePrefix)) {
             _name.Content = _name.Content[NotifyChangePrefix.Length..];
             _notified = false;
+        }
+    }
+
+    public void NotifyReset()
+    {
+        Value = Read();
+        _notified = false;
+        if (_name!.Content.StartsWith(NotifyChangePrefix)) {
+            _name!.Content = _name.Content[NotifyChangePrefix.Length..];
         }
     }
 

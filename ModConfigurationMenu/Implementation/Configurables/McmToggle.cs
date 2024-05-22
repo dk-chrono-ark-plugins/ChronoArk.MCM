@@ -52,6 +52,10 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
 
     public override Transform Render(Transform parent)
     {
+        if (Ref != null) {
+            return Ref.transform;
+        }
+
         var button = new McmButton() {
             Content = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal) {
                 Composites = [
@@ -82,7 +86,8 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
     public void SetState(bool state)
     {
         Value = state;
-        NotifyChanged();
+        Save(_value);
+        NotifyChange();
     }
 
     public override void DeferredUpdate()
@@ -94,7 +99,6 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
         CoroutineHelper.Deferred(
             () => {
                 UpdateVisual();
-                Save(_value);
                 _dirty = true;
                 _deferred = false;
             },

@@ -2,6 +2,7 @@
 
 public interface INotifyChanged
 {
-    void NotifyChanged();
-    void NotifyApplied();
+    void NotifyChange();
+    void NotifyApply();
+    void NotifyReset();
 }

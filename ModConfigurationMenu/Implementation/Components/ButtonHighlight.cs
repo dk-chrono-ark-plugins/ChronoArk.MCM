@@ -1,4 +1,5 @@
-﻿using Mcm.Implementation.Displayables;
+﻿using ChronoArkMod.Helper;
+using Mcm.Implementation.Displayables;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,6 +14,16 @@ internal class ButtonHighlight : HoverBehaviour
     private Color? _original;
 
     public required McmButton Button { get; set; }
+
+    protected override void OnDisable()
+    {
+        _cancel = true;
+        var outline = Button.Ref?.GetComponentInChildren<Outline>();
+        if (outline == null) {
+            return;
+        }
+        outline.effectColor = _original ?? Color.white;
+    }
 
     public override void OnPointerEnter(PointerEventData eventData)
     {
@@ -32,12 +43,7 @@ internal class ButtonHighlight : HoverBehaviour
 
     public override void OnPointerExit(PointerEventData eventData)
     {
-        _cancel = true;
-        var outline = Button.Ref?.GetComponentInChildren<Outline>();
-        if (outline == null) {
-            return;
-        }
-        outline.effectColor = _original ?? Color.white;
+        OnDisable();
     }
 
     internal IEnumerator GradientColor(Outline outline)

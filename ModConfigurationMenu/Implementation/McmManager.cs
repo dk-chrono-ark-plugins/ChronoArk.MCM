@@ -1,5 +1,6 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
+using ChronoArkMod.Plugin;
 using Mcm.Api.Configurables;
 
 namespace Mcm.Implementation;
@@ -11,7 +12,7 @@ internal partial class McmManager : IModConfigurationMenu
     public sealed record McmRegistry(IModLayout Layout)
     {
         public Dictionary<string, McmSettingEntry> Settings = [];
-        public bool Dirty = false;
+        public bool Dirty = true;
     }
 
     public const IModConfigurationMenu.Version McmInstanceVersion = IModConfigurationMenu.Version.V1;
@@ -75,8 +76,10 @@ internal partial class McmManager : IModConfigurationMenu
             modInfo.settings = registry.Settings
                 .ToDictionary(kv => kv.Key, kv => kv.Value.Value);
             ConfigSerializer.WriteConfig(modInfo.settings, modInfo.modSettingsPath);
-            modInfo.ReadModSetting();
             modInfo.WriteMcmConfig(modInfo.settings);
+            modInfo.ReadModSetting();
+            modInfo.assemblyInfo.Plugins
+                .ForEach(p => p.OnModSettingUpdate());
             registry.Dirty = false;
         }
     }
@@ -86,7 +89,10 @@ internal partial class McmManager : IModConfigurationMenu
         if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
             return;
         }
-        registry.Settings = modInfo.ReadMcmConfig<Dictionary<string, McmSettingEntry>>() ?? [];
+        var current = modInfo.ReadMcmConfig<Dictionary<string, object>>() ?? []; 
+        current.Keys
+           .Where(registry.Settings.ContainsKey)
+           .Do(key => registry.Settings[key].Value = current[key]);
         registry.Dirty = false;
     }
 }

@@ -33,26 +33,26 @@ public interface IModConfigurationMenu
     /// <returns>Index <see cref="IPage"/><br/>
     /// Use it to add custom displayables
     /// </returns>
-    IPage Register(ChronoArkPlugin mod);
+    IPage Register(string mod);
 
     /// <summary>
     /// Unregister from MCM
     /// </summary>
     /// <param name="mod">Your mod, don't use others...</param>
-    void Unregister(ChronoArkPlugin mod);
+    void Unregister(string mod);
 
     // Config options
 
     /// <summary>
     /// Add a toggle option to the index page
     /// </summary>
-    /// <param name="mod">Your mod, don't use others...</param>
+    /// <param name="mod">Your mod id, don't use others...</param>
     /// <param name="key">Unique key of this option</param>
     /// <param name="name">Display name, supports <see cref="I2.Loc"/> keys</param>
     /// <param name="description">Display description, supports <see cref="I2.Loc"/> keys</param>
     /// <param name="default">Default value</param>
     /// <returns><see cref="IToggle"/> can be used to change state externally</returns>
-    IToggle AddToggleOption(ChronoArkPlugin mod, string key, string name, string description, bool @default);
+    IToggle AddToggleOption(string mod, string key, string name, string description, bool @default);
 
 
 
@@ -67,7 +67,7 @@ public interface IModConfigurationMenu
     /// <param name="name">Name of the page, don't use "index"</param>
     /// <param name="layout">Page layout, default to vertical</param>
     /// <returns>New <see cref="IPage"/> to use for custom rendering</returns>
-    IPage AddPage(ChronoArkPlugin mod, string name, ICompositeLayout.LayoutGroup layout = ICompositeLayout.LayoutGroup.Vertical);
+    IPage AddPage(string mod, string name, ICompositeLayout.LayoutGroup layout = ICompositeLayout.LayoutGroup.Vertical);
 
     // UI elements renders from top to bottom
 
@@ -77,7 +77,7 @@ public interface IModConfigurationMenu
     /// <param name="mod">Your mod, don't use others...</param>
     /// <param name="text">The text to display</param>
     /// <returns><see cref="IText"/> can be saved for later modification</returns>
-    IText AddText(ChronoArkPlugin mod, string text);
+    IText AddText(string mod, string text);
 
     /// <summary>
     /// Add a sprite to index page
@@ -85,7 +85,7 @@ public interface IModConfigurationMenu
     /// <param name="mod">Your mod, don't use others...</param>
     /// <param name="sprite">The sprite to display</param>
     /// <returns><see cref="IImage"/> can be saved for later modification</returns>
-    IImage AddImage(ChronoArkPlugin mod, Sprite sprite);
+    IImage AddImage(string mod, Sprite sprite);
 
     /// <summary>
     /// Add a simple image to index page
@@ -93,7 +93,7 @@ public interface IModConfigurationMenu
     /// <param name="mod">Your mod, don't use others...</param>
     /// <param name="color">The mask color to display</param>
     /// <returns><see cref="IImage"/> can be saved for later modification</returns>
-    IImage AddImage(ChronoArkPlugin mod, Color color);
+    IImage AddImage(string mod, Color color);
 }
 
 public static class McmProxy

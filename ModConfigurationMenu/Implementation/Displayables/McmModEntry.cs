@@ -1,5 +1,6 @@
 ﻿using ChronoArkMod.ModData;
 using Mcm.Implementation.Components;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Mcm.Implementation.Displayables;
 
@@ -9,9 +10,12 @@ internal class McmModEntry : ScriptRef
 {
     public readonly McmButton ModEntry;
     public override Vector2? Size => new(320f, 640f);
+    public ModInfo Owner { get; init; }
 
     public McmModEntry(ModInfo modInfo)
     {
+        Owner = modInfo;
+
         var cover = new McmImage() { MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover };
         var text = new McmText() { Content = $"{modInfo.Title}\nv{modInfo.Version}" };
         var bar = new McmImage() {

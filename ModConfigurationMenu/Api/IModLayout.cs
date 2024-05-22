@@ -10,10 +10,8 @@ namespace Mcm.Api;
 public interface IModLayout
 {
     IPage IndexPage { get; init; }
-    IPage CurrentPage { get; }
     ModInfo Owner { get; init; }
 
-    void ChangeToPage(string name);
     IPage? GetPage(string name);
     IPage AddPage(string name, IPage page);
     void RemovePage(string name);
