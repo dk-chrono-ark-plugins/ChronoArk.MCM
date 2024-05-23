@@ -2,6 +2,7 @@
 using I2.Loc;
 using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
+using System.Security.Cryptography;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Configurables;
@@ -13,25 +14,14 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
     private readonly McmComposite _on;
     private readonly McmComposite _off;
     private readonly McmButton _toggle;
-    private bool _value;
-
-    public override bool Value
-    {
-        get => _value;
-        set
-        {
-            _value = value;
-            DeferredUpdate();
-        }
-    }
 
     public McmToggle(string key, McmSettingEntry entry) : base(key, entry.Name, entry.Description)
     {
         _on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap) {
             Composites = [
                 new(new McmImage() {
-                        MaskColor = Color.black,
-                        BorderColor = Color.clear,
+                        MaskColor = PageStyle.BackColor,
+                        BorderColor = PageStyle.BorderColor,
                         BorderThickness = new(0f, 0f),
                     },
                     new(400f, 100f)),
@@ -46,8 +36,8 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
         _off = new McmComposite(ICompositeLayout.LayoutGroup.Overlap) {
             Composites = [
                 new(new McmImage(){
-                        MaskColor = Color.black,
-                        BorderColor = Color.clear,
+                        MaskColor = PageStyle.BackColor,
+                        BorderColor = PageStyle.BorderColor,
                         BorderThickness = new(0f, 0f),
                     },
                     new(400f, 100f)),
@@ -69,7 +59,7 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
                 Padding = new(5, 5, 10, 10),
                 Spacing = new(5f, 0f),
             },
-            OnClick = () => SetState(!Value),
+            OnClick = () => SetValue(!Value),
             DisableGradient = true,
         };
     }
@@ -80,27 +70,29 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
             return Ref.transform;
         }
 
-        MergeSetting(new(_toggle, new(800f, 100f)));
-        CoroutineHelper.Deferred(() => Value = Read());
+        var group = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal) {
+            Composites = [
+                .. _entry,
+                new(_toggle, new(800f, 100f)),
+            ],
+            Size = new(1000f, 100f),
+            Spacing = new(10f, 10f),
+        };
 
-        return base.Render(parent);
-    }
+        var toggle = group.Render(parent);
+        Value = Read();
 
-    public void SetState(bool state)
-    {
-        Value = state;
-        Save(_value);
-        NotifyChange();
+        return base.Render(toggle);
     }
 
     public override void Update()
     {
-        if (_on.Composites[0].Displayable is McmImage on) {
-            on.Image!.GetComponent<Outline>().effectColor = _value ? Color.white : Color.black;
+        if (_on.Composites[0]?.Displayable is McmImage on) {
+            on.Image!.GetComponent<Outline>().effectColor = _value ? PageStyle.BorderColor : Color.clear;
             on.Image!.GetComponent<Outline>().effectDistance = _value ? new(5f, 5f) : Vector2.zero;
         }
-        if (_off.Composites[0].Displayable is McmImage off) {
-            off.Image!.GetComponent<Outline>().effectColor = !_value ? Color.white : Color.black;
+        if (_off.Composites[0]?.Displayable is McmImage off) {
+            off.Image!.GetComponent<Outline>().effectColor = !_value ? PageStyle.BorderColor : Color.clear;
             off.Image!.GetComponent<Outline>().effectDistance = !_value ? new(5f, 5f) : Vector2.zero;
         }
         if (_toggle.Background is McmImage bg) {

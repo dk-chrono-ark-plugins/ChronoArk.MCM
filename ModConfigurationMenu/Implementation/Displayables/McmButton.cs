@@ -29,9 +29,9 @@ internal class McmButton : ScriptRef, IButton
     public McmButton()
     {
         _buttonImg = new() {
-            BorderColor = Color.white,
+            BorderColor = PageStyle.BorderColor,
             BorderThickness = new(3f, 3f),
-            MaskColor = Color.black,
+            MaskColor = PageStyle.BackColor,
         };
     }
 

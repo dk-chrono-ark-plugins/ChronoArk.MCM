@@ -3,6 +3,8 @@ using System.IO;
 
 namespace Mcm.Implementation;
 
+#nullable enable
+
 public static class LoadAsset
 {
     public static Texture2D LoadTexture2D(this ModInfo modInfo, string filename, bool absens = false)

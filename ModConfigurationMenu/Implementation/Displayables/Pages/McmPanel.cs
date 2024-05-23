@@ -66,14 +66,14 @@ internal class McmPanel : McmPage
         }
 
         var page = parent.AttachRectTransformObject($"McmPage:{Owner.Title}:{Name}");
-        page.sizeDelta = PageSizeFitter.Normal + PageSizeFitter.BorderThickness;
+        page.sizeDelta = PageStyle.Normal + PageStyle.BorderThickness;
 
         var imageBg = page.AddComponent<Image>();
-        imageBg.color = Color.black;
+        imageBg.color = PageStyle.BackColor;
 
         var imageFg = page.AddComponent<Outline>();
-        imageFg.effectColor = Color.white;
-        imageFg.effectDistance = PageSizeFitter.BorderThickness;
+        imageFg.effectColor = PageStyle.BorderColor;
+        imageFg.effectDistance = PageStyle.BorderThickness;
 
         var title = _titleText.Render<RectTransform>(page);
         title.AlignToTop(new(0f, 20f));

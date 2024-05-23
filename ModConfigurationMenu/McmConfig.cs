@@ -1,6 +1,8 @@
 ﻿namespace Mcm.Implementation;
 
-internal record McmConfig
+#nullable enable
+
+internal sealed record McmConfig
 {
-    public bool SomeBool { get; set; } = false;
+    internal bool SwapColorKey { get; set; } = false;
 }

@@ -18,7 +18,12 @@ internal partial class McmManager : IModConfigurationMenu
         var registry = new McmRegistry(new ModLayout(new McmVerticalPage(modInfo)));
         if (_registries.TryAdd(modInfo, registry)) {
             Debug.Log($"registered {mod}");
-            return _registries[modInfo].Layout;
+            var layout = _registries[modInfo].Layout;
+            if (modInfo.NeedRestartWhenSettingChanged) {
+                layout.IndexPage.AddText(McmLoc.Page.RestartPrompt);
+                layout.IndexPage.AddSeparator();
+            }
+            return layout;
         } else {
             throw new InvalidOperationException($"failed to register {mod}");
         }

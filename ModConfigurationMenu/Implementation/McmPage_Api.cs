@@ -2,6 +2,8 @@
 
 namespace Mcm.Implementation;
 
+#nullable enable
+
 internal partial class McmPage : ScriptRef, IPage
 {
     public IImage AddImage(Color color)

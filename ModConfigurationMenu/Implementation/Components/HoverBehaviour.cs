@@ -2,6 +2,8 @@
 
 namespace Mcm.Implementation.Components;
 
+#nullable enable
+
 internal class HoverBehaviour : UIBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public virtual void OnPointerEnter(PointerEventData eventData)

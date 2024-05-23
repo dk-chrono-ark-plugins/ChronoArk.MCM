@@ -11,7 +11,7 @@ namespace Mcm.Implementation.Displayables;
 /// </summary>
 internal class McmGridPage(ModInfo Info) : McmScrollPage(Info)
 {
-    public Vector2 CellSize = new(320f, 480f);
+    public Vector2 CellSize = new(320f, 400f);
 
     public override Transform Render(Transform parent)
     {

@@ -1,8 +1,11 @@
 ﻿namespace Mcm.Api.Configurables;
 
+#nullable enable
+
 public interface IDropdown : IConfigurable<int>
 {
-    List<IDropdownEntry> Options { get; }
-
-    int CurrentOption { get; }
+    /// <summary>
+    /// List of options
+    /// </summary>
+    IDisplayable[] Options { get; }
 }

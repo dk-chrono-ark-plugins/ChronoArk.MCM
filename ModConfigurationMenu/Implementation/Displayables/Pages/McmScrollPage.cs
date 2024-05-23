@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
+#nullable enable
+
 /// <summary>
 /// Scroll rect page, will return a content holder to the render pipe
 /// </summary>
@@ -18,7 +20,7 @@ internal class McmScrollPage(ModInfo Info) : McmPanel(Info)
         parent = base.Render(parent);
 
         var scrollView = parent.AttachRectTransformObject("ScrollView", false);
-        scrollView.sizeDelta = PageSizeFitter.Normal - PageSizeFitter.BorderThickness;
+        scrollView.sizeDelta = PageStyle.Normal - PageStyle.BorderThickness;
         scrollView.SetToStretch();
         scrollView.localScale = Vector3.one;
 

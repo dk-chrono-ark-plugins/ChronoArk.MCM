@@ -43,7 +43,7 @@ internal class McmVerticalPage(ModInfo Info) : McmScrollPage(Info)
             var grid = element.Render<LayoutElement>(parent);
             var image = grid.GetComponent<Image>();
             if (image != null && image.sprite != null) {
-                var imageSize = image.sprite.rect.size;
+                var imageSize = image.GetComponent<RectTransform>().sizeDelta;
                 grid.minWidth = imageSize.x;
                 grid.minHeight = imageSize.y;
 

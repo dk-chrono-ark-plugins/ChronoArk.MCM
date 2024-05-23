@@ -16,9 +16,10 @@ internal partial class ModLayout : IModLayout
     public ModLayout(IPage index)
     {
         Owner = index.Owner;
+        index.Name = "index";
         var key = SanitizedName("index");
         _pages[key] = index;
-        IndexPage = _pages[key];
+        IndexPage = index;
     }
 
     public IPage AddPage(string name, ICompositeLayout.LayoutGroup layout, bool showAsEntry = false)

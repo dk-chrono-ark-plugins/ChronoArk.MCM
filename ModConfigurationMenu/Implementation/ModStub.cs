@@ -16,29 +16,30 @@ public static class ModStub
     public static Dictionary<string, McmSettingEntry> StubMcmConfig(this ModInfo modInfo)
     {
         modInfo.ReadModSetting();
+
         return modInfo.ModSettingEntries.ToDictionary(
             entry => entry.Key,
             entry => {
-                var setting = new McmSettingEntry() {
-                    Name = entry.DisplayName,
-                    Description = entry.Description,
-                };
+                var setting = new McmSettingEntry(entry.DisplayName, entry.Description);
 
-                if (entry is DropdownSetting) {
+                if (entry is DropdownSetting dropdown) {
                     setting.EntryType = IBasicEntry.EntryType.Dropdown;
-                    setting.Value = modInfo.GetSetting<DropdownSetting>(entry.Key).Value;
-                } else if (entry is InputFieldSetting) {
+                    setting.Value = dropdown.Value;
+                } else if (entry is InputFieldSetting input) {
                     setting.EntryType = IBasicEntry.EntryType.Input;
-                    setting.Value = modInfo.GetSetting<InputFieldSetting>(entry.Key).Value;
-                } else if (entry is InputFieldSetting_Int) {
+                    setting.Value = input.Value;
+                } else if (entry is InputFieldSetting_Int inputInt) {
                     setting.EntryType = IBasicEntry.EntryType.Input;
-                    setting.Value = modInfo.GetSetting<InputFieldSetting_Int>(entry.Key).Value;
-                } else if (entry is SliderSetting) {
+                    setting.Value = inputInt.Value;
+                } else if (entry is SliderSetting slider) {
                     setting.EntryType = IBasicEntry.EntryType.Slider;
-                    setting.Value = modInfo.GetSetting<SliderSetting>(entry.Key).Value;
-                } else if (entry is ToggleSetting) {
+                    setting.Value = slider.Value;
+                    setting.Min = slider.MinValue;
+                    setting.Max = slider.MaxValue;
+                    setting.Step = slider.StepSize;
+                } else if (entry is ToggleSetting toggle) {
                     setting.EntryType = IBasicEntry.EntryType.Toggle;
-                    setting.Value = modInfo.GetSetting<ToggleSetting>(entry.Key).Value;
+                    setting.Value = toggle.Value;
                 }
 
                 return setting;
@@ -62,9 +63,8 @@ public static class ModStub
         Debug.Log("attempt to generate a stub page...");
 
         var index = registry.Layout.IndexPage;
-        index.Clear();
 
-        index.AddText("StubPage");
+        index.AddText(McmLoc.Page.StubPrompt);
         index.AddSeparator();
 
         foreach (var (key, entry) in modInfo.StubMcmConfig()) {
@@ -73,11 +73,17 @@ public static class ModStub
                     break;
                 case IBasicEntry.EntryType.Input:
                     break;
-                case IBasicEntry.EntryType.Slider:
+                case IBasicEntry.EntryType.Slider: {
+                    registry.Layout.AddSliderOption(key, entry.Name, entry.Description,
+                        min: entry.Min.GetValueOrDefault(),
+                        max: entry.Max.GetValueOrDefault(),
+                        step: entry.Step.GetValueOrDefault(),
+                        set: (_) => { } // already saving in mcm
+                    );
                     break;
+                }
                 case IBasicEntry.EntryType.Toggle: {
                     registry.Layout.AddToggleOption(key, entry.Name, entry.Description,
-                        get: () => modInfo.GetMcmConfig<bool>(key),
                         set: (value) => modInfo.SetMcmConfig(key, value)
                     );
                     break;
@@ -86,7 +92,6 @@ public static class ModStub
                     break;
             }
         }
-        McmManager.SaveMcmConfig(modInfo);
     }
 
     public static T GetMcmConfig<T>(this ModInfo modInfo, string key)

@@ -8,7 +8,7 @@ namespace Mcm.Implementation.Displayables;
 internal class McmModEntry : ScriptRef
 {
     public readonly McmButton ModEntry;
-    public override Vector2? Size => new(320f, 640f);
+    public override Vector2? Size => new(320f, 400f);
     public ModInfo Owner { get; init; }
 
     public McmModEntry(ModInfo modInfo, IPage? pageOverride = null, IImage? coverOverride = null, IDisplayable? barOverride = null)
@@ -22,14 +22,12 @@ internal class McmModEntry : ScriptRef
             Content = pageOverride?.Title ?? modInfo.Title,
             Size = new(320f, 320f),
         };
-        var bar = barOverride ?? new McmImage() {
-            MaskColor = Color.blue
-        };
+        //var bar = barOverride ?? new McmImage() { MaskColor = Color.blue };
         var modEntryInternal = new McmComposite(ICompositeLayout.LayoutGroup.Vertical) {
             Composites = [
                 new(cover, new(0f, 320f)),
                 new(text, new(0f, 80f)),
-                new(bar, new(0f, 80f)),
+                //new(bar, new(0f, 80f)),
             ]
         };
         ModEntry = new() {
@@ -52,8 +50,9 @@ internal class McmModEntry : ScriptRef
         }
 
         var modEntry = ModEntry.Render<RectTransform>(parent);
-
+        
         modEntry.sizeDelta = Size!.Value;
+        (ModEntry.Background as McmImage)!.Image!.color = Color.black;
 
         return base.Render(modEntry);
     }

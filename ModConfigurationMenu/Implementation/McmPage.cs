@@ -2,13 +2,15 @@
 
 namespace Mcm.Implementation;
 
+#nullable enable
+
 internal partial class McmPage(ModInfo Info) : ScriptRef, IPage
 {
     protected readonly List<IDisplayable> _elements = [];
 
     public ModInfo Owner => Info;
-    public virtual string Title { get; set; }
-    public virtual string Name { get; set; }
+    public virtual string Title { get; set; } = McmLoc.Page.Untitled;
+    public virtual string Name { get; set; } = "_";
     public List<IDisplayable> Elements => _elements;
 
     public virtual void Add(IDisplayable displayable)

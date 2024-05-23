@@ -11,9 +11,9 @@ namespace Mcm.Implementation.Components;
 internal class McmWindow : UIBehaviour
 {
     private static bool _onceFlag;
+    private readonly List<IPage> _pageHierarchy = [];
     private bool _shouldReturn = true;
     private Canvas? _canvas;
-    private readonly List<IPage> _pageHierarchy = [];
 
     public IPage? TopPage
     {
@@ -142,24 +142,13 @@ internal class McmWindow : UIBehaviour
         var layout = McmManager.GetMcmRegistry(modInfo)!.Layout;
         var myPage = layout.GetPage("McmEntry") ??
             throw new InvalidOperationException($"MCM cannot render the entry page...");
+
         myPage.Clear();
-
-        RenderStub();
-
         McmManager.Instance
             .PopulateModEntries()
             .ForEach(myPage.Add);
 
         RenderPage(myPage);
-    }
-
-    private void RenderStub()
-    {
-        McmMod.ModInfo.StubMcmPage();
-
-        MyLayout!.IndexPage.AddSeparator();
-        MyLayout!.IndexPage.AddText("Displayable here, Displayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable here");
-        MyLayout!.IndexPage.AddSeparator();
     }
 
     private void LookupOnce()

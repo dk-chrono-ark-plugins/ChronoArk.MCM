@@ -2,22 +2,23 @@
 
 namespace Mcm.Implementation;
 
-internal sealed record McmSettingEntry
+#nullable enable
+
+public sealed record McmSettingEntry
 {
-    public string Name;
-    public string Description;
-    public object Value;
-    public IBasicEntry.EntryType EntryType;
+    public string Name { get; init; } = "";
+    public string Description { get; init; } = "";
+    public IBasicEntry.EntryType EntryType { get; set; } = IBasicEntry.EntryType.Unknown;
+    public object Value { get; set; } = new();
+    public float? Min { get; set; } = null;
+    public float? Max { get; set; } = null;
+    public float? Step { get; set; } = null;
+    public string[]? Options { get; set; } = null;
 
-    public McmSettingEntry()
-    {
-    }
 
-    public McmSettingEntry(string name, string description, object value, IBasicEntry.EntryType entryType)
+    public McmSettingEntry(string name, string description)
     {
         Name = name;
         Description = description;
-        Value = value;
-        EntryType = entryType;
     }
 }

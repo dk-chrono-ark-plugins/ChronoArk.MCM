@@ -1,9 +1,12 @@
 ﻿namespace Mcm.Api.Configurables;
 
+#nullable enable
+
 public interface IBasicEntry
 {
     enum EntryType
     {
+        Unknown,
         // CARK supported
         Dropdown,
         Input,

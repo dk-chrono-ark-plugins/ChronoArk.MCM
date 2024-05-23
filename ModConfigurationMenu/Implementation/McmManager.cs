@@ -101,6 +101,7 @@ internal partial class McmManager : IModConfigurationMenu
         if (registry.Settings.TryGetValue(key, out var settings)) {
             settings.Value = value;
         }
+
         registry.Dirty = true;
     }
 
@@ -108,20 +109,23 @@ internal partial class McmManager : IModConfigurationMenu
     /// Save all
     /// </summary>
     /// <param name="modInfo"></param>
-    public static void SaveMcmConfig(ModInfo modInfo)
+    public static void SaveMcmConfig(ModInfo modInfo, bool force = false)
     {
         if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
             return;
         }
-        if (registry.Dirty) {
+        if (registry.Dirty || force) {
             // force update?
             modInfo.settings = registry.Settings
                 .ToDictionary(kv => kv.Key, kv => kv.Value.Value);
+
             ConfigCereal.WriteConfig(modInfo.settings, modInfo.modSettingsPath);
             modInfo.WriteMcmConfig(modInfo.settings);
+
             modInfo.ReadModSetting();
             modInfo.assemblyInfo.Plugins
                 .ForEach(p => p.OnModSettingUpdate());
+
             registry.Dirty = false;
         }
     }
@@ -135,10 +139,12 @@ internal partial class McmManager : IModConfigurationMenu
         if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
             return;
         }
+
         var current = modInfo.ReadMcmConfig<Dictionary<string, object>>() ?? [];
         current.Keys
            .Where(registry.Settings.ContainsKey)
            .Do(key => registry.Settings[key].Value = current[key]);
+
         registry.Dirty = false;
     }
 }

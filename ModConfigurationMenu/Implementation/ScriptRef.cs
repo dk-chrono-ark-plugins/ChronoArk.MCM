@@ -11,7 +11,7 @@ internal class ScriptRef : IDeferredUpdate, IDisplayable
     private object? _deferredLock = null;
 
     public GameObject? Ref { get; private set; }
-    public virtual Vector2? Size { get; init; }
+    public virtual Vector2? Size { get; set; }
     public bool Deferred { get; }
     public bool Dirty => _dirty;
 
@@ -40,7 +40,7 @@ internal class ScriptRef : IDeferredUpdate, IDisplayable
     public void Destroy()
     {
         if (Ref != null) {
-            UnityEngine.Object.DestroyImmediate(Ref);
+            UnityEngine.Object.Destroy(Ref);
             Ref = null;
         }
     }
@@ -63,6 +63,5 @@ internal class ScriptRef : IDeferredUpdate, IDisplayable
 
     public virtual void Update()
     {
-        throw new NotImplementedException();
     }
 }

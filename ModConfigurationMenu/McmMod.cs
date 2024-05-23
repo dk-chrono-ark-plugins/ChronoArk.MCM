@@ -43,22 +43,7 @@ public class McmMod : ChronoArkPlugin
         // mcm window main entry
         layout.AddPage("McmEntry", ICompositeLayout.LayoutGroup.Grid).Title = "Mod Configuration Menu";
 
-        // mcm own configs
-        //layout.AddToggleOption("TestToggleKey", "Test Key", "Description", true);
-
-        Mockup(layout);
-    }
-
-    private void Mockup(IModLayout layout)
-    {
-        // mcm mockup
-        var mockup = layout.AddPage("McmMockup", ICompositeLayout.LayoutGroup.Vertical, true);
-        mockup.Title = "Mcm Mockup & Playground";
-        mockup.AddSeparator();
-        mockup.AddImage("cover.png");
-        mockup.AddSeparator();
-        mockup.AddText("okay this is text component");
-        mockup.AddImage("absss.png");
-        mockup.AddSeparator();
+        McmMockup.Mockup(layout);
+        McmMockup.Stub(layout);
     }
 }

@@ -21,6 +21,23 @@ public static class ConfigCereal
         }
     }
 
+    public static bool ReadConfig<T>(string path, out T? inferred)
+    {
+        try {
+            if (File.Exists(path)) {
+                using var sr = new StreamReader(path);
+                inferred = JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
+                return true;
+            }
+        } catch {
+            Debug.Log("failed to read config");
+            throw;
+            // noexcept
+        }
+        inferred = default;
+        return false;
+    }
+
     public static void WriteMcmConfig<T>(this ModInfo modInfo, T data)
     {
         try {
@@ -49,7 +66,6 @@ public static class ConfigCereal
         } catch {
             Debug.Log("failed to read config");
             throw;
-            // noexcept
         }
         return default;
     }

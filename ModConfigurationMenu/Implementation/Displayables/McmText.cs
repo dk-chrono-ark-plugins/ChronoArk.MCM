@@ -7,7 +7,7 @@ namespace Mcm.Implementation.Displayables;
 
 internal class McmText : ScriptRef, IText
 {
-    public TextMeshProUGUI? Text;
+    public TextMeshProUGUI? Text { get; private set; }
     private string? _content;
     private float? _fontsize;
 

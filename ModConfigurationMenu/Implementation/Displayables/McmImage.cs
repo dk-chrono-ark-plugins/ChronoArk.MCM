@@ -20,11 +20,6 @@ internal class McmImage : ScriptRef, IImage
         }
 
         var image = parent.AttachRectTransformObject("McmImage");
-        if (Size == null) {
-            image.SetToStretch();
-        } else {
-            image.sizeDelta = Size.Value;
-        }
 
         Image = image.AddComponent<Image>();
         if (BorderColor != null) {
@@ -38,6 +33,16 @@ internal class McmImage : ScriptRef, IImage
         }
         if (MainSprite != null) {
             Image.sprite = MainSprite;
+        }
+
+        if (Size == null) {
+            if (MainSprite != null) {
+                image.sizeDelta = Image.sprite.rect.size;
+            } else {
+                image.SetToStretch();
+            }
+        } else {
+            image.sizeDelta = Size.Value;
         }
 
         return base.Render(image);

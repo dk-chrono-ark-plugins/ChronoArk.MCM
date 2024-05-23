@@ -8,92 +8,98 @@ namespace Mcm.Implementation.Configurables;
 
 internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
 {
-    private readonly McmComposite _entry;
-    private McmText? _name;
+    protected T _value = default!;
+    protected readonly ICompositeLayout.Composite[] _entry;
+    private readonly McmText _name;
     private bool _notified;
 
     public virtual string Id { get; init; }
-    public virtual string? Name { get; set; }
-    public virtual string? Description { get; set; }
+    public virtual string Name { get; init; }
+    public virtual string Description { get; init; }
     public virtual required Action<T> Save { get; init; }
     public virtual required Func<T> Read { get; init; }
     public virtual required ModInfo Owner { get; init; }
     public virtual T Value
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => _value;
+        set
+        {
+            _value = value;
+            DeferredUpdate();
+        }
     }
+
     public IBasicEntry.EntryType SettingType { get; init; }
 
-    private static string _notifyChangePrefix => McmMod.ModInfo.I2Loc("Mcm/Page/Changed");
-
-    protected McmConfigurable(string key, string name, string description)
+    protected McmConfigurable(string key, string name, string desc)
     {
         Id = key;
         Name = name;
-        Description = description;
-
-        _entry = new(ICompositeLayout.LayoutGroup.Horizontal) {
-            Composites = [],
-            Size = new(1000f, 100f),
-            Spacing = new(10f, 10f),
-        };
-    }
-
-    public override Transform Render(Transform parent)
-    {
-        if (Ref != null) {
-            return Ref.transform;
-        }
+        Description = desc;
 
         _name = new McmText() {
-            Content = Name ?? "Unknown Setting",
+            Content = name,
             FontSize = 30f,
             Size = new(400f, 100f),
         };
-        var desc = new McmText() {
-            Content = Description ?? string.Empty,
+        var _desc = new McmText() {
+            Content = Description,
             Size = new(400f, 100f),
             FontSize = 30f,
         };
-        _entry.Composites = [
+        _entry = [
             new(_name, new(400f, 100f)),
-            new(desc, new(400f, 100f)),
-            _entry.Composites[0],
+            new(_desc, new(400f, 100f)),
         ];
-
-        var option = _entry.Render<RectTransform>(parent);
-
-        return base.Render(option);
     }
 
-    public void NotifyChange()
+    public virtual void SetValue(T value)
+    {
+        Value = value;
+        Save(_value);
+        NotifyChange();
+    }
+
+    public void NotifyChange(object? payload = null)
     {
         if (!_notified) {
-            _name!.Content = _notifyChangePrefix + _name.Content;
             _notified = true;
+            AddPrefix();
         }
     }
 
-    public void NotifyApply()
+    public void NotifyApply(object? payload = null)
     {
-        if (_notified && _name!.Content.StartsWith(_notifyChangePrefix)) {
-            _name.Content = _name.Content[_notifyChangePrefix.Length..];
+        if (_notified) {
             _notified = false;
+            RemovePrefix();
         }
     }
 
-    public void NotifyReset()
+    public void NotifyReset(object? payload = null)
     {
         Value = Read();
         _notified = false;
-        if (_name!.Content.StartsWith(_notifyChangePrefix)) {
-            _name!.Content = _name.Content[_notifyChangePrefix.Length..];
+        RemovePrefix();
+    }
+
+    private void AddPrefix()
+    {
+        if (_name == null) {
+            return;
+        }
+        if (!_name.Content.StartsWith(McmLoc.Page.Changed)) {
+            _name.Content = McmLoc.Page.Changed + _name.Content;
         }
     }
 
-    protected void MergeSetting(ICompositeLayout.Composite composite)
+    private void RemovePrefix()
     {
-        _entry.Composites = [composite];
+        if (_name == null) {
+            return;
+        }
+        if (_name.Content.StartsWith(McmLoc.Page.Changed)) {
+            _name.Content = _name.Content[McmLoc.Page.Changed.Length..];
+        }
     }
 }

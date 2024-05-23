@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
+#nullable enable
+
 internal class McmSeparator : ScriptRef, ILine
 {
     private Color _color = Color.gray;
