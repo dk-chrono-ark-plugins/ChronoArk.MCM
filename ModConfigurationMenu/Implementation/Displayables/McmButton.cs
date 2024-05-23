@@ -8,9 +8,9 @@ namespace Mcm.Implementation.Displayables;
 
 internal class McmButton : ScriptRef, IButton
 {
+    public Button? Button;
     private bool _interactable = true;
     private readonly McmImage _buttonImg;
-    public Button? _button;
 
     public required IDisplayable Content { get; init; }
     public bool Interactable
@@ -64,26 +64,15 @@ internal class McmButton : ScriptRef, IButton
         // button always stretch its content
         content.SetToStretch();
 
-        _button = buttonHolder.AddComponent<Button>();
-        _button.onClick.AddListener(Click);
+        Button = buttonHolder.AddComponent<Button>();
+        Button.onClick.AddListener(Click);
         DeferredUpdate();
 
         return base.Render(button);
     }
 
-    public override void DeferredUpdate()
+    public override void Update()
     {
-        if (_deferred) {
-            return;
-        }
-        _deferred = true;
-        CoroutineHelper.Deferred(
-            () => {
-                _button!.interactable = _interactable;
-                _dirty = true;
-                _deferred = false;
-            },
-            () => _button != null
-        );
+        Button!.interactable = _interactable;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Mcm.Api.Displayables;
+﻿using UnityEngine.UI;
+
+namespace Mcm.Api.Displayables;
 
 #nullable enable
 
@@ -7,8 +9,9 @@
 /// </summary>
 public interface IImage : IDisplayable
 {
-    public Color? BorderColor { get; set; }
-    public Vector2? BorderThickness { get; set; }
-    public Color? MaskColor { get; set; }
-    public Sprite? MainSprite { get; set; }
+    public Color? BorderColor { get; }
+    public Vector2? BorderThickness { get; }
+    public Color? MaskColor { get; }
+    public Sprite? MainSprite { get; }
+    public Image? Image { get; }
 }

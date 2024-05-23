@@ -1,11 +1,14 @@
-﻿namespace Mcm.Implementation;
+﻿using ChronoArkMod.Helper;
+
+namespace Mcm.Implementation;
 
 #nullable enable
 
-internal class ScriptRef : IDeferredUpdater, IDisplayable
+internal class ScriptRef : IDeferredUpdate, IDisplayable
 {
     protected bool _dirty = true;
     protected bool _deferred = false;
+    private object? _deferredLock = null;
 
     public GameObject? Ref { get; private set; }
     public virtual Vector2? Size { get; init; }
@@ -25,6 +28,7 @@ internal class ScriptRef : IDeferredUpdater, IDisplayable
     public virtual Transform Render(Transform parent)
     {
         Ref = parent.gameObject;
+        _deferredLock = Ref;
         return parent;
     }
 
@@ -41,7 +45,23 @@ internal class ScriptRef : IDeferredUpdater, IDisplayable
         }
     }
 
-    public virtual void DeferredUpdate()
+    public void DeferredUpdate()
+    {
+        if (_deferred) {
+            return;
+        }
+        _deferred = true;
+        CoroutineHelper.Deferred(
+            () => {
+                Update();
+                _dirty = true;
+                _deferred = false;
+            },
+            () => _deferredLock != null
+        );
+    }
+
+    public virtual void Update()
     {
         throw new NotImplementedException();
     }

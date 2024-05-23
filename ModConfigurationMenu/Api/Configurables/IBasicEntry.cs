@@ -4,14 +4,13 @@ public interface IBasicEntry
 {
     enum EntryType
     {
-        // Mcm specializeed
-        Patch,
         // CARK supported
         Dropdown,
         Input,
         Slider,
         Toggle,
         // Mcm added
+        FileBrowser,
     }
 
     /// <summary>

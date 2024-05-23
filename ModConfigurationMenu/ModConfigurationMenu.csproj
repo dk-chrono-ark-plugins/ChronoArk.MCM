@@ -411,9 +411,6 @@
   </ItemGroup>
   <!-- Compile ItemGroup Start-->
   <ItemGroup>
-    <PackageReference Include="PeanutButter.DuckTyping">
-      <Version>3.0.298</Version>
-    </PackageReference>
     <PackageReference Include="PolySharp">
       <Version>1.14.1</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -445,22 +442,24 @@
     <Compile Include="Api\Configurables\IConfigurable.cs" />
     <Compile Include="Api\Configurables\IDropdown.cs" />
     <Compile Include="Api\Configurables\IDropdownEntry.cs" />
-    <Compile Include="Api\Configurables\INotifyChanged.cs" />
+    <Compile Include="Api\Displayables\ILine.cs" />
+    <Compile Include="Api\INotifyChange.cs" />
     <Compile Include="Api\Configurables\IToggle.cs" />
     <Compile Include="Api\Displayables\IButton.cs" />
     <Compile Include="Api\Displayables\ICompositeLayout.cs" />
-    <Compile Include="Api\IDeferredUpdater.cs" />
+    <Compile Include="Api\IDeferredUpdate.cs" />
     <Compile Include="Api\IScriptRef.cs" />
     <Compile Include="Api\Displayables\IImage.cs" />
     <Compile Include="Api\IModLayout.cs" />
     <Compile Include="Api\Displayables\IText.cs" />
     <Compile Include="Api\Configurables\IBasicEntry.cs" />
     <Compile Include="Api\Displayables\IDisplayable.cs" />
-    <Compile Include="Api\Displayables\IPage.cs" />
+    <Compile Include="Api\IPage.cs" />
+    <Compile Include="Common\McmLog.cs" />
     <Compile Include="Implementation\Components\ButtonHighlight.cs" />
     <Compile Include="Implementation\Components\HoverBehaviour.cs" />
     <Compile Include="Implementation\Components\McmWindow.cs" />
-    <Compile Include="Implementation\ConfigCereal.cs" />
+    <Compile Include="Common\ConfigCereal.cs" />
     <Compile Include="Implementation\Configurables\McmConfigurable.cs" />
     <Compile Include="Implementation\Configurables\McmDropdown.cs" />
     <Compile Include="Implementation\Configurables\McmToggle.cs" />
@@ -468,11 +467,17 @@
     <Compile Include="Implementation\Displayables\McmComposite.cs" />
     <Compile Include="Implementation\Displayables\McmImage.cs" />
     <Compile Include="Implementation\Displayables\McmModEntry.cs" />
-    <Compile Include="Implementation\Displayables\Pages\McmPage.cs" />
-    <Compile Include="Implementation\I2LocFetch.cs" />
+    <Compile Include="Implementation\Displayables\McmSeparator.cs" />
+    <Compile Include="Implementation\LoadAsset.cs" />
+    <Compile Include="Implementation\McmPage.cs" />
+    <Compile Include="Implementation\Displayables\Pages\McmPanel.cs" />
+    <Compile Include="Common\I2LocFetch.cs" />
     <Compile Include="Implementation\McmManager_Api.cs" />
+    <Compile Include="Implementation\McmPage_Api.cs" />
     <Compile Include="Implementation\McmSettingEntry.cs" />
+    <Compile Include="Implementation\ModLayout_Api.cs" />
     <Compile Include="Implementation\ModStub.cs" />
+    <Compile Include="Common\RenderHelper.cs" />
     <Compile Include="McmConfig.cs" />
     <Compile Include="Implementation\ModLayout.cs" />
     <Compile Include="Implementation\Displayables\Pages\McmVerticalPage.cs" />
@@ -482,12 +487,15 @@
     <Compile Include="Implementation\Patches\MainOptionsPatch.cs" />
     <Compile Include="Common\PageSizeFitter.cs" />
     <Compile Include="Api\IModConfigurationMenu.cs" />
-    <Compile Include="Api\IPatch.cs" />
     <Compile Include="Implementation\McmManager.cs" />
     <Compile Include="Implementation\ScriptRef.cs" />
     <Compile Include="McmMod.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Link>README.md</Link>
+    </None>
+  </ItemGroup>
   <!-- Compile ItemGroup End-->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

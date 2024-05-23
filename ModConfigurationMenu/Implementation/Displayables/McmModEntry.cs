@@ -11,16 +11,18 @@ internal class McmModEntry : ScriptRef
     public override Vector2? Size => new(320f, 640f);
     public ModInfo Owner { get; init; }
 
-    public McmModEntry(ModInfo modInfo)
+    public McmModEntry(ModInfo modInfo, IPage? pageOverride = null, IImage? coverOverride = null, IDisplayable? barOverride = null)
     {
         Owner = modInfo;
 
-        var cover = new McmImage() { MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover };
-        var text = new McmText() { 
-            Content = $"{modInfo.Title}",
+        var cover = coverOverride ?? new McmImage() { 
+            MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover 
+        };
+        var text = new McmText() {
+            Content = pageOverride?.Title ?? modInfo.Title,
             Size = new(320f, 320f),
         };
-        var bar = new McmImage() {
+        var bar = barOverride ?? new McmImage() {
             MaskColor = Color.blue
         };
         var modEntryInternal = new McmComposite(ICompositeLayout.LayoutGroup.Vertical) {
@@ -32,7 +34,9 @@ internal class McmModEntry : ScriptRef
         };
         ModEntry = new() {
             Content = modEntryInternal,
-            OnClick = () => McmWindow.Instance?.RenderIndexPage(modInfo),
+            OnClick = () => {
+                McmWindow.Instance?.RenderNamedPage(modInfo, pageOverride?.Name ?? "index");
+            },
         };
     }
 

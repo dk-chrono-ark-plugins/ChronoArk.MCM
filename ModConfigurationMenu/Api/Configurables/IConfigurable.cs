@@ -1,10 +1,8 @@
-﻿using System.ComponentModel;
-
-namespace Mcm.Api.Configurables;
+﻿namespace Mcm.Api.Configurables;
 
 #nullable enable
 
-public interface IConfigurable<T> : IBasicEntry, INotifyChanged
+public interface IConfigurable<T> : IBasicEntry, INotifyChange
 {
     T Value { get; }
     Action<T> Save { get; }

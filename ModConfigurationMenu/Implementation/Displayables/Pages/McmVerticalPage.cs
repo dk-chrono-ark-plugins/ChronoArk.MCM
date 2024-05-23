@@ -1,6 +1,5 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
-using TMPro;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
@@ -26,8 +25,8 @@ internal class McmVerticalPage(ModInfo Info) : McmScrollPage(Info)
         vert.childAlignment = TextAnchor.MiddleCenter;
         vert.childControlWidth = true;
         vert.childControlHeight = true;
-        vert.childForceExpandWidth = true;
-        vert.childForceExpandHeight = false;
+        vert.childForceExpandWidth = false;
+        vert.childForceExpandHeight = true;
 
         var contentSizeFitter = content.AddComponent<ContentSizeFitter>();
         contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -42,7 +41,17 @@ internal class McmVerticalPage(ModInfo Info) : McmScrollPage(Info)
     {
         foreach (var element in _elements) {
             var grid = element.Render<LayoutElement>(parent);
-            grid.preferredWidth = parent.GetComponent<RectTransform>().rect.width - 40f;
+            var image = grid.GetComponent<Image>();
+            if (image != null && image.sprite != null) {
+                var imageSize = image.sprite.rect.size;
+                grid.minWidth = imageSize.x;
+                grid.minHeight = imageSize.y;
+
+                grid.preferredWidth = imageSize.x;
+                grid.preferredHeight = imageSize.y;
+            } else {
+                grid.preferredWidth = parent.GetComponent<RectTransform>().rect.width - 40f;
+            }
         }
     }
 }

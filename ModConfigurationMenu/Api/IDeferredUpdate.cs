@@ -1,8 +1,9 @@
 ﻿namespace Mcm.Api;
 
-public interface IDeferredUpdater
+public interface IDeferredUpdate
 {
     bool Deferred { get; }
 
     void DeferredUpdate();
+    void Update();
 }

@@ -51,30 +51,18 @@ internal class McmText : ScriptRef, IText
         return base.Render(text);
     }
 
-    public override void DeferredUpdate()
+    public override void Update()
     {
-        if (_deferred) {
-            return;
+        if (_fontsize != null) {
+            Text!.fontSize = _fontsize!.Value;
+        } else {
+            Text!.fontSizeMin = 10f;
+            Text.fontSizeMax = 40f;
+            Text.enableAutoSizing = true;
+            Text.autoSizeTextContainer = true;
         }
-        _deferred = true;
-        CoroutineHelper.Deferred(
-            () => {
-                if (_fontsize != null) {
-                    Text!.fontSize = _fontsize!.Value;
-                } else {
-                    Text!.fontSizeMin = 10f;
-                    Text.fontSizeMax = 40f;
-                    Text.enableAutoSizing = true;
-                    Text.autoSizeTextContainer = true;
-                }
-                if (_content != null) {
-                    Text!.text = _content;
-                }
-                
-                _dirty = true;
-                _deferred = false;
-            },
-            () => Text != null
-        );
+        if (_content != null) {
+            Text!.text = _content;
+        }
     }
 }

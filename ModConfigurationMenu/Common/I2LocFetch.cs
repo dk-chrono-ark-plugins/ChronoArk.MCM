@@ -1,11 +1,6 @@
 ﻿using ChronoArkMod.ModData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mcm.Implementation;
+namespace Mcm.Common;
 
 internal static class I2LocFetch
 {

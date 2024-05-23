@@ -1,6 +1,5 @@
 ﻿using ChronoArkMod.Helper;
 using I2.Loc;
-using Mcm.Api.Configurables;
 using Mcm.Implementation.Components;
 using TMPro;
 using UnityEngine.EventSystems;
@@ -10,7 +9,8 @@ namespace Mcm.Implementation;
 
 #nullable enable
 
-internal class MainOptionsPatch : IPatch
+[HarmonyPatch]
+internal static class MainOptionsPatch
 {
     public const string ButtonEntryName = "MCM Button";
     public const string ButtonEntryText = "Mods";
@@ -18,23 +18,8 @@ internal class MainOptionsPatch : IPatch
 
     private static GameObject? _mcm;
 
-    public string Id => "main-options-layout";
-    public string Name => Id;
-    public string Description => Id;
-    public IBasicEntry.EntryType SettingType => IBasicEntry.EntryType.Patch;
-
-    public void Commit()
-    {
-        var harmony = McmMod.Instance!._harmony!;
-        harmony.Patch(
-            original: AccessTools.Method(
-                typeof(MainOptionMenu),
-                "Start"
-            ),
-            postfix: new(typeof(MainOptionsPatch), nameof(OnStart))
-        );
-    }
-
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainOptionMenu), "Start")]
     private static void OnStart(MainOptionMenu __instance)
     {
         var layout = __instance.transform.GetFirstNestedChildWithName(_layoutHierarchy);

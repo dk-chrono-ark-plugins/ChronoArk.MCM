@@ -1,7 +1,8 @@
-﻿using ChronoArkMod.Helper;
+﻿using ChronoArkMod;
 using ChronoArkMod.ModData;
-using ChronoArkMod.Plugin;
 using Mcm.Api.Configurables;
+using Mcm.Implementation.Displayables;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Mcm.Implementation;
 
@@ -17,14 +18,47 @@ internal partial class McmManager : IModConfigurationMenu
 
     public const IModConfigurationMenu.Version McmInstanceVersion = IModConfigurationMenu.Version.V1;
 
-    private static readonly Lazy<McmManager> _instance = new(() => new());
     private readonly Dictionary<ModInfo, McmRegistry> _registries = [];
+    private static readonly Lazy<McmManager> _instance = new(() => new());
 
+    public List<IPage> ExtraEntries = [];
     public Dictionary<ModInfo, McmRegistry> Registries => _registries;
     public static McmManager Instance => _instance.Value;
 
     private McmManager()
     {
+    }
+
+    public List<McmModEntry> PopulateModEntries()
+    {
+        Debug.Log($"populating mcm index pages");
+
+        var indexes = ExtraEntries
+            .Select(e => new McmModEntry(e.Owner, e))
+            .ToList();
+        foreach (var modInfo in ModManager.LoadedMods.Select(ModManager.getModInfo)) {
+            try {
+                var registry = GetMcmRegistry(modInfo);
+                if (registry == null) {
+                    Register(modInfo.id);
+                    if (modInfo.settings.Count > 0) {
+                        Debug.Log($"{modInfo.id} has legacy settings and is not registered with MCM");
+                        Debug.Log("attempt to generate a stub page...");
+                        modInfo.StubMcmPage();
+                    }
+                    registry = GetMcmRegistry(modInfo)
+                        ?? throw new InvalidOperationException($"cannot populate mod index page for {modInfo.id}");
+                }
+                var modEntry = new McmModEntry(modInfo);
+                modEntry.ModEntry.Interactable = registry.Settings.Count > 0;
+                indexes.Add(modEntry);
+            } catch (Exception ex) {
+                Debug.Log($"failed: {ex.Message}");
+                // noexcept
+            }
+        }
+
+        return [.. indexes.OrderByDescending(e => e.ModEntry.Interactable).ThenBy(e => e.Owner.id)];
     }
 
     public static McmRegistry? GetMcmRegistry(ModInfo modInfo)
@@ -89,7 +123,7 @@ internal partial class McmManager : IModConfigurationMenu
         if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
             return;
         }
-        var current = modInfo.ReadMcmConfig<Dictionary<string, object>>() ?? []; 
+        var current = modInfo.ReadMcmConfig<Dictionary<string, object>>() ?? [];
         current.Keys
            .Where(registry.Settings.ContainsKey)
            .Do(key => registry.Settings[key].Value = current[key]);

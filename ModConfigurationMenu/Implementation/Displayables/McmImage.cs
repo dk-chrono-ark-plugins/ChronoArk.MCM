@@ -1,4 +1,5 @@
 ﻿using ChronoArkMod.Helper;
+using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
@@ -7,48 +8,11 @@ namespace Mcm.Implementation.Displayables;
 
 internal class McmImage : ScriptRef, IImage
 {
-    private Image? _image;
-    private Color? _borderColor;
-    private Vector2? _borderThickness;
-    private Color? _maskColor;
-    private Sprite? _sprite;
-
-    public Color? BorderColor
-    {
-        get => _borderColor;
-        set
-        {
-            _borderColor = value;
-            DeferredUpdate();
-        }
-    }
-    public Vector2? BorderThickness
-    {
-        get => _borderThickness;
-        set
-        {
-            _borderThickness = value;
-            DeferredUpdate();
-        }
-    }
-    public Color? MaskColor
-    {
-        get => _maskColor;
-        set
-        {
-            _maskColor = value;
-            DeferredUpdate();
-        }
-    }
-    public Sprite? MainSprite
-    {
-        get => _sprite;
-        set
-        {
-            _sprite = value;
-            DeferredUpdate();
-        }
-    }
+    public Color? BorderColor { get; init; }
+    public Vector2? BorderThickness { get; init; }
+    public Color? MaskColor { get; init; }
+    public Sprite? MainSprite { get; init; }
+    public Image? Image { get; private set; }
 
     public override Transform Render(Transform parent)
     {
@@ -63,36 +27,20 @@ internal class McmImage : ScriptRef, IImage
             image.sizeDelta = Size.Value;
         }
 
-        _image = image.AddComponent<Image>();
-        DeferredUpdate();
+        Image = image.AddComponent<Image>(); 
+        if (BorderColor != null) {
+            Image.gameObject.GetOrAddComponent<Outline>().effectColor = BorderColor.Value;
+        }
+        if (BorderThickness != null) {
+            Image.gameObject.GetOrAddComponent<Outline>().effectDistance = BorderThickness.Value;
+        }
+        if (MaskColor != null) {
+            Image.color = MaskColor!.Value;
+        }
+        if (MainSprite != null) {
+            Image.sprite = MainSprite;
+        }
 
         return base.Render(image);
-    }
-
-    public override void DeferredUpdate()
-    {
-        if (_deferred) {
-            return;
-        }
-        _deferred = true;
-        CoroutineHelper.Deferred(
-            () => {
-                if (_borderColor != null) {
-                    _image!.gameObject.GetOrAddComponent<Outline>().effectColor = _borderColor.Value;
-                }
-                if (_borderThickness != null) {
-                    _image!.gameObject.GetOrAddComponent<Outline>().effectDistance = _borderThickness.Value;
-                }
-                if (_maskColor != null) {
-                    _image!.color = _maskColor!.Value;
-                }
-                if (_sprite != null) {
-                    _image!.sprite = _sprite;
-                }
-                _dirty = true;
-                _deferred = false;
-            },
-            () => _image != null
-        );
     }
 }

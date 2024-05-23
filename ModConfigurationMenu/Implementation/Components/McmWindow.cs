@@ -4,7 +4,6 @@ using ChronoArkMod.ModData;
 using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Mcm.Implementation.Components;
 
@@ -27,16 +26,13 @@ internal class McmWindow : UIBehaviour
     }
     public static McmWindow? Instance { get; private set; }
     public static ModUI? ModUI { get; private set; }
+    public static IModLayout? MyLayout { get; private set; }
 
     protected override void Start()
     {
         Instance = this;
         LookupOnce();
-
-        _canvas = gameObject.GetOrAddComponent<Canvas>();
-        _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        gameObject.GetOrAddComponent<CanvasScaler>();
-        gameObject.GetOrAddComponent<GraphicRaycaster>();
+        _canvas = RenderHelper.Setup(gameObject);
     }
 
     private void Update()
@@ -76,34 +72,6 @@ internal class McmWindow : UIBehaviour
         this.StartDeferredCoroutine(() => gameObject.SetActive(false));
     }
 
-    public void RenderPage(IPage? page)
-    {
-        if (!gameObject.activeInHierarchy || _canvas == null || page == null) {
-            return;
-        }
-        _shouldReturn = false;
-
-        try {
-            TopPage?.Hide();
-            page.Render(_canvas.transform);
-        } catch {
-            Debug.Log($"failed to render page {page.Title}");
-            throw;
-        }
-        _pageHierarchy.Add(page);
-    }
-
-    public void RenderIndexPage(ModInfo modInfo)
-    {
-        RenderNamedPage(modInfo, "index");
-    }
-
-    public void RenderNamedPage(ModInfo modInfo, string name)
-    {
-        var registry = McmManager.GetMcmRegistry(modInfo);
-        this.StartDeferredCoroutine(() => RenderPage(registry!.Layout.GetPage(name)));
-    }
-
     public static void Back()
     {
         if (Instance == null) {
@@ -125,7 +93,7 @@ internal class McmWindow : UIBehaviour
         }
         McmManager.SaveModSetting(Instance.TopPage.Owner);
         Instance.TopPage.Elements
-            .OfType<INotifyChanged>()
+            .OfType<INotifyChange>()
             .Do(disp => disp.NotifyApply());
     }
 
@@ -136,8 +104,37 @@ internal class McmWindow : UIBehaviour
         }
         McmManager.ResetModSetting(Instance.TopPage.Owner);
         Instance.TopPage.Elements
-            .OfType<INotifyChanged>()
+            .OfType<INotifyChange>()
             .Do(disp => disp.NotifyReset());
+    }
+
+    public void RenderPage(IPage? page)
+    {
+        if (!gameObject.activeInHierarchy || _canvas == null || page == null) {
+            return;
+        }
+        _shouldReturn = false;
+
+        try {
+            TopPage?.Hide();
+            page.Render(_canvas.transform);
+        } catch {
+            Debug.Log($"failed to render page {page.Title}");
+            TopPage?.Show();
+            throw;
+        }
+        _pageHierarchy.Add(page);
+    }
+
+    public void RenderNamedPage(ModInfo modInfo, string name)
+    {
+        var registry = McmManager.GetMcmRegistry(modInfo);
+        this.StartDeferredCoroutine(() => RenderPage(registry!.Layout.GetPage(name)));
+    }
+
+    public void RenderIndexPage(ModInfo modInfo)
+    {
+        RenderNamedPage(modInfo, "index");
     }
 
     private void RenderSelf()
@@ -146,43 +143,13 @@ internal class McmWindow : UIBehaviour
         var layout = McmManager.GetMcmRegistry(modInfo)!.Layout;
         var myPage = layout.GetPage("McmEntry") ??
             throw new InvalidOperationException($"MCM cannot render the entry page...");
-        
         myPage.Clear();
-        PopulateModIndexes(myPage);
+
+        McmManager.Instance
+            .PopulateModEntries()
+            .ForEach(myPage.Add);
 
         RenderPage(myPage);
-    }
-
-    private void PopulateModIndexes(IPage myPage)
-    {
-        Debug.Log($"populating mcm index pages");
-
-        var indexes = new List<McmModEntry>();
-        foreach (var modInfo in ModManager.LoadedMods.Select(ModManager.getModInfo)) {
-            try {
-                var registry = McmManager.GetMcmRegistry(modInfo);
-                if (registry == null) {
-                    McmManager.Instance.Register(modInfo.id);
-                    if (modInfo.settings.Count > 0) {
-                        Debug.Log($"{modInfo.id} has legacy settings and is not registered with MCM");
-                        Debug.Log("attempt to generate a stub page...");
-                        modInfo.StubMcmPage();
-                    }
-                    registry = McmManager.GetMcmRegistry(modInfo)
-                        ?? throw new InvalidOperationException($"cannot populate mod index page for {modInfo.id}");
-                }
-                var modEntry = new McmModEntry(modInfo);
-                modEntry.ModEntry.Interactable = registry.Settings.Count > 0;
-                indexes.Add(modEntry);
-            } catch (Exception ex) {
-                Debug.Log($"failed: {ex.Message}");
-                // noexcept
-            }
-        }
-
-        indexes.OrderByDescending(e => e.ModEntry.Interactable)
-            .ThenBy(e => e.Owner.id)
-            .Do(myPage.Add);
     }
 
     private void LookupOnce()
@@ -191,6 +158,7 @@ internal class McmWindow : UIBehaviour
             ComponentFetch.TryFindObject<ModUI>("ModUI", out var modUI)) {
             ModUI = modUI;
         }
+        MyLayout = McmManager.GetMcmRegistry(McmMod.ModInfo)?.Layout;
         _onceFlag = true;
     }
 }

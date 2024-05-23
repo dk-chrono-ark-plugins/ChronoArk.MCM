@@ -1,6 +1,6 @@
 ﻿namespace Mcm.Api.Configurables;
 
-public interface INotifyChanged
+public interface INotifyChange
 {
     void NotifyChange();
     void NotifyApply();

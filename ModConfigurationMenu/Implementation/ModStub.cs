@@ -1,8 +1,6 @@
 ﻿using ChronoArkMod.ModData;
 using ChronoArkMod.ModData.Settings;
-using ChronoArkMod.Plugin;
 using Mcm.Api.Configurables;
-using Microsoft.Win32;
 
 namespace Mcm.Implementation;
 
@@ -49,38 +47,37 @@ internal static class ModStub
     }
 
     /// <summary>
-    /// Generate a stub index page for the mod, regarding its configs</br>
-    /// Will clear index page beforehands
+    /// Generate a stub index page for the mod, with its configs
     /// </summary>
     /// <param name="modInfo"></param>
     internal static void StubMcmPage(this ModInfo modInfo)
     {
-        var registry = McmManager.GetMcmRegistry(modInfo) 
+        var registry = McmManager.GetMcmRegistry(modInfo)
             ?? throw new InvalidOperationException($"{modInfo.id} hasn't been registered or failed with MCM");
-        
+
         if (modInfo.settings.Count == 0) {
             return;
         }
 
         var index = registry.Layout.IndexPage;
         index.Clear();
-        var text = McmManager.Instance.AddText(modInfo.id, "");
+
+        index.AddText("StubPage");
+        index.AddSeparator();
 
         foreach (var (key, entry) in modInfo.StubMcmConfig()) {
             switch (entry.EntryType) {
-                case IBasicEntry.EntryType.Patch:
-                    break;
                 case IBasicEntry.EntryType.Dropdown:
                     break;
                 case IBasicEntry.EntryType.Input:
                     break;
                 case IBasicEntry.EntryType.Slider:
                     break;
-                case IBasicEntry.EntryType.Toggle:{
-                    McmManager.Instance.AddToggleOption(modInfo.id, key, entry.Name, entry.Description, false);
+                case IBasicEntry.EntryType.Toggle: {
+                    registry.Layout.AddToggleOption(key, entry.Name, entry.Description, (bool)entry.Value);
                     break;
                 }
-                default: 
+                default:
                     break;
             }
         }

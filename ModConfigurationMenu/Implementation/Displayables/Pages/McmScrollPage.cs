@@ -1,6 +1,5 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
-using Mcm.Common;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
@@ -8,7 +7,7 @@ namespace Mcm.Implementation.Displayables;
 /// <summary>
 /// Scroll rect page, will return a content holder to the render pipe
 /// </summary>
-internal class McmScrollPage(ModInfo Info) : McmPage(Info)
+internal class McmScrollPage(ModInfo Info) : McmPanel(Info)
 {
     public override Transform Render(Transform parent)
     {

@@ -1,7 +1,6 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
 using I2.Loc;
-using Mcm.Common;
 using Mcm.Implementation.Components;
 using UnityEngine.UI;
 
@@ -12,23 +11,21 @@ namespace Mcm.Implementation.Displayables;
 /// <summary>
 /// Basic page layout, will return a bordered page to the render pipe
 /// </summary>
-internal class McmPage : ScriptRef, IPage
+internal class McmPanel : McmPage
 {
-    protected readonly List<IDisplayable> _elements = [];
     protected readonly McmComposite _buttons;
     protected readonly McmText _titleText;
 
-    public ModInfo Owner { get; init; }
-    public string Title { get; set; }
-    public List<IDisplayable> Elements => _elements;
-    public string Name { get; set; }
-
-    public McmPage(ModInfo modInfo)
+    public override string Title
     {
-        Name = "";
-        Owner = modInfo;
+        get => _titleText.Content;
+        set => _titleText.Content = value;
+    }
+
+    public McmPanel(ModInfo modInfo) : base(modInfo)
+    {
+        _titleText = new() { Content = string.Empty };
         Title = $"{Owner.Title}  v{Owner.Version}";
-        _titleText = new() { Content = Title };
 
         var back = new McmButton() {
             Content = new McmText() {
@@ -62,21 +59,6 @@ internal class McmPage : ScriptRef, IPage
         };
     }
 
-    public virtual void Add(IDisplayable displayable)
-    {
-        _elements.Add(displayable);
-    }
-
-    public virtual void Clear()
-    {
-        _elements.Clear();
-    }
-
-    public virtual void Remove(IDisplayable displayable)
-    {
-        _elements.Remove(displayable);
-    }
-
     public override Transform Render(Transform parent)
     {
         if (Ref != null) {
@@ -84,7 +66,6 @@ internal class McmPage : ScriptRef, IPage
         }
 
         McmManager.ResetModSetting(Owner);
-
         var page = parent.AttachRectTransformObject($"McmPage:{Owner.Title}:{Name}");
         page.sizeDelta = PageSizeFitter.Normal + PageSizeFitter.BorderThickness;
 
