@@ -2,7 +2,6 @@
 using ChronoArkMod.ModData;
 using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
-using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Mcm.Implementation;
 
@@ -43,7 +42,6 @@ internal partial class McmManager : IModConfigurationMenu
                     Register(modInfo.id);
                     if (modInfo.settings.Count > 0) {
                         Debug.Log($"{modInfo.id} has legacy settings and is not registered with MCM");
-                        Debug.Log("attempt to generate a stub page...");
                         modInfo.StubMcmPage();
                     }
                     registry = GetMcmRegistry(modInfo)
@@ -66,7 +64,7 @@ internal partial class McmManager : IModConfigurationMenu
         return Instance.Registries.GetValueOrDefault(modInfo);
     }
 
-    public static void AddModSetting(ModInfo modInfo, string key, McmSettingEntry entry)
+    public static void AddMcmConfig(ModInfo modInfo, string key, McmSettingEntry entry)
     {
         if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
             return;
@@ -74,7 +72,7 @@ internal partial class McmManager : IModConfigurationMenu
         registry.Settings.TryAdd(key, entry);
     }
 
-    public static T GetModSetting<T>(ModInfo modInfo, string key)
+    public static T GetMcmConfig<T>(ModInfo modInfo, string key)
     {
         if (Instance.Registries.TryGetValue(modInfo, out var registry) &&
             registry.Settings.TryGetValue(key, out var entry) &&
@@ -84,12 +82,18 @@ internal partial class McmManager : IModConfigurationMenu
         return default!;
     }
 
-    public static void UpdateModSetting<T>(ModInfo modInfo, IConfigurable<T> configurable)
+    public static void UpdateMcmConfig<T>(ModInfo modInfo, IConfigurable<T> configurable)
     {
-        UpdateModSetting(modInfo, configurable.Id, configurable.Value!);
+        UpdateMcmConfig(modInfo, configurable.Id, configurable.Value!);
     }
 
-    public static void UpdateModSetting(ModInfo modInfo, string key, object value)
+    /// <summary>
+    /// Update single setting
+    /// </summary>
+    /// <param name="modInfo"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    public static void UpdateMcmConfig(ModInfo modInfo, string key, object value)
     {
         if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
             return;
@@ -100,7 +104,11 @@ internal partial class McmManager : IModConfigurationMenu
         registry.Dirty = true;
     }
 
-    public static void SaveModSetting(ModInfo modInfo)
+    /// <summary>
+    /// Save all
+    /// </summary>
+    /// <param name="modInfo"></param>
+    public static void SaveMcmConfig(ModInfo modInfo)
     {
         if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
             return;
@@ -118,7 +126,11 @@ internal partial class McmManager : IModConfigurationMenu
         }
     }
 
-    public static void ResetModSetting(ModInfo modInfo)
+    /// <summary>
+    /// Reset all
+    /// </summary>
+    /// <param name="modInfo"></param>
+    public static void ResetMcmConfig(ModInfo modInfo)
     {
         if (!Instance.Registries.TryGetValue(modInfo, out var registry)) {
             return;

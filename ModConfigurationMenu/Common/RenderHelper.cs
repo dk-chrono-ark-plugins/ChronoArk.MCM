@@ -5,9 +5,9 @@ namespace Mcm.Common;
 
 #nullable enable
 
-internal static class RenderHelper
+public static class RenderHelper
 {
-    internal static Canvas Setup(GameObject? current = null)
+    public static Canvas Setup(GameObject? current = null)
     {
         if (current == null || current.GetComponent<Canvas>() != null) {
             current = new GameObject("McmRenderHelper");

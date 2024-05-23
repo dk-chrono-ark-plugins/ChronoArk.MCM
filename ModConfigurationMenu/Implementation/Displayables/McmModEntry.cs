@@ -15,8 +15,8 @@ internal class McmModEntry : ScriptRef
     {
         Owner = modInfo;
 
-        var cover = coverOverride ?? new McmImage() { 
-            MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover 
+        var cover = coverOverride ?? new McmImage() {
+            MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover
         };
         var text = new McmText() {
             Content = pageOverride?.Title ?? modInfo.Title,
@@ -35,7 +35,12 @@ internal class McmModEntry : ScriptRef
         ModEntry = new() {
             Content = modEntryInternal,
             OnClick = () => {
-                McmWindow.Instance?.RenderNamedPage(modInfo, pageOverride?.Name ?? "index");
+                var pageName = pageOverride?.Name ?? "index";
+                if (pageName == "index") {
+                    Debug.Log($"Loading mod config for {Owner.id}");
+                    McmManager.ResetMcmConfig(Owner);
+                }
+                McmWindow.Instance?.RenderNamedPage(modInfo, pageName);
             },
         };
     }

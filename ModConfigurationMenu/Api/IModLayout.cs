@@ -45,7 +45,7 @@ public interface IModLayout
     /// <summary>
     /// Prepare the page with name and render it at topmost
     /// </summary>
-    /// <remarks>If there's no active Mcm instance in the scene, this will do nothing</remarks>
+    /// <remarks>If there's no active Mcm instance in the scene, nothing happens</remarks>
     /// <param name="name"></param>
     void RenderPage(string name);
 
@@ -55,6 +55,8 @@ public interface IModLayout
     /// <param name="key">Unique key of this option</param>
     /// <param name="name">Display name, supports <see cref="I2.Loc"/> keys</param>
     /// <param name="description">Display description, supports <see cref="I2.Loc"/> keys</param>
-    /// <param name="default">Default value</param>
-    IToggle AddToggleOption(string key, string name, string description, bool @default);
+    /// <param name="get">Delegate to fetch value</param>
+    /// <param name="set">Delegate to set value</param>
+    /// <returns><see cref="IToggle"/> can be used to change state externally</returns>
+    IToggle AddToggleOption(string key, string name, string description, Func<bool> get, Action<bool> set);
 }

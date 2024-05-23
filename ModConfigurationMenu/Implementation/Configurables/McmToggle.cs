@@ -29,11 +29,11 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
     {
         _on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap) {
             Composites = [
-                new(new McmImage() { 
+                new(new McmImage() {
                         MaskColor = Color.black,
                         BorderColor = Color.clear,
                         BorderThickness = new(0f, 0f),
-                    }, 
+                    },
                     new(400f, 100f)),
                 new(new McmText() {
                         Content = LocalizationManager.GetTranslation(ScriptTerms.UI_Option.Bool_On),
@@ -45,11 +45,11 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
         };
         _off = new McmComposite(ICompositeLayout.LayoutGroup.Overlap) {
             Composites = [
-                new(new McmImage(){ 
+                new(new McmImage(){
                         MaskColor = Color.black,
                         BorderColor = Color.clear,
-                        BorderThickness = new(0f, 0f), 
-                    }, 
+                        BorderThickness = new(0f, 0f),
+                    },
                     new(400f, 100f)),
                 new(new McmText() {
                         Content = LocalizationManager.GetTranslation(ScriptTerms.UI_Option.Bool_Off),

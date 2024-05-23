@@ -3,9 +3,9 @@ using System.IO;
 
 namespace Mcm.Implementation;
 
-internal static class LoadAsset
+public static class LoadAsset
 {
-    internal static Texture2D LoadTexture2D(this ModInfo modInfo, string filename, bool absens = false)
+    public static Texture2D LoadTexture2D(this ModInfo modInfo, string filename, bool absens = false)
     {
         var file = Path.Combine(modInfo.assetInfo.AssetDirectory, filename);
         if (File.Exists(file)) {

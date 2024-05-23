@@ -2,7 +2,6 @@
 using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
 using Mcm.Api.Configurables;
-using Mcm.Implementation.Displayables;
 using UnityEngine.EventSystems;
 
 namespace Mcm.Implementation.Components;
@@ -91,7 +90,7 @@ internal class McmWindow : UIBehaviour
         if (Instance == null || Instance.TopPage == null) {
             return;
         }
-        McmManager.SaveModSetting(Instance.TopPage.Owner);
+        McmManager.SaveMcmConfig(Instance.TopPage.Owner);
         Instance.TopPage.Elements
             .OfType<INotifyChange>()
             .Do(disp => disp.NotifyApply());
@@ -102,7 +101,7 @@ internal class McmWindow : UIBehaviour
         if (Instance == null || Instance.TopPage == null) {
             return;
         }
-        McmManager.ResetModSetting(Instance.TopPage.Owner);
+        McmManager.ResetMcmConfig(Instance.TopPage.Owner);
         Instance.TopPage.Elements
             .OfType<INotifyChange>()
             .Do(disp => disp.NotifyReset());
@@ -145,11 +144,22 @@ internal class McmWindow : UIBehaviour
             throw new InvalidOperationException($"MCM cannot render the entry page...");
         myPage.Clear();
 
+        RenderStub();
+
         McmManager.Instance
             .PopulateModEntries()
             .ForEach(myPage.Add);
 
         RenderPage(myPage);
+    }
+
+    private void RenderStub()
+    {
+        McmMod.ModInfo.StubMcmPage();
+
+        MyLayout!.IndexPage.AddSeparator();
+        MyLayout!.IndexPage.AddText("Displayable here, Displayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable here");
+        MyLayout!.IndexPage.AddSeparator();
     }
 
     private void LookupOnce()

@@ -11,7 +11,7 @@ internal class McmSeparator : ScriptRef, ILine
     public Color Color
     {
         get => _color;
-        set 
+        set
         {
             _color = value;
             DeferredUpdate();

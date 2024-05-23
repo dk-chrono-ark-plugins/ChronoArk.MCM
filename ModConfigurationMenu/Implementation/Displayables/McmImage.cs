@@ -1,5 +1,4 @@
 ﻿using ChronoArkMod.Helper;
-using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
@@ -27,7 +26,7 @@ internal class McmImage : ScriptRef, IImage
             image.sizeDelta = Size.Value;
         }
 
-        Image = image.AddComponent<Image>(); 
+        Image = image.AddComponent<Image>();
         if (BorderColor != null) {
             Image.gameObject.GetOrAddComponent<Outline>().effectColor = BorderColor.Value;
         }

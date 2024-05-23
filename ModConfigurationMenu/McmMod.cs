@@ -11,8 +11,6 @@ global using Debug = Mcm.Common.Debug;
 using ChronoArkMod;
 using ChronoArkMod.ModData;
 using ChronoArkMod.Plugin;
-using Mcm.Implementation.Displayables;
-using NLog.Layouts;
 
 namespace Mcm;
 
@@ -46,10 +44,7 @@ public class McmMod : ChronoArkPlugin
         layout.AddPage("McmEntry", ICompositeLayout.LayoutGroup.Grid).Title = "Mod Configuration Menu";
 
         // mcm own configs
-        layout.AddToggleOption("TestToggleKey", "Test Key", "Description", true);
-        layout.IndexPage.AddSeparator();
-        layout.IndexPage.AddText("Displayable here, Displayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable here");
-        layout.IndexPage.AddSeparator();
+        //layout.AddToggleOption("TestToggleKey", "Test Key", "Description", true);
 
         Mockup(layout);
     }

@@ -65,7 +65,6 @@ internal class McmPanel : McmPage
             return Ref.transform;
         }
 
-        McmManager.ResetModSetting(Owner);
         var page = parent.AttachRectTransformObject($"McmPage:{Owner.Title}:{Name}");
         page.sizeDelta = PageSizeFitter.Normal + PageSizeFitter.BorderThickness;
 
