@@ -67,7 +67,6 @@ internal class McmWindow : UIBehaviour
     public void Close()
     {
         _shouldReturn = true;
-        CoroutineHelper.HaltAll();
         this.StartDeferredCoroutine(() => gameObject.SetActive(false));
     }
 

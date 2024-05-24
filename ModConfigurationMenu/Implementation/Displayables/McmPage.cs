@@ -1,10 +1,11 @@
 ﻿using ChronoArkMod.ModData;
+using Mcm.Implementation.Displayables;
 
-namespace Mcm.Implementation;
+namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal partial class McmPage(ModInfo Info) : ScriptRef, IPage
+internal partial class McmPage(ModInfo Info) : McmStylable, IPage
 {
     protected readonly List<IDisplayable> _elements = [];
 

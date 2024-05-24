@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal class McmButton : ScriptRef, IButton
+internal class McmButton : McmStylable, IButton
 {
     public Button? Button;
     private bool _interactable = true;
@@ -29,9 +29,9 @@ internal class McmButton : ScriptRef, IButton
     public McmButton()
     {
         _buttonImg = new() {
-            BorderColor = PageStyle.BorderColor,
+            BorderColor = McmStyle.BorderColor,
             BorderThickness = new(3f, 3f),
-            MaskColor = PageStyle.BackColor,
+            MaskColor = McmStyle.MaskColor,
         };
     }
 

@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Configurables;
 
 #nullable enable
 
-internal class McmConfigurable<T> : ScriptRef, IConfigurable<T>
+internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
 {
     protected T _value = default!;
     protected readonly ICompositeLayout.Composite[] _entry;

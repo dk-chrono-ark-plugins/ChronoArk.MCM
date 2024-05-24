@@ -1,4 +1,4 @@
-﻿namespace Mcm.Implementation;
+﻿namespace Mcm;
 
 #nullable enable
 

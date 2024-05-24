@@ -1,10 +1,8 @@
-﻿using Mcm.Implementation.Displayables;
-
-namespace Mcm.Implementation;
+﻿namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal partial class McmPage : ScriptRef, IPage
+internal partial class McmPage : McmStylable, IPage
 {
     public IImage AddImage(Color color)
     {

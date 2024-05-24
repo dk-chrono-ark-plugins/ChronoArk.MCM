@@ -20,42 +20,42 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
         _on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap) {
             Composites = [
                 new(new McmImage() {
-                        MaskColor = PageStyle.BackColor,
-                        BorderColor = PageStyle.BorderColor,
+                        MaskColor = McmStyle.MaskColor,
+                        BorderColor = McmStyle.BorderColor,
                         BorderThickness = new(0f, 0f),
                     },
-                    new(400f, 100f)),
+                    new(200f, 100f)),
                 new(new McmText() {
                         Content = LocalizationManager.GetTranslation(ScriptTerms.UI_Option.Bool_On),
                         FontSize = 50f,
                     },
-                    new(400f, 100f)),
+                    new(200f, 100f)),
             ],
-            Size = new(400f, 100f),
+            Size = new(200f, 100f),
         };
         _off = new McmComposite(ICompositeLayout.LayoutGroup.Overlap) {
             Composites = [
                 new(new McmImage(){
-                        MaskColor = PageStyle.BackColor,
-                        BorderColor = PageStyle.BorderColor,
+                        MaskColor = McmStyle.MaskColor,
+                        BorderColor = McmStyle.BorderColor,
                         BorderThickness = new(0f, 0f),
                     },
-                    new(400f, 100f)),
+                    new(200f, 100f)),
                 new(new McmText() {
                         Content = LocalizationManager.GetTranslation(ScriptTerms.UI_Option.Bool_Off),
                         FontSize = 50f,
                     },
-                    new(400f, 100f)),
+                    new(200f, 100f)),
             ],
-            Size = new(400f, 100f),
+            Size = new(200f, 100f),
         };
         _toggle = new McmButton() {
             Content = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal) {
                 Composites = [
-                    new(_on, new(400f, 100f)),
-                    new(_off, new(400f, 100f)),
+                    new(_on, new(200f, 100f)),
+                    new(_off, new(200f, 100f)),
                 ],
-                Size = new(800f, 100f),
+                Size = new(400f, 100f),
                 Padding = new(5, 5, 10, 10),
                 Spacing = new(5f, 0f),
             },
@@ -73,9 +73,9 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
         var group = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal) {
             Composites = [
                 .. _entry,
-                new(_toggle, new(800f, 100f)),
+                new(_toggle, new(400f, 100f)),
             ],
-            Size = new(1000f, 100f),
+            Size = new(2000f, 100f),
             Spacing = new(10f, 10f),
         };
 
@@ -88,11 +88,11 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
     public override void Update()
     {
         if (_on.Composites[0]?.Displayable is McmImage on) {
-            on.Image!.GetComponent<Outline>().effectColor = _value ? PageStyle.BorderColor : Color.clear;
+            on.Image!.GetComponent<Outline>().effectColor = _value ? McmStyle.BorderColor : Color.clear;
             on.Image!.GetComponent<Outline>().effectDistance = _value ? new(5f, 5f) : Vector2.zero;
         }
         if (_off.Composites[0]?.Displayable is McmImage off) {
-            off.Image!.GetComponent<Outline>().effectColor = !_value ? PageStyle.BorderColor : Color.clear;
+            off.Image!.GetComponent<Outline>().effectColor = !_value ? McmStyle.BorderColor : Color.clear;
             off.Image!.GetComponent<Outline>().effectDistance = !_value ? new(5f, 5f) : Vector2.zero;
         }
         if (_toggle.Background is McmImage bg) {

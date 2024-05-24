@@ -5,7 +5,7 @@ namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal class McmImage : ScriptRef, IImage
+internal class McmImage : McmStylable, IImage
 {
     public Color? BorderColor { get; init; }
     public Vector2? BorderThickness { get; init; }

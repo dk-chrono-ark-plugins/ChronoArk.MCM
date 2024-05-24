@@ -5,7 +5,7 @@ namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal class McmModEntry : ScriptRef
+internal class McmModEntry : McmStylable
 {
     public readonly McmButton ModEntry;
     public override Vector2? Size => new(320f, 400f);

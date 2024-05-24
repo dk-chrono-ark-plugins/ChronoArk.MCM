@@ -444,6 +444,7 @@
     <Compile Include="Api\Configurables\IInputField.cs" />
     <Compile Include="Api\Configurables\ISlider.cs" />
     <Compile Include="Api\Displayables\ILine.cs" />
+    <Compile Include="Api\Displayables\IStylable.cs" />
     <Compile Include="Api\INotifyChange.cs" />
     <Compile Include="Api\Configurables\IToggle.cs" />
     <Compile Include="Api\Displayables\IButton.cs" />
@@ -455,7 +456,7 @@
     <Compile Include="Api\Displayables\IText.cs" />
     <Compile Include="Api\Configurables\IBasicEntry.cs" />
     <Compile Include="Api\Displayables\IDisplayable.cs" />
-    <Compile Include="Api\IPage.cs" />
+    <Compile Include="Api\Displayables\IPage.cs" />
     <Compile Include="Common\McmLoc.cs" />
     <Compile Include="Common\McmLog.cs" />
     <Compile Include="Implementation\Components\ButtonHighlight.cs" />
@@ -468,15 +469,17 @@
     <Compile Include="Implementation\Configurables\McmToggle.cs" />
     <Compile Include="Implementation\Displayables\McmButton.cs" />
     <Compile Include="Implementation\Displayables\McmComposite.cs" />
+    <Compile Include="Implementation\Displayables\McmStylable.cs" />
     <Compile Include="Implementation\Displayables\McmImage.cs" />
     <Compile Include="Implementation\Displayables\McmModEntry.cs" />
     <Compile Include="Implementation\Displayables\McmSeparator.cs" />
-    <Compile Include="Implementation\LoadAsset.cs" />
+    <Compile Include="Common\LoadAsset.cs" />
+    <Compile Include="Implementation\Displayables\McmDisplayable.cs" />
     <Compile Include="Implementation\McmMockup.cs" />
-    <Compile Include="Implementation\McmPage.cs" />
+    <Compile Include="Implementation\Displayables\McmPage.cs" />
     <Compile Include="Implementation\Displayables\Pages\McmPanel.cs" />
     <Compile Include="Implementation\McmManager_Api.cs" />
-    <Compile Include="Implementation\McmPage_Api.cs" />
+    <Compile Include="Implementation\Displayables\McmPage_Api.cs" />
     <Compile Include="Implementation\McmSettingEntry.cs" />
     <Compile Include="Implementation\ModLayout_Api.cs" />
     <Compile Include="Implementation\ModStub.cs" />
@@ -488,7 +491,7 @@
     <Compile Include="Implementation\Displayables\Pages\McmScrollPage.cs" />
     <Compile Include="Implementation\Displayables\McmText.cs" />
     <Compile Include="Implementation\Patches\MainOptionsPatch.cs" />
-    <Compile Include="Common\PageStyle.cs" />
+    <Compile Include="Common\McmStyle.cs" />
     <Compile Include="Api\IModConfigurationMenu.cs" />
     <Compile Include="Implementation\McmManager.cs" />
     <Compile Include="Implementation\ScriptRef.cs" />

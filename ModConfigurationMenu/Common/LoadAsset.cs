@@ -1,7 +1,7 @@
 ﻿using ChronoArkMod.ModData;
 using System.IO;
 
-namespace Mcm.Implementation;
+namespace Mcm.Common;
 
 #nullable enable
 

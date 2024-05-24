@@ -20,7 +20,7 @@ internal class McmScrollPage(ModInfo Info) : McmPanel(Info)
         parent = base.Render(parent);
 
         var scrollView = parent.AttachRectTransformObject("ScrollView", false);
-        scrollView.sizeDelta = PageStyle.Normal - PageStyle.BorderThickness;
+        scrollView.sizeDelta = McmStyle.Size - McmStyle.BorderSize;
         scrollView.SetToStretch();
         scrollView.localScale = Vector3.one;
 

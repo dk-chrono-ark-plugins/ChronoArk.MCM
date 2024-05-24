@@ -5,7 +5,7 @@ namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : ScriptRef, ICompositeLayout
+internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : McmStylable, ICompositeLayout
 {
     public required ICompositeLayout.Composite[] Composites { get; set; }
     public ICompositeLayout.LayoutGroup Layout => CompositeLayout;

@@ -5,7 +5,7 @@ namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal class McmSeparator : ScriptRef, ILine
+internal class McmSeparator : McmStylable, ILine
 {
     private Color _color = Color.gray;
     private float _thickness = 5f;

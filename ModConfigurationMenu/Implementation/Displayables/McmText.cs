@@ -5,7 +5,7 @@ namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal class McmText : ScriptRef, IText
+internal class McmText : McmStylable, IText
 {
     public TextMeshProUGUI? Text { get; private set; }
     private string? _content;
