@@ -18,33 +18,32 @@ public static class ModStub
         modInfo.ReadModSetting();
 
         return modInfo.ModSettingEntries.ToDictionary(
-            entry => entry.Key,
-            entry => {
-                var setting = new McmSettingEntry(entry.DisplayName, entry.Description);
+            kv => kv.Key,
+            kv => {
+                var setting = new McmSettingEntry(kv.DisplayName, kv.Description);
 
-                if (entry is DropdownSetting dropdown) {
+                if (kv is DropdownSetting dropdown) {
                     setting.EntryType = IBasicEntry.EntryType.Dropdown;
                     setting.Value = dropdown.Value;
-                } else if (entry is InputFieldSetting input) {
+                } else if (kv is InputFieldSetting input) {
                     setting.EntryType = IBasicEntry.EntryType.Input;
                     setting.Value = input.Value;
-                } else if (entry is InputFieldSetting_Int inputInt) {
+                } else if (kv is InputFieldSetting_Int inputInt) {
                     setting.EntryType = IBasicEntry.EntryType.Input;
                     setting.Value = inputInt.Value;
-                } else if (entry is SliderSetting slider) {
+                } else if (kv is SliderSetting slider) {
                     setting.EntryType = IBasicEntry.EntryType.Slider;
                     setting.Value = slider.Value;
                     setting.Min = slider.MinValue;
                     setting.Max = slider.MaxValue;
                     setting.Step = slider.StepSize;
-                } else if (entry is ToggleSetting toggle) {
+                } else if (kv is ToggleSetting toggle) {
                     setting.EntryType = IBasicEntry.EntryType.Toggle;
                     setting.Value = toggle.Value;
                 }
 
                 return setting;
-            }
-        );
+            });
     }
 
     /// <summary>

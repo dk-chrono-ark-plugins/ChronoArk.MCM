@@ -21,6 +21,7 @@ internal class McmImage(McmStyle? StyleOverride = null) : McmStylable(StyleOverr
         Image = image.AddComponent<Image>();
         if (Style.Size == null) {
             if (MainSprite != null) {
+                Image.sprite = MainSprite;
                 Image.SetNativeSize();
             } else {
                 image.SetToStretch();
