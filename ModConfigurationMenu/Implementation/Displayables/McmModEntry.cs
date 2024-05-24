@@ -22,7 +22,7 @@ internal class McmModEntry : McmStylable
 
         var text = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
             Composites = [
-                new(new McmImage(new() { MainColor = new(0.17f, 0.24f, 0.31f, 1f) }),
+                new(new McmImage(new() { ColorPrimary = Color.black }),
                     new(320f, 80f)),
                 new(new McmText(Style) {
                         Content = pageOverride?.Title ?? modInfo.Title

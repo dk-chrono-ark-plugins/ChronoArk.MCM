@@ -4,7 +4,7 @@
 
 internal class McmStylable(McmStyle? StyleOverride = null) : McmDisplayable, IStylable
 {
-    private McmStyle _style = StyleOverride ?? new();
+    private McmStyle _style = StyleOverride == null ? new() : StyleOverride.Copy();
     public McmStyle Style
     {
         get => _style;

@@ -20,7 +20,7 @@ internal class McmScrollPage(ModInfo Info) : McmPanel(Info)
         parent = base.Render(parent);
 
         var scrollView = parent.AttachRectTransformObject("ScrollView", false);
-        scrollView.sizeDelta = Style.Size!.Value - Style.BorderSize!.Value;
+        scrollView.sizeDelta = Style.Size!.Value - Style.OutlineSize!.Value;
         scrollView.SetToStretch();
         scrollView.localScale = Vector3.one;
 
@@ -44,7 +44,7 @@ internal class McmScrollPage(ModInfo Info) : McmPanel(Info)
         scrollbarComponent.direction = Scrollbar.Direction.BottomToTop;
 
         var scrollbarImage = scrollbar.AddComponent<Image>();
-        scrollbarImage.color = new(0.6f, 0.85f, 0.92f, 1f);
+        scrollbarImage.color = Style.ColorPrimaryVariant!.Value;
 
         var slidingArea = scrollbar.AttachRectTransformObject("Slider", false);
         slidingArea.anchorMin = new(0.05f, 0.05f);

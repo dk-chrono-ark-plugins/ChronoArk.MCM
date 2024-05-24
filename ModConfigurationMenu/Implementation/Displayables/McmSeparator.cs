@@ -10,7 +10,7 @@ internal class McmSeparator : McmStylable, ILine
     public McmSeparator(McmStyle? styleOverride = null)
     {
         Style = styleOverride ?? new() {
-            MainColor = Color.gray,
+            ColorPrimary = Color.gray,
             Size = new(0f, 5f),
         };
     }
@@ -32,7 +32,7 @@ internal class McmSeparator : McmStylable, ILine
 
     public override void Update()
     {
-        Ref!.GetComponent<Image>().color = Style.MainColor!.Value;
+        Ref!.GetComponent<Image>().color = Style.ColorPrimary!.Value;
         Ref!.GetComponent<LayoutElement>().preferredHeight = Style.Size!.Value.y;
     }
 }

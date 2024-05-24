@@ -21,7 +21,7 @@ internal partial class ModLayout : IModLayout
     {
         var registry = McmManager.GetMcmRegistry(Owner)
             ?? throw new InvalidOperationException($"{Owner.id} must be registerd with MCM first");
-        var entry = new McmSettingEntry(Owner.I2Loc(name), Owner.I2Loc(description)) {
+        var entry = new McmSettingEntry(key, Owner.I2Loc(name), Owner.I2Loc(description)) {
             EntryType = IBasicEntry.EntryType.Slider,
             Value = min,
         };
@@ -51,7 +51,7 @@ internal partial class ModLayout : IModLayout
     {
         var registry = McmManager.GetMcmRegistry(Owner)
             ?? throw new InvalidOperationException($"{Owner.id} must be registerd with MCM first");
-        var entry = new McmSettingEntry(Owner.I2Loc(name), Owner.I2Loc(description)) {
+        var entry = new McmSettingEntry(key, Owner.I2Loc(name), Owner.I2Loc(description)) {
             EntryType = IBasicEntry.EntryType.Toggle,
             Value = false,
         };

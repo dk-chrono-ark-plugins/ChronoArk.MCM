@@ -36,19 +36,17 @@ internal class McmImage(McmStyle? StyleOverride = null) : McmStylable(StyleOverr
 
     public override void Update()
     {
-        base.Update();
-
         if (MainSprite != null) {
             Image!.sprite = MainSprite;
         }
-        if (Style.BorderColor != null) {
-            Image!.gameObject.GetOrAddComponent<Outline>().effectColor = Style.BorderColor.Value;
+        if (Style.OutlineSize != null) {
+            Image!.gameObject.GetOrAddComponent<Outline>().effectDistance = Style.OutlineSize.Value;
+            if (Style.ColorSecondary != null) {
+                Image!.gameObject.GetOrAddComponent<Outline>().effectColor = Style.ColorSecondary.Value;
+            }
         }
-        if (Style.BorderSize != null) {
-            Image!.gameObject.GetOrAddComponent<Outline>().effectDistance = Style.BorderSize.Value;
-        }
-        if (Style.MainColor != null) {
-            Image!.color = Style.MainColor.Value;
+        if (Style.ColorPrimary != null) {
+            Image!.color = Style.ColorPrimary.Value;
         }
     }
 }

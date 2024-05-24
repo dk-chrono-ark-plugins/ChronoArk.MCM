@@ -24,26 +24,28 @@ internal class McmPanel : McmPage
 
     public McmPanel(ModInfo modInfo) : base(modInfo)
     {
-        _titleText = new() { Content = string.Empty };
-        Title = $"{Owner.Title}  v{Owner.Version}";
-
         Style = McmStyle.Default();
+
+        _titleText = new() { Content = string.Empty };
+        _titleText.Style.TextFontSize = 40f;
+
+        Title = $"{Owner.Title}  v{Owner.Version}";
 
         var back = new McmButton() {
             Content = new McmText(Style) {
-                Content = "<b><size=40><<</size></b>",
+                Content = McmLoc.Page.Back,
             },
             OnClick = McmWindow.Back
         };
         var apply = new McmButton() {
             Content = new McmText(Style) {
-                Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Apply),
+                Content = McmLoc.Page.Apply,
             },
             OnClick = McmWindow.Save
         };
         var reset = new McmButton() {
             Content = new McmText(Style) {
-                Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Cancel),
+                Content = McmLoc.Page.Reset,
             },
             OnClick = McmWindow.Reset
         };
@@ -66,14 +68,14 @@ internal class McmPanel : McmPage
         }
 
         var page = parent.AttachRectTransformObject($"McmPage:{Owner.Title}:{Name}");
-        page.sizeDelta = Style.Size!.Value + Style.BorderSize!.Value;
-        //Debug.Log(Style);
+        page.sizeDelta = Style.Size!.Value + Style.OutlineSize!.Value;
+
         var imageBg = page.AddComponent<Image>();
-        imageBg.color = Style.MainColor!.Value;
+        imageBg.color = Style.ColorPrimary!.Value;
 
         var imageFg = page.AddComponent<Outline>();
-        imageFg.effectColor = Style.BorderColor!.Value;
-        imageFg.effectDistance = Style.BorderSize!.Value;
+        imageFg.effectColor = Style.ColorSecondary!.Value;
+        imageFg.effectDistance = Style.OutlineSize!.Value;
 
         var title = _titleText.Render<RectTransform>(page);
         title.AlignToTop(new(0f, 20f));

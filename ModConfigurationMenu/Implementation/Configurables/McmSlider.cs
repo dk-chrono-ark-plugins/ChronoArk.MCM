@@ -15,10 +15,11 @@ internal class McmSlider : McmConfigurable<float>, ISlider
     public float Step { get; init; }
     public Slider? Slider { get; set; }
 
-    public McmSlider(string key, McmSettingEntry entry) : base(key, entry.Name, entry.Description)
+    public McmSlider(string key, McmSettingEntry entry) 
+        : base(key, entry.Name, entry.Description)
     {
         _bg = new McmImage();
-        _bg.Style.BorderSize = new(0f, 0f);
+        _bg.Style.OutlineSize = new(0f, 0f);
     }
 
     public override Transform Render(Transform parent)

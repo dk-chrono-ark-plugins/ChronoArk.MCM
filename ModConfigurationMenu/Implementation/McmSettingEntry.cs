@@ -1,4 +1,5 @@
-﻿using Mcm.Api.Configurables;
+﻿using ChronoArkMod;
+using Mcm.Api.Configurables;
 
 namespace Mcm.Implementation;
 
@@ -6,8 +7,9 @@ namespace Mcm.Implementation;
 
 public sealed record McmSettingEntry
 {
-    public string Name { get; init; } = "";
-    public string Description { get; init; } = "";
+    public string Key { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
     public IBasicEntry.EntryType EntryType { get; set; } = IBasicEntry.EntryType.Unknown;
     public object Value { get; set; } = new();
     public float? Min { get; set; } = null;
@@ -16,9 +18,10 @@ public sealed record McmSettingEntry
     public string[]? Options { get; set; } = null;
 
 
-    public McmSettingEntry(string name, string description)
+    public McmSettingEntry(string key, string name, string description)
     {
-        Name = name;
-        Description = description;
+        Key = key;
+        Name = string.IsNullOrEmpty(name) ? key : name;
+        Description = string.IsNullOrEmpty(description) ? McmLoc.Setting.Placeholder : description;
     }
 }

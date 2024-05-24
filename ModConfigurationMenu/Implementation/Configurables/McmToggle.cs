@@ -1,5 +1,6 @@
 ﻿using I2.Loc;
 using Mcm.Api.Configurables;
+using Mcm.Api.Displayables;
 using Mcm.Implementation.Displayables;
 
 namespace Mcm.Implementation.Configurables;
@@ -8,49 +9,62 @@ namespace Mcm.Implementation.Configurables;
 
 internal class McmToggle : McmConfigurable<bool>, IToggle
 {
-    private readonly McmComposite _on;
-    private readonly McmComposite _off;
-    private readonly McmButton _toggle;
+    private readonly McmImage _on;
+    private readonly McmImage _off;
+    private readonly McmComposite _toggle;
 
-    public McmToggle(string key, McmSettingEntry entry) : base(key, entry.Name, entry.Description)
+    public override IBasicEntry.EntryType SettingType => IBasicEntry.EntryType.Toggle;
+
+    public McmToggle(string key, McmSettingEntry entry) 
+        : base(key, entry.Name, entry.Description, McmStyle.Default())
     {
-        Style = McmStyle.Default();
-        Style.Size = new(200f, 100f);
+        Style.Size = McmStyle.SettingLayout.ToggleSingle;
         Style.TextFontSize = 50f;
+        Style.OutlineSize = null;
 
-        _on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
+        _on = new McmImage(Style);
+        _off = new McmImage(Style);
+        var on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
             Composites = [
-                new(new McmImage(Style),
-                    new(200f, 100f)),
+                new(_on, McmStyle.SettingLayout.ToggleSingle),
                 new(new McmText(Style) {
-                        Content = LocalizationManager.GetTranslation(ScriptTerms.UI_Option.Bool_On),
-                    },
-                    new(200f, 100f)),
+                        Content = McmLoc.Setting.ToggleOn,
+                    }, 
+                    McmStyle.SettingLayout.ToggleSingle),
             ],
         };
-        _off = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
+        var off = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
             Composites = [
-                new(new McmImage(Style),
-                    new(200f, 100f)),
+                new(_off,
+                    McmStyle.SettingLayout.ToggleSingle),
                 new(new McmText(Style) {
-                        Content = LocalizationManager.GetTranslation(ScriptTerms.UI_Option.Bool_Off),
+                        Content = McmLoc.Setting.ToggleOff,
                     },
-                    new(200f, 100f)),
+                    McmStyle.SettingLayout.ToggleSingle),
             ],
         };
 
-        Style.Size = new(400f, 100f);
-        Style.LayoutPadding = new(5, 5, 10, 10);
-        Style.LayoutSpacing = new(5f, 0f);
-        _toggle = new McmButton() {
+        Style.Size = McmStyle.SettingLayout.Setting;
+        Style.LayoutPadding = McmStyle.SettingLayout.TogglePadding;
+        Style.LayoutSpacing = McmStyle.SettingLayout.ToggleSpacing;
+
+        var toggle = new McmButton(Style) {
             Content = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal, Style) {
                 Composites = [
-                    new(_on, new(200f, 100f)),
-                    new(_off, new(200f, 100f)),
+                    new(on, McmStyle.SettingLayout.ToggleSingle),
+                    new(off, McmStyle.SettingLayout.ToggleSingle),
                 ],
             },
             OnClick = () => SetValue(!Value),
             DisableGradient = true,
+        };
+
+        Style.LayoutSpacing = McmStyle.SettingLayout.ToggleSpacingInner;
+        _toggle = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal, Style) {
+            Composites = [
+                .. _entry,
+                new(toggle, Style.Size!.Value),
+            ],
         };
     }
 
@@ -60,16 +74,7 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
             return Ref.transform;
         }
 
-        Style.Size = new(2000f, 100f);
-        Style.LayoutSpacing = new(10f, 10f);
-        var group = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal, Style) {
-            Composites = [
-                .. _entry,
-                new(_toggle, new(400f, 100f)),
-            ],
-        };
-
-        var toggle = group.Render(parent);
+        var toggle = _toggle.Render(parent);
         Value = Read();
 
         return base.Render(toggle);
@@ -77,6 +82,9 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
 
     public override void Update()
     {
-        Debug.Log("update here");
+        _on.Style.OutlineSize = Value ? new(5f, 5f) : Vector2.zero;
+        _off.Style.OutlineSize = !Value ? new(5f, 5f) : Vector2.zero;
+        _on.Update();
+        _off.Update();
     }
 }

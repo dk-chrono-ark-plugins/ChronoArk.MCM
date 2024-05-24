@@ -32,7 +32,6 @@ public static class ConfigCereal
         } catch {
             Debug.Log("failed to read config");
             throw;
-            // noexcept
         }
         inferred = default;
         return false;

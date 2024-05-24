@@ -7,7 +7,7 @@ internal partial class McmPage : McmStylable, IPage
     public IImage AddImage(Color color)
     {
         var mcmImage = new McmImage();
-        mcmImage.Style.MainColor = color;
+        mcmImage.Style.ColorPrimary = color;
         Add(mcmImage);
         return mcmImage;
     }
@@ -34,8 +34,8 @@ internal partial class McmPage : McmStylable, IPage
     public ILine AddSeparator(float thickness = 5f, Color? color = null)
     {
         var mcmLine = new McmSeparator();
-        mcmLine.Style.BorderColor = color;
-        mcmLine.Style.BorderSize = new(0f, thickness);
+        mcmLine.Style.ColorSecondary = color;
+        mcmLine.Style.OutlineSize = new(0f, thickness);
         Add(mcmLine);
         return mcmLine;
     }

@@ -20,7 +20,7 @@ public static class ModStub
         return modInfo.ModSettingEntries.ToDictionary(
             kv => kv.Key,
             kv => {
-                var setting = new McmSettingEntry(kv.DisplayName, kv.Description);
+                var setting = new McmSettingEntry(kv.Key, kv.DisplayName, kv.Description);
 
                 if (kv is DropdownSetting dropdown) {
                     setting.EntryType = IBasicEntry.EntryType.Dropdown;

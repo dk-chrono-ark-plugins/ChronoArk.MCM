@@ -4,5 +4,4 @@
 
 internal sealed record McmConfig
 {
-    internal bool SwapColorKey { get; set; } = false;
 }

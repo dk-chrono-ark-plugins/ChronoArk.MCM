@@ -28,8 +28,7 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
             DeferredUpdate();
         }
     }
-
-    public IBasicEntry.EntryType SettingType { get; init; }
+    public virtual IBasicEntry.EntryType SettingType => throw new NotImplementedException();
 
     protected McmConfigurable(string key, string name, string desc, McmStyle? styleOverride = null)
         : base(styleOverride)
@@ -38,18 +37,21 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
         Name = name;
         Description = desc;
 
-        Style.TextFontSize = 30f;
-        Style.Size = new(400f, 100f);
-
+        Style.TextFontSize = 34f;
+        Style.Size = McmStyle.SettingLayout.NameText;
         _name = new McmText(Style) {
             Content = name,
         };
+
+        Style.TextFontSize = 30f;
+        Style.Size = McmStyle.SettingLayout.DescText;
         var _desc = new McmText(Style) {
             Content = Description,
         };
+
         _entry = [
-            new(_name, Style.Size.Value),
-            new(_desc, Style.Size.Value),
+            new(_name, McmStyle.SettingLayout.NameText),
+            new(_desc, McmStyle.SettingLayout.DescText),
         ];
     }
 
@@ -88,8 +90,8 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
         if (_name == null) {
             return;
         }
-        if (!_name.Content.StartsWith(McmLoc.Page.Changed)) {
-            _name.Content = McmLoc.Page.Changed + _name.Content;
+        if (!_name.Content.StartsWith(McmLoc.Setting.Changed)) {
+            _name.Content = McmLoc.Setting.Changed + _name.Content;
         }
     }
 
@@ -98,8 +100,8 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
         if (_name == null) {
             return;
         }
-        if (_name.Content.StartsWith(McmLoc.Page.Changed)) {
-            _name.Content = _name.Content[McmLoc.Page.Changed.Length..];
+        if (_name.Content.StartsWith(McmLoc.Setting.Changed)) {
+            _name.Content = _name.Content[McmLoc.Setting.Changed.Length..];
         }
     }
 }

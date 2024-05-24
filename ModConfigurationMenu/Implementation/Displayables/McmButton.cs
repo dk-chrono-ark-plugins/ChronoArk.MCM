@@ -26,11 +26,12 @@ internal class McmButton : McmStylable, IButton
     public bool DisableGradient { get; init; }
     public IImage Background => _buttonImg;
 
-    public McmButton(McmStyle? styleOverride = null) : base(styleOverride)
+    public McmButton(McmStyle? styleOverride = null)
+        : base(styleOverride)
     {
         if (styleOverride == null) {
             Style = McmStyle.Default() with {
-                BorderSize = new(3f, 3f)
+                OutlineSize = new(3f, 3f)
             };
         }
         _buttonImg = new(Style);
