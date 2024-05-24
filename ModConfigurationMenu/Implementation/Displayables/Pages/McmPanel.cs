@@ -1,53 +1,49 @@
 ﻿using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
-using I2.Loc;
 using Mcm.Implementation.Components;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
 /// <summary>
-/// Basic page layout, will return a bordered page to the render pipe
+///     Basic page layout, will return a bordered page to the render pipe
 /// </summary>
 internal class McmPanel : McmPage
 {
-    protected readonly McmComposite _buttons;
-    protected readonly McmText _titleText;
+    private readonly McmComposite _buttons;
+    private readonly McmText _titleText;
 
-    public override string Title
-    {
-        get => _titleText.Content;
-        set => _titleText.Content = value;
-    }
-
-    public McmPanel(ModInfo modInfo) : base(modInfo)
+    protected McmPanel(ModInfo modInfo)
+        : base(modInfo)
     {
         Style = McmStyle.Default();
 
-        _titleText = new() { Content = string.Empty };
-        _titleText.Style.TextFontSize = 40f;
+        _titleText = new() {
+            Content = string.Empty,
+            Style = {
+                TextFontSize = 40f,
+            },
+        };
 
         Title = $"{Owner.Title}  v{Owner.Version}";
 
-        var back = new McmButton() {
+        var back = new McmButton {
             Content = new McmText(Style) {
                 Content = McmLoc.Page.Back,
             },
-            OnClick = McmWindow.Back
+            OnClick = McmWindow.Back,
         };
-        var apply = new McmButton() {
+        var apply = new McmButton {
             Content = new McmText(Style) {
                 Content = McmLoc.Page.Apply,
             },
-            OnClick = McmWindow.Save
+            OnClick = McmWindow.Save,
         };
-        var reset = new McmButton() {
+        var reset = new McmButton {
             Content = new McmText(Style) {
                 Content = McmLoc.Page.Reset,
             },
-            OnClick = McmWindow.Reset
+            OnClick = McmWindow.Reset,
         };
 
         _buttons = new(ICompositeLayout.LayoutGroup.Horizontal) {
@@ -56,9 +52,17 @@ internal class McmPanel : McmPage
                 new(apply, new(100f, 50f)),
                 new(reset, new(100f, 50f)),
             ],
+            Style = {
+                LayoutSpacing = new(10f, 0f),
+                Size = new(400f, 50f),
+            },
         };
-        _buttons.Style.LayoutSpacing = new(10f, 0f);
-        _buttons.Style.Size = new(400f, 50f);
+    }
+
+    public sealed override string Title
+    {
+        get => _titleText.Content;
+        set => _titleText.Content = value;
     }
 
     public override Transform Render(Transform parent)

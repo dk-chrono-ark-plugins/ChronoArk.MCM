@@ -1,19 +1,16 @@
 ﻿using ChronoArkMod;
 using ChronoArkMod.Helper;
 using ChronoArkMod.ModData;
-using Mcm.Api.Configurables;
 using UnityEngine.EventSystems;
 
 namespace Mcm.Implementation.Components;
-
-#nullable enable
 
 internal class McmWindow : UIBehaviour
 {
     private static bool _onceFlag;
     private readonly List<IPage> _pageHierarchy = [];
-    private bool _shouldReturn = true;
     private Canvas? _canvas;
+    private bool _shouldReturn = true;
 
     public IPage? TopPage
     {
@@ -23,9 +20,22 @@ internal class McmWindow : UIBehaviour
             return _pageHierarchy.LastOrDefault();
         }
     }
+
     public static McmWindow? Instance { get; private set; }
     public static ModUI? ModUI { get; private set; }
     public static IModLayout? MyLayout { get; private set; }
+
+    public static void Reset()
+    {
+        if (Instance == null || Instance.TopPage == null) {
+            return;
+        }
+
+        McmManager.ResetMcmConfig(Instance.TopPage.Owner);
+        Instance.TopPage.Elements
+            .OfType<INotifyChange>()
+            .Do(element => element.NotifyReset());
+    }
 
     protected override void Start()
     {
@@ -50,18 +60,20 @@ internal class McmWindow : UIBehaviour
     public void Open()
     {
         var mom = GameObject.Find("MainOptions");
-        if (mom != null) {
-            gameObject.SetActive(true);
-            mom.SetActive(false);
-            _shouldReturn = false;
-
-            this.StartDeferredCoroutine(
-                () => mom.SetActive(true),
-                () => _shouldReturn
-            );
-            // render on next frame
-            this.StartDeferredCoroutine(RenderSelf);
+        if (mom == null) {
+            return;
         }
+
+        gameObject.SetActive(true);
+        mom.SetActive(false);
+        _shouldReturn = false;
+
+        this.StartDeferredCoroutine(
+            () => mom.SetActive(true),
+            () => _shouldReturn
+        );
+        // render on next frame
+        this.StartDeferredCoroutine(RenderSelf);
     }
 
     public void Close()
@@ -89,21 +101,11 @@ internal class McmWindow : UIBehaviour
         if (Instance == null || Instance.TopPage == null) {
             return;
         }
+
         McmManager.SaveMcmConfig(Instance.TopPage.Owner);
         Instance.TopPage.Elements
             .OfType<INotifyChange>()
-            .Do(disp => disp.NotifyApply());
-    }
-
-    public static void Reset()
-    {
-        if (Instance == null || Instance.TopPage == null) {
-            return;
-        }
-        McmManager.ResetMcmConfig(Instance.TopPage.Owner);
-        Instance.TopPage.Elements
-            .OfType<INotifyChange>()
-            .Do(disp => disp.NotifyReset());
+            .Do(element => element.NotifyApply());
     }
 
     public void RenderPage(IPage? page)
@@ -111,6 +113,7 @@ internal class McmWindow : UIBehaviour
         if (!gameObject.activeInHierarchy || _canvas == null || page == null) {
             return;
         }
+
         _shouldReturn = false;
 
         try {
@@ -121,6 +124,7 @@ internal class McmWindow : UIBehaviour
             TopPage?.Show();
             throw;
         }
+
         _pageHierarchy.Add(page);
     }
 
@@ -140,7 +144,7 @@ internal class McmWindow : UIBehaviour
         var modInfo = ModManager.getModInfo(McmMod.Instance!.ModId);
         var layout = McmManager.GetMcmRegistry(modInfo)!.Layout;
         var myPage = layout.GetPage("McmEntry") ??
-            throw new InvalidOperationException($"MCM cannot render the entry page...");
+                     throw new InvalidOperationException("MCM cannot render the entry page...");
 
         myPage.Clear();
         McmManager.Instance
@@ -156,7 +160,8 @@ internal class McmWindow : UIBehaviour
             ComponentFetch.TryFindObject<ModUI>("ModUI", out var modUI)) {
             ModUI = modUI;
         }
-        MyLayout = McmManager.GetMcmRegistry(McmMod.ModInfo)?.Layout;
+
+        MyLayout = McmManager.GetMcmRegistry(McmMod.ModInfo!)?.Layout;
         _onceFlag = true;
     }
 }

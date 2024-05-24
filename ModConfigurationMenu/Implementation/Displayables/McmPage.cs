@@ -2,13 +2,11 @@
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
-internal partial class McmPage(ModInfo Info) : McmStylable, IPage
+internal partial class McmPage(ModInfo info) : McmStylable, IPage
 {
     protected readonly List<IDisplayable> _elements = [];
 
-    public ModInfo Owner => Info;
+    public ModInfo Owner => info;
     public virtual string Title { get; set; } = McmLoc.Page.Untitled;
     public virtual string Name { get; set; } = "_";
     public List<IDisplayable> Elements => _elements;

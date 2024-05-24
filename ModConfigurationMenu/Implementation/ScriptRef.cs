@@ -1,43 +1,39 @@
 ﻿using ChronoArkMod.Helper;
+using Object = UnityEngine.Object;
 
 namespace Mcm.Implementation;
 
-#nullable enable
-
 internal class ScriptRef : IScriptRef
 {
-    protected bool _dirty = true;
-    protected bool _deferred = false;
     protected object? _deferredLock = null;
 
     public GameObject? Ref { get; protected set; }
-    public bool Deferred { get; }
-    public bool Dirty => _dirty;
-
-    ~ScriptRef()
-    {
-        Destroy();
-    }
+    public bool Deferred { get; private set; }
+    public bool Dirty { get; private set; } = true;
 
     public void Destroy()
     {
-        if (Ref != null) {
-            UnityEngine.Object.Destroy(Ref);
-            Ref = null;
+        if (!Ref) {
+            return;
         }
+
+        Object.Destroy(Ref);
+        Ref = null;
     }
 
     public void DeferredUpdate()
     {
-        if (_deferred) {
+        if (Deferred) {
             return;
         }
-        _deferred = true;
+
+        Dirty = true;
+        Deferred = true;
         CoroutineHelper.Deferred(
             () => {
                 Update();
-                _dirty = true;
-                _deferred = false;
+                Dirty = false;
+                Deferred = false;
             },
             () => _deferredLock != null
         );
@@ -45,5 +41,10 @@ internal class ScriptRef : IScriptRef
 
     public virtual void Update()
     {
+    }
+
+    ~ScriptRef()
+    {
+        Destroy();
     }
 }

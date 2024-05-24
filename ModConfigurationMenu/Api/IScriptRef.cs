@@ -1,25 +1,23 @@
 ﻿namespace Mcm.Api;
 
-#nullable enable
-
 /// <summary>
-/// Holds a ref to script-created game object<br/>
-/// Responsible for its destruction
+///     Holds a ref to script-created game object<br />
+///     Responsible for its destruction
 /// </summary>
 public interface IScriptRef : IDeferredUpdate
 {
     /// <summary>
-    /// Ref needs updating
+    ///     Ref needs updating
     /// </summary>
     bool Dirty { get; }
 
     /// <summary>
-    /// Ref to itself
+    ///     Ref to itself
     /// </summary>
     GameObject? Ref { get; }
 
     /// <summary>
-    /// Destroy self
+    ///     Destroy self
     /// </summary>
     void Destroy();
 }

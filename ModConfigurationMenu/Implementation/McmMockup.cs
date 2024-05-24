@@ -2,8 +2,6 @@
 
 namespace Mcm.Implementation;
 
-#nullable enable
-
 internal static class McmMockup
 {
     internal static void Mockup(IModLayout layout)
@@ -24,10 +22,11 @@ internal static class McmMockup
     {
         CoroutineHelper.Deferred(
             () => {
-                McmMod.ModInfo.StubMcmPage();
+                McmMod.ModInfo?.StubMcmPage();
 
-                layout!.IndexPage.AddSeparator();
-                layout.IndexPage.AddText("Displayable here, Displayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable here");
+                layout.IndexPage.AddSeparator();
+                layout.IndexPage.AddText(
+                    "Displayable here, Displayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable hereDisplayable here");
                 layout.IndexPage.AddSeparator();
             },
             () => McmMod.ModInfo != null

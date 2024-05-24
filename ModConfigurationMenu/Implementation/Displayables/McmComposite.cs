@@ -3,12 +3,11 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
-internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout, McmStyle? StyleOverride = null) : McmStylable(StyleOverride), ICompositeLayout
+internal class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmStyle? styleOverride = null)
+    : McmStylable(styleOverride), ICompositeLayout
 {
     public required ICompositeLayout.Composite[] Composites { get; set; }
-    public ICompositeLayout.LayoutGroup Layout => CompositeLayout;
+    public ICompositeLayout.LayoutGroup Layout => compositeLayout;
 
     public override Transform Render(Transform parent)
     {
@@ -37,6 +36,7 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout, McmSty
                     if (Style.LayoutSpacing != null) {
                         group.spacing = Style.LayoutSpacing.Value;
                     }
+
                     break;
                 }
                 case ICompositeLayout.LayoutGroup.Horizontal: {
@@ -44,6 +44,7 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout, McmSty
                     if (Style.LayoutSpacing != null) {
                         group.spacing = Style.LayoutSpacing.Value.x;
                     }
+
                     contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
                     break;
                 }
@@ -52,6 +53,7 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout, McmSty
                     if (Style.LayoutSpacing != null) {
                         group.spacing = Style.LayoutSpacing.Value.y;
                     }
+
                     contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
                     break;
                 }
@@ -84,6 +86,7 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout, McmSty
             if (!Mathf.Approximately(size.x, 0f)) {
                 element.preferredWidth = size.x;
             }
+
             if (!Mathf.Approximately(size.y, 0f)) {
                 element.preferredHeight = size.y;
             }

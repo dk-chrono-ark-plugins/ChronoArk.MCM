@@ -1,9 +1,7 @@
-﻿using ChronoArkMod.ModData;
-using System.IO;
+﻿using System.IO;
+using ChronoArkMod.ModData;
 
 namespace Mcm.Common;
-
-#nullable enable
 
 public static class LoadAsset
 {
@@ -17,9 +15,11 @@ public static class LoadAsset
                 return texture;
             }
         }
+
         if (absens) {
             throw new FileNotFoundException("can't find texture");
         }
+
         return McmMod.ModInfo!.LoadTexture2D("absens.png", true);
     }
 }

@@ -3,22 +3,8 @@ using TMPro;
 
 namespace Mcm.Common;
 
-#nullable enable
-
 public sealed record McmStyle
 {
-    public sealed record SettingLayout
-    {
-        public static readonly Vector2 NameText = new(400f, 100f);
-        public static readonly Vector2 DescText = new(400f, 100f);
-        public static readonly Vector2 Setting = new(400f, 100f);
-
-        public static readonly Vector2 ToggleSingle = new(200f, 100f);
-        public static readonly RectOffset TogglePadding = new(5, 5, 10, 10);
-        public static readonly Vector2 ToggleSpacing = new(5f, 0f);
-        public static readonly Vector2 ToggleSpacingInner = new(10f, 10f);
-    }
-
     public static Vector2 MaxSize => new(Display.main.renderingWidth, Display.main.renderingHeight);
     public static Vector2? CurrentPageSize => McmWindow.Instance?.TopPage?.Style.Size;
 
@@ -69,13 +55,28 @@ public sealed record McmStyle
         };
     }
 
-    public McmStyle Copy() => this with { };
+    public McmStyle Copy()
+    {
+        return this with { };
+    }
 
     public override string ToString()
     {
-        return $"Size {Size} OutlineSize {OutlineSize}\n" + 
-            $"ColorPrimary {ColorPrimary} ColorPrimaryVariant {ColorPrimaryVariant} ColorSecondary {ColorSecondary} ColorSecondaryVariant {ColorSecondaryVariant}\n" +
-            $"TextAlignment {TextAlignment} TextFontSize {TextFontSize} TextAutoSize {TextAutoSize}\n" +
-            $"LayoutSpacing {LayoutSpacing} LayoutPadding {LayoutPadding} LayoutAnchor {LayoutAnchor}";
+        return $"Size {Size} OutlineSize {OutlineSize}\n" +
+               $"ColorPrimary {ColorPrimary} ColorPrimaryVariant {ColorPrimaryVariant} ColorSecondary {ColorSecondary} ColorSecondaryVariant {ColorSecondaryVariant}\n" +
+               $"TextAlignment {TextAlignment} TextFontSize {TextFontSize} TextAutoSize {TextAutoSize}\n" +
+               $"LayoutSpacing {LayoutSpacing} LayoutPadding {LayoutPadding} LayoutAnchor {LayoutAnchor}";
+    }
+
+    public sealed record SettingLayout
+    {
+        public static readonly Vector2 NameText = new(400f, 100f);
+        public static readonly Vector2 DescText = new(400f, 100f);
+        public static readonly Vector2 Setting = new(400f, 100f);
+        public static readonly Vector2 SettingSpacingInner = new(10f, 10f);
+
+        public static readonly Vector2 ToggleSingle = new(200f, 100f);
+        public static readonly RectOffset TogglePadding = new(5, 5, 10, 10);
+        public static readonly Vector2 ToggleSpacing = new(5f, 0f);
     }
 }

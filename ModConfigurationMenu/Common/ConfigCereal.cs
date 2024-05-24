@@ -1,10 +1,8 @@
-﻿using ChronoArkMod.ModData;
+﻿using System.IO;
+using ChronoArkMod.ModData;
 using Newtonsoft.Json;
-using System.IO;
 
 namespace Mcm.Common;
-
-#nullable enable
 
 public static class ConfigCereal
 {
@@ -33,6 +31,7 @@ public static class ConfigCereal
             Debug.Log("failed to read config");
             throw;
         }
+
         inferred = default;
         return false;
     }
@@ -59,13 +58,16 @@ public static class ConfigCereal
             if (File.Exists(path)) {
                 using var sr = new StreamReader(path);
                 return JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
-            } else if (modInfo.RestoreMcmConfig()) {
+            }
+
+            if (modInfo.RestoreMcmConfig()) {
                 return modInfo.ReadMcmConfig<T>();
             }
         } catch {
             Debug.Log("failed to read config");
             throw;
         }
+
         return default;
     }
 
@@ -98,6 +100,7 @@ public static class ConfigCereal
             Debug.Log("failed to restore config");
             // noexcept
         }
+
         return false;
     }
 

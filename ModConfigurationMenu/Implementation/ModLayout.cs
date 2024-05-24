@@ -4,14 +4,9 @@ using Mcm.Implementation.Displayables;
 
 namespace Mcm.Implementation;
 
-#nullable enable
-
-internal partial class ModLayout : IModLayout
+internal partial class ModLayout
 {
     private readonly Dictionary<string, IPage> _pages = [];
-
-    public IPage IndexPage { get; init; }
-    public ModInfo Owner { get; init; }
 
     public ModLayout(IPage index)
     {
@@ -22,23 +17,31 @@ internal partial class ModLayout : IModLayout
         IndexPage = index;
     }
 
+    public IPage IndexPage { get; init; }
+    public ModInfo Owner { get; init; }
+
     public IPage AddPage(string name, ICompositeLayout.LayoutGroup layout, bool showAsEntry = false)
     {
         IPage page = layout switch {
             ICompositeLayout.LayoutGroup.Grid => new McmGridPage(Owner),
             ICompositeLayout.LayoutGroup.Vertical => new McmVerticalPage(Owner),
-            _ => throw new NotImplementedException()
+            _ => throw new NotImplementedException(),
         };
 
         page.Name = name;
         var key = SanitizedName(name);
-        if (_pages.TryAdd(key, page)) {
-            Debug.Log($"{page.Owner.Title} added page {name}");
-            if (showAsEntry) {
-                McmManager.Instance.ExtraEntries.Add(page);
-                Debug.Log("...as separate entry");
-            }
+        if (!_pages.TryAdd(key, page)) {
+            return _pages[key];
         }
+
+        Debug.Log($"{page.Owner.Title} added page {name}");
+        if (!showAsEntry) {
+            return _pages[key];
+        }
+
+        McmManager.Instance.ExtraEntries.Add(page);
+        Debug.Log("...as separate entry");
+
         return _pages[key];
     }
 
@@ -55,9 +58,10 @@ internal partial class ModLayout : IModLayout
         if (name == "index") {
             return;
         }
+
         var key = SanitizedName(name);
         var success = _pages.Remove(key);
-        Debug.Log($"removed page {key}, " + (success ? "success" : "nonexist"));
+        Debug.Log($"removing page {key}, " + (success ? "success" : "nonexistent"));
     }
 
     public void RenderPage(string name)
@@ -66,6 +70,7 @@ internal partial class ModLayout : IModLayout
         if (page == null || McmWindow.Instance == null) {
             return;
         }
+
         McmWindow.Instance.RenderPage(page);
     }
 
@@ -74,10 +79,12 @@ internal partial class ModLayout : IModLayout
         if (string.IsNullOrEmpty(name)) {
             throw new ArgumentNullException(nameof(name));
         }
+
         var prefix = $"{Owner.id}_";
         if (!name.StartsWith(prefix)) {
             name = prefix + name;
         }
+
         return name;
     }
 }

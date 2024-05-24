@@ -1,6 +1,5 @@
 ﻿namespace Mcm.Implementation.Displayables;
 
-#nullable enable
 internal class McmDisplayable : ScriptRef, IDisplayable
 {
     public virtual void Hide()

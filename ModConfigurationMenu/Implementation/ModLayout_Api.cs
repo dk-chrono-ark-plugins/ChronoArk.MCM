@@ -3,11 +3,10 @@ using Mcm.Implementation.Configurables;
 
 namespace Mcm.Implementation;
 
-#nullable enable
-
 internal partial class ModLayout : IModLayout
 {
-    public IDropdown AddDropdownMenu(string key, string name, string description, Func<string[]> options, Action<int> set)
+    public IDropdown AddDropdownMenu(string key, string name, string description, Func<string[]> options,
+        Action<int> set)
     {
         throw new NotImplementedException();
     }
@@ -17,10 +16,11 @@ internal partial class ModLayout : IModLayout
         throw new NotImplementedException();
     }
 
-    public ISlider AddSliderOption(string key, string name, string description, float min, float max, float step, Action<float> set)
+    public ISlider AddSliderOption(string key, string name, string description, float min, float max, float step,
+        Action<float> set)
     {
         var registry = McmManager.GetMcmRegistry(Owner)
-            ?? throw new InvalidOperationException($"{Owner.id} must be registerd with MCM first");
+                       ?? throw new InvalidOperationException($"{Owner.id} must be registered with MCM first");
         var entry = new McmSettingEntry(key, Owner.I2Loc(name), Owner.I2Loc(description)) {
             EntryType = IBasicEntry.EntryType.Slider,
             Value = min,
@@ -32,7 +32,7 @@ internal partial class ModLayout : IModLayout
 
         var mcmSlider = new McmSlider(key, entry) {
             Owner = Owner,
-            Save = (value) => {
+            Save = value => {
                 set(value);
                 Owner.SetMcmConfig(key, value);
             },
@@ -50,7 +50,7 @@ internal partial class ModLayout : IModLayout
     public IToggle AddToggleOption(string key, string name, string description, Action<bool> set)
     {
         var registry = McmManager.GetMcmRegistry(Owner)
-            ?? throw new InvalidOperationException($"{Owner.id} must be registerd with MCM first");
+                       ?? throw new InvalidOperationException($"{Owner.id} must be registered with MCM first");
         var entry = new McmSettingEntry(key, Owner.I2Loc(name), Owner.I2Loc(description)) {
             EntryType = IBasicEntry.EntryType.Toggle,
             Value = false,
@@ -62,7 +62,7 @@ internal partial class ModLayout : IModLayout
 
         var mcmToggle = new McmToggle(key, entry) {
             Owner = Owner,
-            Save = (value) => {
+            Save = value => {
                 set(value);
                 Owner.SetMcmConfig(key, value);
             },

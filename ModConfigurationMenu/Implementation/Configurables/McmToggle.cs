@@ -1,35 +1,29 @@
-﻿using I2.Loc;
-using Mcm.Api.Configurables;
-using Mcm.Api.Displayables;
+﻿using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
 
 namespace Mcm.Implementation.Configurables;
 
-#nullable enable
-
 internal class McmToggle : McmConfigurable<bool>, IToggle
 {
-    private readonly McmImage _on;
     private readonly McmImage _off;
+    private readonly McmImage _on;
     private readonly McmComposite _toggle;
 
-    public override IBasicEntry.EntryType SettingType => IBasicEntry.EntryType.Toggle;
-
-    public McmToggle(string key, McmSettingEntry entry) 
+    public McmToggle(string key, McmSettingEntry entry)
         : base(key, entry.Name, entry.Description, McmStyle.Default())
     {
         Style.Size = McmStyle.SettingLayout.ToggleSingle;
         Style.TextFontSize = 50f;
         Style.OutlineSize = null;
 
-        _on = new McmImage(Style);
-        _off = new McmImage(Style);
+        _on = new(Style);
+        _off = new(Style);
         var on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
             Composites = [
                 new(_on, McmStyle.SettingLayout.ToggleSingle),
                 new(new McmText(Style) {
                         Content = McmLoc.Setting.ToggleOn,
-                    }, 
+                    },
                     McmStyle.SettingLayout.ToggleSingle),
             ],
         };
@@ -59,14 +53,16 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
             DisableGradient = true,
         };
 
-        Style.LayoutSpacing = McmStyle.SettingLayout.ToggleSpacingInner;
-        _toggle = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal, Style) {
+        Style.LayoutSpacing = McmStyle.SettingLayout.SettingSpacingInner;
+        _toggle = new(ICompositeLayout.LayoutGroup.Horizontal, Style) {
             Composites = [
                 .. _entry,
                 new(toggle, Style.Size!.Value),
             ],
         };
     }
+
+    public override IBasicEntry.EntryType SettingType => IBasicEntry.EntryType.Toggle;
 
     public override Transform Render(Transform parent)
     {
@@ -82,9 +78,7 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
 
     public override void Update()
     {
-        _on.Style.OutlineSize = Value ? new(5f, 5f) : Vector2.zero;
-        _off.Style.OutlineSize = !Value ? new(5f, 5f) : Vector2.zero;
-        _on.Update();
-        _off.Update();
+        _on.Style = _on.Style with { OutlineSize = Value ? new(5f, 5f) : Vector2.zero };
+        _off.Style = _off.Style with { OutlineSize = !Value ? new(5f, 5f) : Vector2.zero };
     }
 }

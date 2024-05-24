@@ -4,9 +4,9 @@ namespace Mcm.Common;
 
 internal static class McmLoc
 {
-    internal static string I2Loc(this ModInfo modInfo, string key)
+    internal static string I2Loc(this ModInfo? modInfo, string key)
     {
-        return modInfo.localizationInfo.SystemLocalizationUpdate(key);
+        return modInfo?.localizationInfo.SystemLocalizationUpdate(key) ?? string.Empty;
     }
 
     internal static class Page
@@ -25,6 +25,5 @@ internal static class McmLoc
         public static readonly string Placeholder = McmMod.ModInfo.I2Loc("Mcm/Setting/Placeholder");
         public static readonly string ToggleOn = McmMod.ModInfo.I2Loc("Mcm/Setting/ToggleOn");
         public static readonly string ToggleOff = McmMod.ModInfo.I2Loc("Mcm/Setting/ToggleOff");
-
     }
 }

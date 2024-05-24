@@ -4,12 +4,10 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
 /// <summary>
-/// Scroll rect page, will return a content holder to the render pipe
+///     Scroll rect page, will return a content holder to the render pipe
 /// </summary>
-internal class McmScrollPage(ModInfo Info) : McmPanel(Info)
+internal class McmScrollPage(ModInfo info) : McmPanel(info)
 {
     public override Transform Render(Transform parent)
     {

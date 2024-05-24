@@ -3,12 +3,9 @@ using Mcm.Implementation.Components;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
 internal class McmModEntry : McmStylable
 {
     public readonly McmButton ModEntry;
-    public ModInfo Owner { get; init; }
 
     public McmModEntry(ModInfo modInfo, IPage? pageOverride = null, IImage? coverOverride = null)
         : base(McmStyle.Default())
@@ -16,8 +13,8 @@ internal class McmModEntry : McmStylable
         Owner = modInfo;
         Style.Size = new(320f, 400f);
 
-        var cover = coverOverride ?? new McmImage() {
-            MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover
+        var cover = coverOverride ?? new McmImage {
+            MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover,
         };
 
         var text = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
@@ -25,7 +22,7 @@ internal class McmModEntry : McmStylable
                 new(new McmImage(new() { ColorPrimary = Color.black }),
                     new(320f, 80f)),
                 new(new McmText(Style) {
-                        Content = pageOverride?.Title ?? modInfo.Title
+                        Content = pageOverride?.Title ?? modInfo.Title,
                     },
                     new(320f, 80f)),
             ],
@@ -34,13 +31,15 @@ internal class McmModEntry : McmStylable
             Composites = [
                 new(cover, new(0f, 320f)),
                 new(text, new(0f, 80f)),
-            ]
+            ],
         };
         ModEntry = new() {
             Content = modEntryInternal,
             OnClick = () => InitPageEntry(pageOverride?.Name ?? "index"),
         };
     }
+
+    public ModInfo Owner { get; init; }
 
     public override Transform Render(Transform parent)
     {
@@ -62,6 +61,7 @@ internal class McmModEntry : McmStylable
             Debug.Log($"Loading mod config for {Owner.id}");
             McmManager.ResetMcmConfig(Owner);
         }
+
         McmWindow.Instance?.RenderNamedPage(Owner, name);
     }
 }

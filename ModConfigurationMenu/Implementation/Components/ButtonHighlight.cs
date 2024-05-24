@@ -1,11 +1,9 @@
-﻿using Mcm.Implementation.Displayables;
-using System.Collections;
+﻿using System.Collections;
+using Mcm.Implementation.Displayables;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Components;
-
-#nullable enable
 
 internal class ButtonHighlight : HoverBehaviour
 {
@@ -21,6 +19,7 @@ internal class ButtonHighlight : HoverBehaviour
         if (outline == null) {
             return;
         }
+
         outline.effectColor = _original ?? Color.white;
     }
 
@@ -32,9 +31,10 @@ internal class ButtonHighlight : HoverBehaviour
         }
 
         var outline = Button.Ref?.GetComponentInChildren<Outline>();
-        if (outline == null) {
+        if (outline is null) {
             return;
         }
+
         _original ??= outline.effectColor;
         _cancel = false;
         StartCoroutine(GradientColor(outline));
@@ -45,7 +45,7 @@ internal class ButtonHighlight : HoverBehaviour
         OnDisable();
     }
 
-    internal IEnumerator GradientColor(Outline outline)
+    private IEnumerator GradientColor(Outline outline)
     {
         while (outline.isActiveAndEnabled && !_cancel) {
             yield return outline.StartCoroutine(LerpColor(outline, Color.green, Color.cyan, 2f));
@@ -57,7 +57,7 @@ internal class ButtonHighlight : HoverBehaviour
         }
     }
 
-    internal IEnumerator LerpColor(Outline outline, Color startColor, Color endColor, float duration)
+    private IEnumerator LerpColor(Outline outline, Color startColor, Color endColor, float duration)
     {
         float time = 0;
         while (time < duration && !_cancel) {

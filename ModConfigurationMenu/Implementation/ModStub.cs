@@ -4,16 +4,14 @@ using Mcm.Api.Configurables;
 
 namespace Mcm.Implementation;
 
-#nullable enable
-
 public static class ModStub
 {
     /// <summary>
-    /// Get a stub dict from game's version of mod setting entries</br>
+    ///     Get a stub dict from game's version of mod setting entries</br>
     /// </summary>
     /// <param name="modInfo">Owner</param>
-    /// <returns>Dict used for <see cref="McmManager.McmRegistry"/></returns>
-    public static Dictionary<string, McmSettingEntry> StubMcmConfig(this ModInfo modInfo)
+    /// <returns>Dict used for <see cref="McmManager.McmRegistry" /></returns>
+    private static Dictionary<string, McmSettingEntry> StubMcmConfig(this ModInfo modInfo)
     {
         modInfo.ReadModSetting();
 
@@ -22,24 +20,31 @@ public static class ModStub
             kv => {
                 var setting = new McmSettingEntry(kv.Key, kv.DisplayName, kv.Description);
 
-                if (kv is DropdownSetting dropdown) {
-                    setting.EntryType = IBasicEntry.EntryType.Dropdown;
-                    setting.Value = dropdown.Value;
-                } else if (kv is InputFieldSetting input) {
-                    setting.EntryType = IBasicEntry.EntryType.Input;
-                    setting.Value = input.Value;
-                } else if (kv is InputFieldSetting_Int inputInt) {
-                    setting.EntryType = IBasicEntry.EntryType.Input;
-                    setting.Value = inputInt.Value;
-                } else if (kv is SliderSetting slider) {
-                    setting.EntryType = IBasicEntry.EntryType.Slider;
-                    setting.Value = slider.Value;
-                    setting.Min = slider.MinValue;
-                    setting.Max = slider.MaxValue;
-                    setting.Step = slider.StepSize;
-                } else if (kv is ToggleSetting toggle) {
-                    setting.EntryType = IBasicEntry.EntryType.Toggle;
-                    setting.Value = toggle.Value;
+                switch (kv) {
+                    case DropdownSetting dropdown:
+                        setting.EntryType = IBasicEntry.EntryType.Dropdown;
+                        setting.Value = dropdown.Value;
+                        break;
+                    case InputFieldSetting input:
+                        setting.EntryType = IBasicEntry.EntryType.Input;
+                        setting.Value = input.Value;
+                        break;
+                    case InputFieldSetting_Int inputInt:
+                        setting.EntryType = IBasicEntry.EntryType.Input;
+                        setting.Value = inputInt.Value;
+                        break;
+                    case SliderSetting slider:
+                        setting.EntryType = IBasicEntry.EntryType.Slider;
+                        setting.Value = slider.Value;
+                        setting.Min = slider.MinValue;
+                        setting.Max = slider.MaxValue;
+                        setting.Step = slider.StepSize;
+                        break;
+                    case ToggleSetting toggle: {
+                        setting.EntryType = IBasicEntry.EntryType.Toggle;
+                        setting.Value = toggle.Value;
+                        break;
+                    }
                 }
 
                 return setting;
@@ -47,13 +52,14 @@ public static class ModStub
     }
 
     /// <summary>
-    /// Generate a stub index page for the mod, with its configs
+    ///     Generate a stub index page for the mod, with its configs
     /// </summary>
     /// <param name="modInfo"></param>
     public static void StubMcmPage(this ModInfo modInfo)
     {
         var registry = McmManager.GetMcmRegistry(modInfo)
-            ?? throw new InvalidOperationException($"{modInfo.id} hasn't been registered or failed with MCM");
+                       ?? throw new InvalidOperationException(
+                           $"{modInfo.id} hasn't been registered or failed with MCM");
 
         if (modInfo.settings.Count == 0) {
             return;
@@ -74,21 +80,19 @@ public static class ModStub
                     break;
                 case IBasicEntry.EntryType.Slider: {
                     registry.Layout.AddSliderOption(key, entry.Name, entry.Description,
-                        min: entry.Min.GetValueOrDefault(),
-                        max: entry.Max.GetValueOrDefault(),
-                        step: entry.Step.GetValueOrDefault(),
-                        set: (_) => { } // already saving in mcm
+                        entry.Min.GetValueOrDefault(),
+                        entry.Max.GetValueOrDefault(),
+                        entry.Step.GetValueOrDefault(),
+                        _ => { } // already saving in mcm
                     );
                     break;
                 }
                 case IBasicEntry.EntryType.Toggle: {
                     registry.Layout.AddToggleOption(key, entry.Name, entry.Description,
-                        set: (value) => modInfo.SetMcmConfig(key, value)
+                        value => modInfo.SetMcmConfig(key, value)
                     );
                     break;
                 }
-                default:
-                    break;
             }
         }
     }

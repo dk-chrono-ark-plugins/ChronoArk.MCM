@@ -1,38 +1,38 @@
 ﻿namespace Mcm.Api.Configurables;
 
-#nullable enable
-
 public interface IBasicEntry
 {
     enum EntryType
     {
         Unknown,
+
         // CARK supported
         Dropdown,
         Input,
         Slider,
         Toggle,
+
         // Mcm added
         FileBrowser,
     }
 
     /// <summary>
-    /// The unique ID of this configuration
+    ///     The unique ID of this configuration
     /// </summary>
     string Id { get; }
 
     /// <summary>
-    /// The name entry in config menu
+    ///     The name entry in config menu
     /// </summary>
     string Name { get; }
 
     /// <summary>
-    /// The explanatory info for this entry
+    ///     The explanatory info for this entry
     /// </summary>
     string Description { get; }
 
     /// <summary>
-    /// Self explainatory
+    ///     Self explainatory
     /// </summary>
     EntryType SettingType { get; }
 }

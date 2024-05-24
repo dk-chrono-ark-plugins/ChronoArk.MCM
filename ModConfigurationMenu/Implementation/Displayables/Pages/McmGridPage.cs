@@ -4,14 +4,12 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
 /// <summary>
-/// Grid layout page, will return the grid content holder to the render pipe
+///     Grid layout page, will return the grid content holder to the render pipe
 /// </summary>
-internal class McmGridPage(ModInfo Info) : McmScrollPage(Info)
+internal class McmGridPage(ModInfo info) : McmScrollPage(info)
 {
-    public Vector2 CellSize = new(320f, 400f);
+    private readonly Vector2 _cellSize = new(320f, 400f);
 
     public override Transform Render(Transform parent)
     {
@@ -22,7 +20,7 @@ internal class McmGridPage(ModInfo Info) : McmScrollPage(Info)
         var content = base.Render(parent);
 
         var grid = content.AddComponent<GridLayoutGroup>();
-        grid.cellSize = CellSize;
+        grid.cellSize = _cellSize;
         grid.spacing = new(20f, 20f);
         grid.padding = new(20, 20, 20, 20);
         grid.childAlignment = TextAnchor.MiddleCenter;
@@ -38,11 +36,10 @@ internal class McmGridPage(ModInfo Info) : McmScrollPage(Info)
 
     protected override void RenderPageElements(Transform parent)
     {
-        foreach (var element in _elements) {
-            var grid = element.Render<LayoutElement>(parent);
+        foreach (var grid in _elements.Select(element => element.Render<LayoutElement>(parent))) {
             grid.GetComponent<RectTransform>().SetToStretch();
-            grid.preferredWidth = CellSize.x;
-            grid.preferredHeight = CellSize.y;
+            grid.preferredWidth = _cellSize.x;
+            grid.preferredHeight = _cellSize.y;
         }
     }
 }

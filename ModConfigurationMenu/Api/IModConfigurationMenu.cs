@@ -4,10 +4,8 @@
 
 namespace Mcm.Api;
 
-#nullable enable
-
 /// <summary>
-/// Main external API for mods
+///     Main external API for mods
 /// </summary>
 public interface IModConfigurationMenu
 {
@@ -17,21 +15,21 @@ public interface IModConfigurationMenu
     }
 
     /// <summary>
-    /// Use this to verify against MCM's running version<br/>
-    /// MCM is backwards compatible
+    ///     Use this to verify against MCM's running version<br />
+    ///     MCM is backwards compatible
     /// </summary>
-    /// <returns><see cref="Version"/> Version enum</returns>
+    /// <returns><see cref="Version" /> Version enum</returns>
     Version GetVersion();
 
     /// <summary>
-    /// Make your mod known to MCM, creates an index page
+    ///     Make your mod known to MCM, creates an index page
     /// </summary>
     /// <param name="mod">Your mod, don't use others...</param>
-    /// <returns>New <see cref="IModLayout"/> to use for adding configs</returns>
+    /// <returns>New <see cref="IModLayout" /> to use for adding configs</returns>
     IModLayout Register(string mod);
 
     /// <summary>
-    /// Unregister from MCM
+    ///     Unregister from MCM
     /// </summary>
     /// <param name="mod">Your mod, don't use others...</param>
     void Unregister(string mod);
@@ -42,9 +40,9 @@ public static class McmProxy
     public static IModConfigurationMenu GetInstance(IModConfigurationMenu.Version versionMinimum)
     {
         var mcm = McmManager.Instance;
-        return mcm != null && mcm.GetVersion() >= versionMinimum
+        return mcm.GetVersion() >= versionMinimum
             ? mcm
             : throw new InvalidOperationException($"MCM cannot fulfill the version request!\n" +
-                $"Requested {versionMinimum}+, Running {mcm?.GetVersion()}");
+                                                  $"Requested {versionMinimum}+, Running {mcm.GetVersion()}");
     }
 }

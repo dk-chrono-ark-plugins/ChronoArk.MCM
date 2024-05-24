@@ -1,21 +1,19 @@
 ﻿namespace Mcm.Api.Configurables;
 
-#nullable enable
-
 public interface ISlider : IConfigurable<float>
 {
     /// <summary>
-    /// Minimum constraint
+    ///     Minimum constraint
     /// </summary>
     float Min { get; }
 
     /// <summary>
-    /// Maximum constraint
+    ///     Maximum constraint
     /// </summary>
     float Max { get; }
 
     /// <summary>
-    /// Minimum step value
+    ///     Minimum step value
     /// </summary>
     float Step { get; }
 }

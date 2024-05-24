@@ -1,10 +1,9 @@
 ﻿namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
-internal class McmStylable(McmStyle? StyleOverride = null) : McmDisplayable, IStylable
+internal class McmStylable(McmStyle? styleOverride = null) : McmDisplayable, IStylable
 {
-    private McmStyle _style = StyleOverride == null ? new() : StyleOverride.Copy();
+    private McmStyle _style = styleOverride == null ? new() : styleOverride.Copy();
+
     public McmStyle Style
     {
         get => _style;

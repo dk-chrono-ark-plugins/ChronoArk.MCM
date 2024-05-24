@@ -3,9 +3,7 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
-internal class McmImage(McmStyle? StyleOverride = null) : McmStylable(StyleOverride), IImage
+internal class McmImage(McmStyle? styleOverride = null) : McmStylable(styleOverride), IImage
 {
     public Sprite? MainSprite { get; init; }
     public Image? Image { get; private set; }
@@ -29,6 +27,7 @@ internal class McmImage(McmStyle? StyleOverride = null) : McmStylable(StyleOverr
         } else {
             image.sizeDelta = Style.Size.Value;
         }
+
         DeferredUpdate();
 
         return base.Render(image);
@@ -39,12 +38,14 @@ internal class McmImage(McmStyle? StyleOverride = null) : McmStylable(StyleOverr
         if (MainSprite != null) {
             Image!.sprite = MainSprite;
         }
+
         if (Style.OutlineSize != null) {
             Image!.gameObject.GetOrAddComponent<Outline>().effectDistance = Style.OutlineSize.Value;
             if (Style.ColorSecondary != null) {
                 Image!.gameObject.GetOrAddComponent<Outline>().effectColor = Style.ColorSecondary.Value;
             }
         }
+
         if (Style.ColorPrimary != null) {
             Image!.color = Style.ColorPrimary.Value;
         }

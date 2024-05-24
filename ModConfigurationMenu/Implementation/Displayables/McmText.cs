@@ -3,12 +3,10 @@ using TMPro;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
-internal class McmText(McmStyle? StyleOverride = null) : McmStylable(StyleOverride ?? McmStyle.Default()), IText
+internal class McmText(McmStyle? styleOverride = null) : McmStylable(styleOverride ?? McmStyle.Default()), IText
 {
-    public TextMeshProUGUI? Text { get; private set; }
     private string? _content;
+    public TextMeshProUGUI? Text { get; private set; }
 
     public required string Content
     {

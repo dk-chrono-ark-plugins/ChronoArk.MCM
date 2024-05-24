@@ -4,15 +4,28 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
 internal class McmButton : McmStylable, IButton
 {
-    public Button? Button;
-    private bool _interactable = true;
     private readonly McmImage _buttonImg;
+    private Button? _button;
+    private bool _interactable = true;
+
+    public McmButton(McmStyle? styleOverride = null)
+        : base(styleOverride)
+    {
+        if (styleOverride == null) {
+            Style = McmStyle.Default() with {
+                OutlineSize = new(3f, 3f),
+            };
+        }
+
+        _buttonImg = new(Style);
+    }
+
+    public bool DisableGradient { get; init; }
 
     public required IDisplayable Content { get; init; }
+
     public bool Interactable
     {
         get => _interactable;
@@ -22,24 +35,13 @@ internal class McmButton : McmStylable, IButton
             DeferredUpdate();
         }
     }
-    public required Action OnClick { get; init; }
-    public bool DisableGradient { get; init; }
-    public IImage Background => _buttonImg;
 
-    public McmButton(McmStyle? styleOverride = null)
-        : base(styleOverride)
-    {
-        if (styleOverride == null) {
-            Style = McmStyle.Default() with {
-                OutlineSize = new(3f, 3f)
-            };
-        }
-        _buttonImg = new(Style);
-    }
+    public required Action OnClick { get; init; }
+    public IImage Background => _buttonImg;
 
     public void Click()
     {
-        OnClick?.Invoke();
+        OnClick();
     }
 
     public override Transform Render(Transform parent)
@@ -62,12 +64,13 @@ internal class McmButton : McmStylable, IButton
         if (!DisableGradient) {
             button.AddComponent<ButtonHighlight>().Button = this;
         }
+
         var content = Content.Render<RectTransform>(buttonHolder);
         // button always stretch its content
         content.SetToStretch();
 
-        Button = buttonHolder.AddComponent<Button>();
-        Button.onClick.AddListener(Click);
+        _button = buttonHolder.AddComponent<Button>();
+        _button.onClick.AddListener(Click);
         DeferredUpdate();
 
         return base.Render(button);
@@ -75,6 +78,6 @@ internal class McmButton : McmStylable, IButton
 
     public override void Update()
     {
-        Button!.interactable = _interactable;
+        _button!.interactable = _interactable;
     }
 }

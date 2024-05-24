@@ -4,12 +4,10 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
 /// <summary>
-/// Grid layout page, will return the layout content holder to the render pipe
+///     Grid layout page, will return the layout content holder to the render pipe
 /// </summary>
-internal class McmVerticalPage(ModInfo Info) : McmScrollPage(Info)
+internal class McmVerticalPage(ModInfo info) : McmScrollPage(info)
 {
     public override Transform Render(Transform parent)
     {

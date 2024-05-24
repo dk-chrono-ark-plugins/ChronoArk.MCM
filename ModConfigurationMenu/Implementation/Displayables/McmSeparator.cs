@@ -3,8 +3,6 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
-#nullable enable
-
 internal class McmSeparator : McmStylable, ILine
 {
     public McmSeparator(McmStyle? styleOverride = null)

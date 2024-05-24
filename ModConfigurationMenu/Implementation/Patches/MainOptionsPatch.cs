@@ -7,23 +7,22 @@ using Object = UnityEngine.Object;
 
 namespace Mcm.Implementation;
 
-#nullable enable
-
 [HarmonyPatch]
 internal static class MainOptionsPatch
 {
-    public const string ButtonEntryName = "MCM Button";
-    public const string ButtonEntryText = "Mods";
-    private const string _layoutHierarchy = "Image/Layout";
+    private const string ButtonEntryName = "MCM Button";
+    private const string ButtonEntryText = "Mods";
+    private const string LayoutHierarchy = "Image/Layout";
 
     private static GameObject? _mcm;
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainOptionMenu), "Start")]
+    // ReSharper disable once InconsistentNaming
     private static void OnStart(MainOptionMenu __instance)
     {
-        var layout = __instance.transform.GetFirstNestedChildWithName(_layoutHierarchy);
-        if (layout == null) {
+        var layout = __instance.transform.GetFirstNestedChildWithName(LayoutHierarchy);
+        if (layout is null) {
             return;
         }
 
@@ -31,10 +30,11 @@ internal static class MainOptionsPatch
         button.name = ButtonEntryName;
         var option = button.GetComponent<OptionButton>();
         var tmp = option.Content.GetComponentsInChildren<TextMeshProUGUI>().FirstOrDefault();
-        if (tmp == null) {
+        if (tmp is null) {
             Object.DestroyImmediate(button);
             return;
         }
+
         tmp.text = ButtonEntryText;
         Object.DestroyImmediate(tmp.GetComponent<Localize>());
 

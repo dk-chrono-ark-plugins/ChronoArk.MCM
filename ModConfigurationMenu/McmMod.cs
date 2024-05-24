@@ -14,25 +14,22 @@ using ChronoArkMod.Plugin;
 
 namespace Mcm;
 
-#nullable enable
-
 public class McmMod : ChronoArkPlugin
 {
     internal McmConfig? _config;
-    internal Harmony? _harmony;
-    private static McmMod? _instance;
+    private Harmony? _harmony;
 
-    public static ModInfo ModInfo => ModManager.getModInfo(Instance!.ModId);
-    public static McmMod? Instance => _instance;
+    public static ModInfo? ModInfo => ModManager.getModInfo(Instance!.ModId);
+    public static McmMod? Instance { get; private set; }
 
     public override void Dispose()
     {
-        _instance = null;
+        Instance = null;
     }
 
     public override void Initialize()
     {
-        _instance = this;
+        Instance = this;
         _config = new();
         _harmony = new(GetGuid());
         _harmony.PatchAll();

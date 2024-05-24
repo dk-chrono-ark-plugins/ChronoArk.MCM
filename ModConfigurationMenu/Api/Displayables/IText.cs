@@ -2,10 +2,8 @@
 
 namespace Mcm.Api.Displayables;
 
-#nullable enable
-
 /// <summary>
-/// Text component
+///     Text component
 /// </summary>
 public interface IText : IStylable
 {
