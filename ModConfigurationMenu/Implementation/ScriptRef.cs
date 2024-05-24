@@ -4,7 +4,7 @@ namespace Mcm.Implementation;
 
 #nullable enable
 
-internal class ScriptRef : IDeferredUpdate, IScriptRef
+internal class ScriptRef : IScriptRef
 {
     protected bool _dirty = true;
     protected bool _deferred = false;

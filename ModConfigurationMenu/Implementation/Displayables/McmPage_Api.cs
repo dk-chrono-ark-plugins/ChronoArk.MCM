@@ -6,9 +6,8 @@ internal partial class McmPage : McmStylable, IPage
 {
     public IImage AddImage(Color color)
     {
-        var mcmImage = new McmImage() {
-            MaskColor = color,
-        };
+        var mcmImage = new McmImage();
+        mcmImage.Style.MainColor = color;
         Add(mcmImage);
         return mcmImage;
     }
@@ -27,7 +26,6 @@ internal partial class McmPage : McmStylable, IPage
         var texture = Owner.LoadTexture2D(assetName);
         var mcmImage = new McmImage() {
             MainSprite = Misc.CreatSprite(texture),
-            Size = new(texture.width, texture.height),
         };
         Add(mcmImage);
         return mcmImage;
@@ -35,10 +33,9 @@ internal partial class McmPage : McmStylable, IPage
 
     public ILine AddSeparator(float thickness = 5f, Color? color = null)
     {
-        var mcmLine = new McmSeparator() {
-            Color = color ?? Color.gray,
-            Thickness = thickness,
-        };
+        var mcmLine = new McmSeparator();
+        mcmLine.Style.BorderColor = color;
+        mcmLine.Style.BorderSize = new(0f, thickness);
         Add(mcmLine);
         return mcmLine;
     }
@@ -48,7 +45,6 @@ internal partial class McmPage : McmStylable, IPage
         var textLoc = Owner.I2Loc(text);
         var mcmText = new McmText() {
             Content = textLoc,
-            FontSize = 30f,
         };
         Add(mcmText);
         return mcmText;

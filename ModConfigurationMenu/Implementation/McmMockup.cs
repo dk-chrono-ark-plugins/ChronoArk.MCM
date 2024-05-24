@@ -13,7 +13,7 @@ internal static class McmMockup
         mockup.Title = "Mcm Mockup & Playground";
         mockup.AddText(McmManager.McmInstanceVersion.ToString());
         mockup.AddSeparator();
-        mockup.AddImage("cover.png").Size = new(512f, 512f);
+        mockup.AddImage("cover.png").Style.Size = new(512f, 512f);
         mockup.AddSeparator();
         mockup.AddText("okay this is text component");
         mockup.AddImage("absss.png");

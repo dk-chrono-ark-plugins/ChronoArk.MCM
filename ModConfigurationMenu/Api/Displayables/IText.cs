@@ -7,9 +7,8 @@ namespace Mcm.Api.Displayables;
 /// <summary>
 /// Text component
 /// </summary>
-public interface IText : IDisplayable
+public interface IText : IStylable
 {
     TextMeshProUGUI? Text { get; }
     string Content { get; set; }
-    float? FontSize { get; }
 }

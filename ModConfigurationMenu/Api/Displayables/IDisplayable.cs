@@ -9,8 +9,6 @@ namespace Mcm.Api.Displayables;
 /// </summary>
 public interface IDisplayable : IScriptRef
 {
-    Vector2? Size { get; set; }
-
     /// <summary>
     /// The call to render! This is called to instantiate the displayable
     /// </summary>

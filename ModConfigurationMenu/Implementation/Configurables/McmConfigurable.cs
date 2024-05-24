@@ -31,25 +31,25 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
 
     public IBasicEntry.EntryType SettingType { get; init; }
 
-    protected McmConfigurable(string key, string name, string desc)
+    protected McmConfigurable(string key, string name, string desc, McmStyle? styleOverride = null)
+        : base(styleOverride)
     {
         Id = key;
         Name = name;
         Description = desc;
 
-        _name = new McmText() {
+        Style.TextFontSize = 30f;
+        Style.Size = new(400f, 100f);
+
+        _name = new McmText(Style) {
             Content = name,
-            FontSize = 30f,
-            Size = new(400f, 100f),
         };
-        var _desc = new McmText() {
+        var _desc = new McmText(Style) {
             Content = Description,
-            Size = new(400f, 100f),
-            FontSize = 30f,
         };
         _entry = [
-            new(_name, new(400f, 100f)),
-            new(_desc, new(400f, 100f)),
+            new(_name, Style.Size.Value),
+            new(_desc, Style.Size.Value),
         ];
     }
 

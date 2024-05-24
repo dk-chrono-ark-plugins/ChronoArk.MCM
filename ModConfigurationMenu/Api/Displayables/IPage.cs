@@ -9,7 +9,7 @@ namespace Mcm.Api.Displayables;
 /// Responsible for rendering its child elements<br/>
 /// Instantiated as vertical layout group by default
 /// </summary>
-public interface IPage : IDisplayable
+public interface IPage : IStylable
 {
     /// <summary>
     /// The page owner info

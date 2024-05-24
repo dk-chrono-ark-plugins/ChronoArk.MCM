@@ -7,11 +7,8 @@ namespace Mcm.Api.Displayables;
 /// <summary>
 /// Image component
 /// </summary>
-public interface IImage : IDisplayable
+public interface IImage : IStylable
 {
-    public Color? BorderColor { get; }
-    public Vector2? BorderThickness { get; }
-    public Color? MaskColor { get; }
     public Sprite? MainSprite { get; }
     public Image? Image { get; }
 }

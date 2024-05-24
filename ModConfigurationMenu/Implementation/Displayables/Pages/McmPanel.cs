@@ -27,36 +27,36 @@ internal class McmPanel : McmPage
         _titleText = new() { Content = string.Empty };
         Title = $"{Owner.Title}  v{Owner.Version}";
 
+        Style = McmStyle.Default();
+
         var back = new McmButton() {
-            Content = new McmText() {
-                Content = "<b><<</b>",
-                FontSize = 40f,
+            Content = new McmText(Style) {
+                Content = "<b><size=40><<</size></b>",
             },
             OnClick = McmWindow.Back
         };
         var apply = new McmButton() {
-            Content = new McmText() {
+            Content = new McmText(Style) {
                 Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Apply),
-                FontSize = 26f,
             },
             OnClick = McmWindow.Save
         };
         var reset = new McmButton() {
-            Content = new McmText() {
+            Content = new McmText(Style) {
                 Content = LocalizationManager.GetTranslation(ScriptTerms.UI.Cancel),
-                FontSize = 26f,
             },
             OnClick = McmWindow.Reset
         };
+
         _buttons = new(ICompositeLayout.LayoutGroup.Horizontal) {
             Composites = [
                 new(back, new(100f, 50f)),
                 new(apply, new(100f, 50f)),
                 new(reset, new(100f, 50f)),
             ],
-            Spacing = new(10f, 0f),
-            Size = new(400f, 50f),
         };
+        _buttons.Style.LayoutSpacing = new(10f, 0f);
+        _buttons.Style.Size = new(400f, 50f);
     }
 
     public override Transform Render(Transform parent)
@@ -66,14 +66,14 @@ internal class McmPanel : McmPage
         }
 
         var page = parent.AttachRectTransformObject($"McmPage:{Owner.Title}:{Name}");
-        page.sizeDelta = McmStyle.Size + McmStyle.BorderSize;
-
+        page.sizeDelta = Style.Size!.Value + Style.BorderSize!.Value;
+        //Debug.Log(Style);
         var imageBg = page.AddComponent<Image>();
-        imageBg.color = McmStyle.MaskColor;
+        imageBg.color = Style.MainColor!.Value;
 
         var imageFg = page.AddComponent<Outline>();
-        imageFg.effectColor = McmStyle.BorderColor;
-        imageFg.effectDistance = McmStyle.BorderSize;
+        imageFg.effectColor = Style.BorderColor!.Value;
+        imageFg.effectDistance = Style.BorderSize!.Value;
 
         var title = _titleText.Render<RectTransform>(page);
         title.AlignToTop(new(0f, 20f));

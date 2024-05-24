@@ -26,7 +26,6 @@ internal partial class ModLayout : IModLayout
     {
         IPage page = layout switch {
             ICompositeLayout.LayoutGroup.Grid => new McmGridPage(Owner),
-            ICompositeLayout.LayoutGroup.Horizontal => new McmGridPage(Owner),
             ICompositeLayout.LayoutGroup.Vertical => new McmVerticalPage(Owner),
             _ => throw new NotImplementedException()
         };

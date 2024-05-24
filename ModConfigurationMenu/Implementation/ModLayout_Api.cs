@@ -1,5 +1,4 @@
-﻿using ChronoArkMod.ModData;
-using Mcm.Api.Configurables;
+﻿using Mcm.Api.Configurables;
 using Mcm.Implementation.Configurables;
 
 namespace Mcm.Implementation;

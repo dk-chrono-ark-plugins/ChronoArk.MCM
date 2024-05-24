@@ -1,9 +1,6 @@
-﻿using ChronoArkMod.Helper;
-using I2.Loc;
+﻿using I2.Loc;
 using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
-using System.Security.Cryptography;
-using UnityEngine.UI;
 
 namespace Mcm.Implementation.Configurables;
 
@@ -17,47 +14,40 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
 
     public McmToggle(string key, McmSettingEntry entry) : base(key, entry.Name, entry.Description)
     {
-        _on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap) {
+        Style = McmStyle.Default();
+        Style.Size = new(200f, 100f);
+        Style.TextFontSize = 50f;
+
+        _on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
             Composites = [
-                new(new McmImage() {
-                        MaskColor = McmStyle.MaskColor,
-                        BorderColor = McmStyle.BorderColor,
-                        BorderThickness = new(0f, 0f),
-                    },
+                new(new McmImage(Style),
                     new(200f, 100f)),
-                new(new McmText() {
+                new(new McmText(Style) {
                         Content = LocalizationManager.GetTranslation(ScriptTerms.UI_Option.Bool_On),
-                        FontSize = 50f,
                     },
                     new(200f, 100f)),
             ],
-            Size = new(200f, 100f),
         };
-        _off = new McmComposite(ICompositeLayout.LayoutGroup.Overlap) {
+        _off = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
             Composites = [
-                new(new McmImage(){
-                        MaskColor = McmStyle.MaskColor,
-                        BorderColor = McmStyle.BorderColor,
-                        BorderThickness = new(0f, 0f),
-                    },
+                new(new McmImage(Style),
                     new(200f, 100f)),
-                new(new McmText() {
+                new(new McmText(Style) {
                         Content = LocalizationManager.GetTranslation(ScriptTerms.UI_Option.Bool_Off),
-                        FontSize = 50f,
                     },
                     new(200f, 100f)),
             ],
-            Size = new(200f, 100f),
         };
+
+        Style.Size = new(400f, 100f);
+        Style.LayoutPadding = new(5, 5, 10, 10);
+        Style.LayoutSpacing = new(5f, 0f);
         _toggle = new McmButton() {
-            Content = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal) {
+            Content = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal, Style) {
                 Composites = [
                     new(_on, new(200f, 100f)),
                     new(_off, new(200f, 100f)),
                 ],
-                Size = new(400f, 100f),
-                Padding = new(5, 5, 10, 10),
-                Spacing = new(5f, 0f),
             },
             OnClick = () => SetValue(!Value),
             DisableGradient = true,
@@ -70,13 +60,13 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
             return Ref.transform;
         }
 
-        var group = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal) {
+        Style.Size = new(2000f, 100f);
+        Style.LayoutSpacing = new(10f, 10f);
+        var group = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal, Style) {
             Composites = [
                 .. _entry,
                 new(_toggle, new(400f, 100f)),
             ],
-            Size = new(2000f, 100f),
-            Spacing = new(10f, 10f),
         };
 
         var toggle = group.Render(parent);
@@ -87,17 +77,6 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
 
     public override void Update()
     {
-        if (_on.Composites[0]?.Displayable is McmImage on) {
-            on.Image!.GetComponent<Outline>().effectColor = _value ? McmStyle.BorderColor : Color.clear;
-            on.Image!.GetComponent<Outline>().effectDistance = _value ? new(5f, 5f) : Vector2.zero;
-        }
-        if (_off.Composites[0]?.Displayable is McmImage off) {
-            off.Image!.GetComponent<Outline>().effectColor = !_value ? McmStyle.BorderColor : Color.clear;
-            off.Image!.GetComponent<Outline>().effectDistance = !_value ? new(5f, 5f) : Vector2.zero;
-        }
-        if (_toggle.Background is McmImage bg) {
-            bg.Image!.GetComponent<Outline>().effectColor = Color.clear;
-            bg.Image!.GetComponent<Outline>().effectDistance = Vector2.zero;
-        }
+        Debug.Log("update here");
     }
 }

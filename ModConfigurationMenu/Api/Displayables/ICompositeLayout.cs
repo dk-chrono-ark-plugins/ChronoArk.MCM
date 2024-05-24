@@ -5,7 +5,7 @@
 /// <summary>
 /// Composite of several displayables, in a layout group
 /// </summary>
-public interface ICompositeLayout : IDisplayable
+public interface ICompositeLayout : IStylable
 {
     /// <summary>
     /// Displayable and its preferred size
@@ -22,6 +22,4 @@ public interface ICompositeLayout : IDisplayable
 
     Composite[] Composites { get; }
     LayoutGroup Layout { get; }
-    Vector2? Spacing { get; }
-    RectOffset? Padding { get; }
 }

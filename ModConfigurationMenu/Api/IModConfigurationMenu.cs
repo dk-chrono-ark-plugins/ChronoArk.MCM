@@ -6,6 +6,9 @@ namespace Mcm.Api;
 
 #nullable enable
 
+/// <summary>
+/// Main external API for mods
+/// </summary>
 public interface IModConfigurationMenu
 {
     enum Version

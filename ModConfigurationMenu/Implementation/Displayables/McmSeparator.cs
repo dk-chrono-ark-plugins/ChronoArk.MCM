@@ -7,26 +7,12 @@ namespace Mcm.Implementation.Displayables;
 
 internal class McmSeparator : McmStylable, ILine
 {
-    private Color _color = Color.gray;
-    private float _thickness = 5f;
-
-    public Color Color
+    public McmSeparator(McmStyle? styleOverride = null)
     {
-        get => _color;
-        set
-        {
-            _color = value;
-            DeferredUpdate();
-        }
-    }
-    public float Thickness
-    {
-        get => _thickness;
-        set
-        {
-            _thickness = value;
-            DeferredUpdate();
-        }
+        Style = styleOverride ?? new() {
+            MainColor = Color.gray,
+            Size = new(0f, 5f),
+        };
     }
 
     public override Transform Render(Transform parent)
@@ -36,11 +22,7 @@ internal class McmSeparator : McmStylable, ILine
         }
 
         var line = parent.AttachRectTransformObject("McmSeparator");
-        if (Size == null) {
-            line.SetToStretch();
-        } else {
-            line.sizeDelta = Size.Value;
-        }
+        line.SetToStretch();
 
         line.AddComponent<Image>();
         DeferredUpdate();
@@ -50,7 +32,7 @@ internal class McmSeparator : McmStylable, ILine
 
     public override void Update()
     {
-        Ref!.GetComponent<Image>().color = _color;
-        Ref!.GetComponent<LayoutElement>().preferredHeight = _thickness;
+        Ref!.GetComponent<Image>().color = Style.MainColor!.Value;
+        Ref!.GetComponent<LayoutElement>().preferredHeight = Style.Size!.Value.y;
     }
 }

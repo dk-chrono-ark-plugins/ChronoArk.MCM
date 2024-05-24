@@ -2,7 +2,13 @@
 
 #nullable enable
 
-public interface IStylable
+/// <summary>
+/// Allows editing styles
+/// </summary>
+public interface IStylable : IDisplayable
 {
-    McmStyle McmStyle { get; set; }
+    /// <summary>
+    /// Style holder
+    /// </summary>
+    McmStyle Style { get; set; }
 }

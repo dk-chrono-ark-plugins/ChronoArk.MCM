@@ -5,11 +5,10 @@ namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal class McmText : McmStylable, IText
+internal class McmText(McmStyle? StyleOverride = null) : McmStylable(StyleOverride ?? McmStyle.Default()), IText
 {
     public TextMeshProUGUI? Text { get; private set; }
     private string? _content;
-    private float? _fontsize;
 
     public required string Content
     {
@@ -17,15 +16,6 @@ internal class McmText : McmStylable, IText
         set
         {
             _content = value;
-            DeferredUpdate();
-        }
-    }
-    public float? FontSize
-    {
-        get => _fontsize;
-        set
-        {
-            _fontsize = value;
             DeferredUpdate();
         }
     }
@@ -37,15 +27,13 @@ internal class McmText : McmStylable, IText
         }
 
         var text = parent.AttachRectTransformObject("McmText");
-
-        if (Size == null) {
+        if (Style.Size == null) {
             text.SetToStretch();
         } else {
-            text.sizeDelta = Size.Value;
+            text.sizeDelta = Style.Size.Value;
         }
 
         Text = text.AddComponent<TextMeshProUGUI>();
-        Text.alignment = TextAlignmentOptions.Center;
         DeferredUpdate();
 
         return base.Render(text);
@@ -53,16 +41,19 @@ internal class McmText : McmStylable, IText
 
     public override void Update()
     {
-        if (_fontsize != null) {
-            Text!.fontSize = _fontsize!.Value;
-        } else {
-            Text!.fontSizeMin = 10f;
+        Text!.alignment = Style.TextAlignment;
+
+        if (Style.TextAutoSize) {
+            Text.fontSizeMin = 10f;
             Text.fontSizeMax = 40f;
             Text.enableAutoSizing = true;
             Text.autoSizeTextContainer = true;
+        } else {
+            Text.fontSize = Style.TextFontSize;
         }
+
         if (_content != null) {
-            Text!.text = _content;
+            Text.text = _content;
         }
     }
 }

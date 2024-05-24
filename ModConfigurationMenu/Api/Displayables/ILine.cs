@@ -2,8 +2,6 @@
 
 #nullable enable
 
-public interface ILine : IDisplayable
+public interface ILine : IStylable
 {
-    float Thickness { get; }
-    Color Color { get; }
 }

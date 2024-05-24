@@ -6,7 +6,7 @@
 /// Holds a ref to script-created game object<br/>
 /// Responsible for its destruction
 /// </summary>
-public interface IScriptRef
+public interface IScriptRef : IDeferredUpdate
 {
     /// <summary>
     /// Ref needs updating

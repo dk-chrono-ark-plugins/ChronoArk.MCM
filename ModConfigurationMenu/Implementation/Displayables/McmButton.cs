@@ -26,13 +26,14 @@ internal class McmButton : McmStylable, IButton
     public bool DisableGradient { get; init; }
     public IImage Background => _buttonImg;
 
-    public McmButton()
+    public McmButton(McmStyle? styleOverride = null) : base(styleOverride)
     {
-        _buttonImg = new() {
-            BorderColor = McmStyle.BorderColor,
-            BorderThickness = new(3f, 3f),
-            MaskColor = McmStyle.MaskColor,
-        };
+        if (styleOverride == null) {
+            Style = McmStyle.Default() with {
+                BorderSize = new(3f, 3f)
+            };
+        }
+        _buttonImg = new(Style);
     }
 
     public void Click()
@@ -48,10 +49,10 @@ internal class McmButton : McmStylable, IButton
 
         var button = parent.AttachRectTransformObject("McmButton");
 
-        if (Size == null) {
+        if (Style.Size == null) {
             button.SetToStretch();
         } else {
-            button.sizeDelta = Size.Value;
+            button.sizeDelta = Style.Size.Value;
         }
 
         var buttonHolder = _buttonImg.Render<RectTransform>(button);

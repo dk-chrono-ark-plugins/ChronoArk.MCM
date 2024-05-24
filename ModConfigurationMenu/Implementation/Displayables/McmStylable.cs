@@ -2,7 +2,16 @@
 
 #nullable enable
 
-internal class McmStylable(McmStyle? Style = null) : McmDisplayable, IStylable
+internal class McmStylable(McmStyle? StyleOverride = null) : McmDisplayable, IStylable
 {
-    public McmStyle McmStyle { get; set; } = Style ?? McmStyle.Default;
+    private McmStyle _style = StyleOverride ?? new();
+    public McmStyle Style
+    {
+        get => _style;
+        set
+        {
+            _style = value;
+            DeferredUpdate();
+        }
+    }
 }

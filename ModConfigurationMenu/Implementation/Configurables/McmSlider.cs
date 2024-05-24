@@ -1,7 +1,5 @@
-﻿using ChronoArkMod.Helper;
-using Mcm.Api.Configurables;
+﻿using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Mcm.Implementation.Configurables;
@@ -19,11 +17,8 @@ internal class McmSlider : McmConfigurable<float>, ISlider
 
     public McmSlider(string key, McmSettingEntry entry) : base(key, entry.Name, entry.Description)
     {
-        _bg = new McmImage() {
-            BorderThickness = new(0f, 0f),
-            BorderColor = McmStyle.BorderColor,
-            MaskColor = McmStyle.MaskColor,
-        };
+        _bg = new McmImage();
+        _bg.Style.BorderSize = new(0f, 0f);
     }
 
     public override Transform Render(Transform parent)
@@ -31,15 +26,15 @@ internal class McmSlider : McmConfigurable<float>, ISlider
         if (Ref != null) {
             return Ref.transform;
         }
-        
+
         var group = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal) {
             Composites = [
                 .. _entry,
                 new(_bg, new(800f, 100f))
             ],
-            Size = new(2000f, 100f),
-            Spacing = new(10f, 10f),
         };
+        group.Style.LayoutSpacing = new(10f, 10f);
+        group.Style.Size = new(2000f, 100f);
 
         var sliderGroup = group.Render(parent);
 
@@ -50,7 +45,7 @@ internal class McmSlider : McmConfigurable<float>, ISlider
         Slider.targetGraphic = _bg.Image!;
 
         // Create a new GameObject for the fill area
-        GameObject fillArea = new GameObject("Fill Area");
+        GameObject fillArea = new("Fill Area");
         fillArea.transform.SetParent(Slider.transform);
         var rectTransform = fillArea.AddComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0, 0.25f);
@@ -59,7 +54,7 @@ internal class McmSlider : McmConfigurable<float>, ISlider
         rectTransform.offsetMax = new Vector2(-5, 0);
 
         // Create a new GameObject for the fill
-        GameObject fill = new GameObject("Fill");
+        GameObject fill = new("Fill");
         fill.transform.SetParent(fillArea.transform);
         rectTransform = fill.AddComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0, 0);
@@ -75,7 +70,7 @@ internal class McmSlider : McmConfigurable<float>, ISlider
         Slider.fillRect = fillImage.rectTransform;
 
         // Create a new GameObject for the handle
-        GameObject handle = new GameObject("Handle");
+        GameObject handle = new("Handle");
         handle.transform.SetParent(Slider.transform);
         rectTransform = handle.AddComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(20, 20);

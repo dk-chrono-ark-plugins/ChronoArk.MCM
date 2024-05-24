@@ -5,12 +5,10 @@ namespace Mcm.Implementation.Displayables;
 
 #nullable enable
 
-internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : McmStylable, ICompositeLayout
+internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout, McmStyle? StyleOverride = null) : McmStylable(StyleOverride), ICompositeLayout
 {
     public required ICompositeLayout.Composite[] Composites { get; set; }
     public ICompositeLayout.LayoutGroup Layout => CompositeLayout;
-    public Vector2? Spacing { get; init; }
-    public RectOffset? Padding { get; init; }
 
     public override Transform Render(Transform parent)
     {
@@ -20,58 +18,48 @@ internal class McmComposite(ICompositeLayout.LayoutGroup CompositeLayout) : McmS
 
         var layout = parent.AttachRectTransformObject($"Mcm{Layout}Composite");
 
-        if (Size == null) {
+        if (Style.Size == null) {
             layout.SetToStretch();
         } else {
-            layout.sizeDelta = Size.Value;
-        }
-
-        var contentSizeFitter = layout.AddComponent<ContentSizeFitter>();
-        contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
-        contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-
-        switch (Layout) {
-            case ICompositeLayout.LayoutGroup.Grid: {
-                var group = layout.AddComponent<GridLayoutGroup>();
-                group.childAlignment = TextAnchor.MiddleCenter;
-                if (Spacing != null) {
-                    group.spacing = Spacing.Value;
-                }
-                if (Padding != null) {
-                    group.padding = Padding;
-                }
-                break;
-            }
-            case ICompositeLayout.LayoutGroup.Horizontal: {
-                var group = layout.AddComponent<HorizontalLayoutGroup>();
-                group.childAlignment = TextAnchor.MiddleCenter;
-                if (Spacing != null) {
-                    group.spacing = Spacing.Value.x;
-                }
-                if (Padding != null) {
-                    group.padding = Padding;
-                }
-                contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-                break;
-            }
-            case ICompositeLayout.LayoutGroup.Vertical: {
-                var group = layout.AddComponent<VerticalLayoutGroup>();
-                group.childAlignment = TextAnchor.MiddleCenter;
-                if (Spacing != null) {
-                    group.spacing = Spacing.Value.y;
-                }
-                if (Padding != null) {
-                    group.padding = Padding;
-                }
-                contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-                break;
-            }
+            layout.sizeDelta = Style.Size.Value;
         }
 
         if (Layout == ICompositeLayout.LayoutGroup.Overlap) {
-            UnityEngine.Object.DestroyImmediate(contentSizeFitter);
             RenderOverlaps(layout);
         } else {
+            var contentSizeFitter = layout.AddComponent<ContentSizeFitter>();
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+            contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+            switch (Layout) {
+                case ICompositeLayout.LayoutGroup.Grid: {
+                    var group = layout.AddComponent<GridLayoutGroup>();
+                    if (Style.LayoutSpacing != null) {
+                        group.spacing = Style.LayoutSpacing.Value;
+                    }
+                    break;
+                }
+                case ICompositeLayout.LayoutGroup.Horizontal: {
+                    var group = layout.AddComponent<HorizontalLayoutGroup>();
+                    if (Style.LayoutSpacing != null) {
+                        group.spacing = Style.LayoutSpacing.Value.x;
+                    }
+                    contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+                    break;
+                }
+                case ICompositeLayout.LayoutGroup.Vertical: {
+                    var group = layout.AddComponent<VerticalLayoutGroup>();
+                    if (Style.LayoutSpacing != null) {
+                        group.spacing = Style.LayoutSpacing.Value.y;
+                    }
+                    contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                    break;
+                }
+            }
+
+            layout.GetComponent<LayoutGroup>().childAlignment = Style.LayoutAnchor;
+            layout.GetComponent<LayoutGroup>().padding = Style.LayoutPadding ?? new();
+
             RenderComposites(layout);
         }
 

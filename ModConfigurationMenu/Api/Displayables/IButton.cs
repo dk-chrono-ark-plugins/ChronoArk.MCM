@@ -5,7 +5,7 @@
 /// <summary>
 /// Basic button
 /// </summary>
-public interface IButton : IDisplayable
+public interface IButton : IStylable
 {
     /// <summary>
     /// Content to display in button rect
