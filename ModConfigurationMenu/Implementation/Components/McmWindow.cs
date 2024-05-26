@@ -119,6 +119,9 @@ internal class McmWindow : UIBehaviour
         try {
             TopPage?.Hide();
             page.Render(_canvas.transform);
+            page.Elements
+                .OfType<INotifyChange>()
+                .Do(element => element.NotifyReset());
         } catch {
             Debug.Log($"failed to render page {page.Title}");
             TopPage?.Show();

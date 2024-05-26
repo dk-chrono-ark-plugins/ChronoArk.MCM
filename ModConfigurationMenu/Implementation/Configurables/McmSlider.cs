@@ -56,10 +56,8 @@ internal class McmSlider : McmConfigurable<float>, ISlider
 
     public override void SetValue(float value)
     {
-        base.SetValue(value);
-        if (Slider != null) {
-            Slider.value = Mathf.Round(value / Step) * Step;
-        }
+        var valueClamped = Mathf.Round(value / Step) * Step;
+        base.SetValue(valueClamped);
     }
 
     public override Transform Render(Transform parent)
@@ -75,18 +73,21 @@ internal class McmSlider : McmConfigurable<float>, ISlider
         Slider.handleRect = _handle.Render<RectTransform>(_line.Ref!.transform);
         Slider.targetGraphic = null;
         Slider.fillRect = null;
-        Slider.onValueChanged.AddListener(SetValue);
 
         Slider.minValue = Min;
         Slider.maxValue = Max;
         Value = Mathf.Round(Read() / Step) * Step;
         Slider.value = Value;
-
+        Slider.onValueChanged.AddListener(SetValue);
+        
         return base.Render(configurable);
     }
 
     public override void Update()
     {
         _handle.Content = Value.ToString("F2");
+        if (Slider != null) {
+            Slider.value = Value;
+        }
     }
 }
