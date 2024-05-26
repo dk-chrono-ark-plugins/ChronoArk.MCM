@@ -5,45 +5,38 @@ namespace Mcm.Implementation.Configurables;
 
 internal class McmToggle : McmConfigurable<bool>, IToggle
 {
+    private readonly McmComposite _configurable;
     private readonly McmImage _off;
     private readonly McmImage _on;
-    private readonly McmComposite _toggle;
 
     public McmToggle(string key, McmSettingEntry entry)
         : base(key, entry.Name, entry.Description, McmStyle.Default())
     {
-        Style.Size = McmStyle.SettingLayout.ToggleSingle;
-        Style.TextFontSize = 50f;
         Style.OutlineSize = null;
 
-        _on = new(Style);
-        _off = new(Style);
-        var on = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
-            Composites = [
-                new(_on, McmStyle.SettingLayout.ToggleSingle),
-                new(new McmText(Style) {
-                        Content = McmLoc.Setting.ToggleOn,
-                    },
-                    McmStyle.SettingLayout.ToggleSingle),
-            ],
-        };
-        var off = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
-            Composites = [
-                new(_off,
-                    McmStyle.SettingLayout.ToggleSingle),
-                new(new McmText(Style) {
-                        Content = McmLoc.Setting.ToggleOff,
-                    },
-                    McmStyle.SettingLayout.ToggleSingle),
-            ],
+        var stateStyle = Style with {
+            Size = McmStyle.SettingLayout.ToggleSingle,
+            TextFontSize = 50f,
         };
 
-        Style.Size = McmStyle.SettingLayout.Setting;
-        Style.LayoutPadding = McmStyle.SettingLayout.TogglePadding;
-        Style.LayoutSpacing = McmStyle.SettingLayout.ToggleSpacing;
+        _on = new(stateStyle);
+        _off = new(stateStyle);
 
-        var toggle = new McmButton(Style) {
-            Content = new McmComposite(ICompositeLayout.LayoutGroup.Horizontal, Style) {
+        var on = new McmLayerText(_on, stateStyle) {
+            Content = McmLoc.Setting.ToggleOn,
+        };
+        var off = new McmLayerText(_off, stateStyle) {
+            Content = McmLoc.Setting.ToggleOff,
+        };
+
+        var toggleStyle = Style with {
+            Size = McmStyle.SettingLayout.Setting,
+            LayoutPadding = McmStyle.SettingLayout.TogglePadding,
+            LayoutSpacing = McmStyle.SettingLayout.ToggleSpacing,
+        };
+
+        var toggle = new McmButton(toggleStyle) {
+            Content = new McmHorizontal(toggleStyle) {
                 Composites = [
                     new(on, McmStyle.SettingLayout.ToggleSingle),
                     new(off, McmStyle.SettingLayout.ToggleSingle),
@@ -53,11 +46,13 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
             DisableGradient = true,
         };
 
-        Style.LayoutSpacing = McmStyle.SettingLayout.SettingSpacingInner;
-        _toggle = new(ICompositeLayout.LayoutGroup.Horizontal, Style) {
+        var configurableStyle = Style with {
+            LayoutSpacing = McmStyle.SettingLayout.SettingSpacingInner,
+        };
+        _configurable = new McmHorizontal(configurableStyle) {
             Composites = [
                 .. _entry,
-                new(toggle, Style.Size!.Value),
+                new(toggle, toggleStyle.Size.Value),
             ],
         };
     }
@@ -70,7 +65,7 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
             return Ref.transform;
         }
 
-        var toggle = _toggle.Render(parent);
+        var toggle = _configurable.Render(parent);
         Value = Read();
 
         return base.Render(toggle);

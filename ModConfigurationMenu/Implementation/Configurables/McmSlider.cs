@@ -6,40 +6,47 @@ namespace Mcm.Implementation.Configurables;
 
 internal class McmSlider : McmConfigurable<float>, ISlider
 {
-    private readonly McmComposite _handle;
+    private readonly McmComposite _configurable;
+    private readonly McmLayerText _handle;
     private readonly McmSeparator _line;
-    private readonly McmComposite _slider;
-    private readonly McmText _valueText;
 
     public McmSlider(string key, McmSettingEntry entry)
         : base(key, entry.Name, entry.Description, McmStyle.Default())
     {
-        Style.Size = new(90f, 90f);
-        Style.OutlineSize = new(3f, 3f);
-
-        _valueText = new(Style) {
-            Content = Value.ToString(),
+        var handleStyle = Style with {
+            Size = new(100f, 50f),
+            OutlineSize = new(3f, 3f),
         };
-        _handle = new(ICompositeLayout.LayoutGroup.Overlap, Style) {
-            Composites = [
-                new(new McmImage(Style), new(90f, 90f)),
-                new(_valueText, new(90f, 90f)),
-            ],
+        _handle = new(new McmImage(handleStyle), handleStyle);
+
+        var sliderStyle = Style with {
+            Size = McmStyle.SettingLayout.Setting,
+            LayoutPadding = McmStyle.SettingLayout.SliderPadding,
         };
 
         _line = new(new() {
             ColorPrimary = Style.ColorSecondaryVariant,
             Size = new(5f, 5f),
         });
-        _slider = new(ICompositeLayout.LayoutGroup.Horizontal) {
+        var lineRange = new McmHorizontal(sliderStyle) {
+            Composites = [
+                new(_line, sliderStyle.Size.Value),
+            ],
+        };
+
+        var configurableStyle = Style with {
+            Size = McmStyle.SettingLayout.Setting,
+            LayoutSpacing = McmStyle.SettingLayout.SettingSpacingInner,
+        };
+        _configurable = new McmHorizontal(configurableStyle) {
             Composites = [
                 .. _entry,
-                new(_line, McmStyle.SettingLayout.Setting),
+                new(lineRange, configurableStyle.Size.Value),
             ],
         };
     }
 
-    public Slider? Slider { get; set; }
+    public Slider? Slider { get; private set; }
 
     public float Min { get; init; }
     public float Max { get; init; }
@@ -47,22 +54,39 @@ internal class McmSlider : McmConfigurable<float>, ISlider
 
     public override IBasicEntry.EntryType SettingType => IBasicEntry.EntryType.Slider;
 
+    public override void SetValue(float value)
+    {
+        base.SetValue(value);
+        if (Slider != null) {
+            Slider.value = Mathf.Round(value / Step) * Step;
+        }
+    }
+
     public override Transform Render(Transform parent)
     {
         if (Ref != null) {
             return Ref.transform;
         }
 
-        var sliderGroup = _slider.Render<RectTransform>(parent);
+        var configurable = _configurable.Render<RectTransform>(parent);
 
+        Slider = _line.Ref!.AddComponent<Slider>();
+        Slider.direction = Slider.Direction.LeftToRight;
+        Slider.handleRect = _handle.Render<RectTransform>(_line.Ref!.transform);
+        Slider.targetGraphic = null;
+        Slider.fillRect = null;
+        Slider.onValueChanged.AddListener(SetValue);
 
-        Value = Read();
+        Slider.minValue = Min;
+        Slider.maxValue = Max;
+        Value = Mathf.Round(Read() / Step) * Step;
+        Slider.value = Value;
 
-        return base.Render(sliderGroup);
+        return base.Render(configurable);
     }
 
     public override void Update()
     {
-        Debug.Log($"slidinnnnnnnn {Value}");
+        _handle.Content = Value.ToString("F2");
     }
 }

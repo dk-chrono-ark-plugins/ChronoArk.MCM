@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
+/// <summary>
+///     Style: default + 3f, 3f border
+/// </summary>
 internal class McmButton : McmStylable, IButton
 {
     private readonly McmImage _buttonImg;
@@ -23,7 +26,6 @@ internal class McmButton : McmStylable, IButton
     }
 
     public bool DisableGradient { get; init; }
-
     public required IDisplayable Content { get; init; }
 
     public bool Interactable
@@ -37,7 +39,6 @@ internal class McmButton : McmStylable, IButton
     }
 
     public required Action OnClick { get; init; }
-    public IImage Background => _buttonImg;
 
     public void Click()
     {

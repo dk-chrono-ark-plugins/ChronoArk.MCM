@@ -21,11 +21,6 @@ public interface IButton : IStylable
     Action OnClick { get; }
 
     /// <summary>
-    ///     Back layer of button
-    /// </summary>
-    IImage Background { get; }
-
-    /// <summary>
     ///     click the button
     /// </summary>
     void Click();

@@ -13,7 +13,7 @@ public interface ICompositeLayout : IStylable
         Overlap,
     }
 
-    Composite[] Composites { get; }
+    Composite[]? Composites { get; }
     LayoutGroup Layout { get; }
 
     /// <summary>

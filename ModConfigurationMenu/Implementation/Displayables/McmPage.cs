@@ -2,13 +2,17 @@
 
 namespace Mcm.Implementation.Displayables;
 
-internal partial class McmPage(ModInfo info) : McmStylable, IPage
+/// <summary>
+///     Style: null
+/// </summary>
+/// <param name="info"></param>
+internal partial class McmPage(ModInfo info) : McmStylable(McmStyle.Default()), IPage
 {
     protected readonly List<IDisplayable> _elements = [];
 
     public ModInfo Owner => info;
     public virtual string Title { get; set; } = McmLoc.Page.Untitled;
-    public virtual string Name { get; set; } = "_";
+    public virtual string Name { get; set; } = string.Empty;
     public List<IDisplayable> Elements => _elements;
 
     public virtual void Add(IDisplayable displayable)

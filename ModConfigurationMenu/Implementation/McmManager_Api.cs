@@ -14,12 +14,12 @@ internal partial class McmManager : IModConfigurationMenu
     {
         var modInfo = ModManager.getModInfo(mod);
         var registry = new McmRegistry(new ModLayout(new McmVerticalPage(modInfo)));
-        if (!Registries.TryAdd(modInfo, registry)) {
+        if (!_registries.TryAdd(modInfo, registry)) {
             throw new InvalidOperationException($"failed to register {mod}");
         }
 
-        Debug.Log($"registered {mod}");
-        var layout = Registries[modInfo].Layout;
+        Debug.Log($"registered {modInfo.id}");
+        var layout = _registries[modInfo].Layout;
         if (!modInfo.NeedRestartWhenSettingChanged) {
             return layout;
         }
@@ -33,7 +33,7 @@ internal partial class McmManager : IModConfigurationMenu
     public void Unregister(string mod)
     {
         var modInfo = ModManager.getModInfo(mod);
-        if (Registries.Remove(modInfo)) {
+        if (_registries.Remove(modInfo)) {
             Debug.Log($"unregistered {mod}");
         }
     }

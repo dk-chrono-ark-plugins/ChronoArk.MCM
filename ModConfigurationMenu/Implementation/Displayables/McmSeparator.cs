@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
+/// <summary>
+///     Style: Color.gray + 5f thickness
+/// </summary>
 internal class McmSeparator : McmStylable, ILine
 {
     public McmSeparator(McmStyle? styleOverride = null)

@@ -11,7 +11,8 @@ internal partial class ModLayout : IModLayout
         throw new NotImplementedException();
     }
 
-    public IInputField AddInputField<T>(string key, string name, string description, string @default, Action<T> set)
+    public IInputField AddInputField<T>(string key, string name, string description, string @default,
+        Action<T> set)
     {
         throw new NotImplementedException();
     }
@@ -36,18 +37,19 @@ internal partial class ModLayout : IModLayout
                 set(value);
                 Owner.SetMcmConfig(key, value);
             },
-            Read = () => Owner.GetMcmConfig<float>(key),
+            Read = () => Convert.ToSingle(Owner.GetMcmConfig<double>(key)),
             Min = min,
             Max = max,
             Step = step,
         };
         McmManager.ResetMcmConfig(Owner);
-        set(Owner.GetMcmConfig<float>(key));
+        set(Convert.ToSingle(Owner.GetMcmConfig<double>(key)));
         IndexPage.Add(mcmSlider);
         return mcmSlider;
     }
 
-    public IToggle AddToggleOption(string key, string name, string description, Action<bool> set)
+    public IToggle AddToggleOption(string key, string name, string description,
+        Action<bool> set)
     {
         var registry = McmManager.GetMcmRegistry(Owner)
                        ?? throw new InvalidOperationException($"{Owner.id} must be registered with MCM first");

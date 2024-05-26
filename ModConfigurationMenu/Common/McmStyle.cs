@@ -78,5 +78,7 @@ public sealed record McmStyle
         public static readonly Vector2 ToggleSingle = new(200f, 100f);
         public static readonly RectOffset TogglePadding = new(5, 5, 10, 10);
         public static readonly Vector2 ToggleSpacing = new(5f, 0f);
+
+        public static readonly RectOffset SliderPadding = new(5, 5, 5, 5);
     }
 }

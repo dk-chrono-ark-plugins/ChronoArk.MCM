@@ -3,6 +3,9 @@ using Mcm.Implementation.Components;
 
 namespace Mcm.Implementation.Displayables;
 
+/// <summary>
+///     Style: fixed
+/// </summary>
 internal class McmModEntry : McmStylable
 {
     public readonly McmButton ModEntry;
@@ -11,23 +14,17 @@ internal class McmModEntry : McmStylable
         : base(McmStyle.Default())
     {
         Owner = modInfo;
-        Style.Size = new(320f, 400f);
 
         var cover = coverOverride ?? new McmImage {
             MainSprite = modInfo.CoverSprite ?? McmWindow.ModUI!.DefaultCover,
         };
 
-        var text = new McmComposite(ICompositeLayout.LayoutGroup.Overlap, Style) {
-            Composites = [
-                new(new McmImage(new() { ColorPrimary = Color.black }),
-                    new(320f, 80f)),
-                new(new McmText(Style) {
-                        Content = pageOverride?.Title ?? modInfo.Title,
-                    },
-                    new(320f, 80f)),
-            ],
+        var textBg = new McmImage(new() { ColorPrimary = Color.black });
+        var text = new McmLayerText(textBg, Style with { Size = new(320f, 80f) }) {
+            Content = pageOverride?.Title ?? modInfo.Title,
         };
-        var modEntryInternal = new McmComposite(ICompositeLayout.LayoutGroup.Vertical, Style) {
+
+        var modEntryInternal = new McmVertical(Style) {
             Composites = [
                 new(cover, new(0f, 320f)),
                 new(text, new(0f, 80f)),
@@ -35,7 +32,7 @@ internal class McmModEntry : McmStylable
         };
         ModEntry = new() {
             Content = modEntryInternal,
-            OnClick = () => InitPageEntry(pageOverride?.Name ?? "index"),
+            OnClick = () => ClickPageEntry(pageOverride?.Name ?? "index"),
         };
     }
 
@@ -48,14 +45,12 @@ internal class McmModEntry : McmStylable
         }
 
         var modEntry = ModEntry.Render<RectTransform>(parent);
-
         modEntry.sizeDelta = Style.Size!.Value;
-        (ModEntry.Background as McmImage)!.Image!.color = Color.black;
 
         return base.Render(modEntry);
     }
 
-    private void InitPageEntry(string name)
+    private void ClickPageEntry(string name)
     {
         if (name == "index") {
             Debug.Log($"Loading mod config for {Owner.id}");

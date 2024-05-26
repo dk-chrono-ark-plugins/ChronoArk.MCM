@@ -3,10 +3,15 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Displayables;
 
+/// <summary>
+///     Style: null
+/// </summary>
+/// <param name="compositeLayout"></param>
+/// <param name="styleOverride"></param>
 internal class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmStyle? styleOverride = null)
     : McmStylable(styleOverride), ICompositeLayout
 {
-    public required ICompositeLayout.Composite[] Composites { get; set; }
+    public ICompositeLayout.Composite[]? Composites { get; set; }
     public ICompositeLayout.LayoutGroup Layout => compositeLayout;
 
     public override Transform Render(Transform parent)
@@ -41,6 +46,8 @@ internal class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmSty
                 }
                 case ICompositeLayout.LayoutGroup.Horizontal: {
                     var group = layout.AddComponent<HorizontalLayoutGroup>();
+                    group.childForceExpandHeight = false;
+
                     if (Style.LayoutSpacing != null) {
                         group.spacing = Style.LayoutSpacing.Value.x;
                     }
@@ -50,6 +57,7 @@ internal class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmSty
                 }
                 case ICompositeLayout.LayoutGroup.Vertical: {
                     var group = layout.AddComponent<VerticalLayoutGroup>();
+                    group.childForceExpandWidth = false;
                     if (Style.LayoutSpacing != null) {
                         group.spacing = Style.LayoutSpacing.Value.y;
                     }
@@ -57,6 +65,9 @@ internal class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmSty
                     contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
                     break;
                 }
+                case ICompositeLayout.LayoutGroup.Overlap:
+                default:
+                    throw new NotImplementedException();
             }
 
             layout.GetComponent<LayoutGroup>().childAlignment = Style.LayoutAnchor;
@@ -70,7 +81,7 @@ internal class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmSty
 
     private void RenderOverlaps(Transform layout)
     {
-        foreach (var (displayable, size) in Composites) {
+        foreach (var (displayable, size) in Composites ?? []) {
             var rect = displayable.Render<RectTransform>(layout);
             rect.SetToStretch();
             rect.sizeDelta = size;
@@ -80,7 +91,7 @@ internal class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmSty
 
     private void RenderComposites(Transform layout)
     {
-        foreach (var (displayable, size) in Composites) {
+        foreach (var (displayable, size) in Composites ?? []) {
             var element = displayable.Render<LayoutElement>(layout);
             element.GetComponent<RectTransform>().SetToStretch();
             if (!Mathf.Approximately(size.x, 0f)) {

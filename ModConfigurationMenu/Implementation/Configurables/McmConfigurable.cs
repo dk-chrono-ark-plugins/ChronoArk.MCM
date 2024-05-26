@@ -1,9 +1,14 @@
 ﻿using ChronoArkMod.ModData;
 using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
+using TMPro;
 
 namespace Mcm.Implementation.Configurables;
 
+/// <summary>
+///     A configurable entry that has name and description ready
+/// </summary>
+/// <typeparam name="T"></typeparam>
 internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
 {
     protected readonly ICompositeLayout.Composite[] _entry;
@@ -18,15 +23,20 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
         Name = name;
         Description = desc;
 
-        Style.TextFontSize = 34f;
-        Style.Size = McmStyle.SettingLayout.NameText;
-        _name = new(Style) {
+        var textStyle = Style with {
+            Size = McmStyle.SettingLayout.NameText,
+            TextFontSize = 34f,
+            TextAlignment = TextAlignmentOptions.Left,
+        };
+        _name = new(textStyle) {
             Content = name,
         };
 
-        Style.TextFontSize = 30f;
-        Style.Size = McmStyle.SettingLayout.DescText;
-        var descText = new McmText(Style) {
+        var descStyle = textStyle with {
+            Size = McmStyle.SettingLayout.DescText,
+            TextFontSize = 30f,
+        };
+        var descText = new McmText(descStyle) {
             Content = Description,
         };
 
@@ -63,23 +73,27 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
         NotifyChange();
     }
 
-    public void NotifyChange(object? payload = null)
-    {
-        if (!_notified) {
-            _notified = true;
-            AddPrefix();
-        }
-    }
-
-    public void NotifyApply(object? payload = null)
+    public virtual void NotifyChange(object? payload = null)
     {
         if (_notified) {
-            _notified = false;
-            RemovePrefix();
+            return;
         }
+
+        _notified = true;
+        AddPrefix();
     }
 
-    public void NotifyReset(object? payload = null)
+    public virtual void NotifyApply(object? payload = null)
+    {
+        if (!_notified) {
+            return;
+        }
+
+        _notified = false;
+        RemovePrefix();
+    }
+
+    public virtual void NotifyReset(object? payload = null)
     {
         Value = Read();
         _notified = false;

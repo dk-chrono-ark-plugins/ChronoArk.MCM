@@ -10,13 +10,13 @@ internal partial class McmManager
     public const IModConfigurationMenu.Version McmInstanceVersion = IModConfigurationMenu.Version.V1;
     private static readonly Lazy<McmManager> _instance = new(() => new());
 
+    private static readonly Dictionary<ModInfo, McmRegistry> _registries = [];
+
     public readonly List<IPage> ExtraEntries = [];
 
     private McmManager()
     {
     }
-
-    private static Dictionary<ModInfo, McmRegistry> Registries => [];
 
     public static McmManager Instance => _instance.Value;
 
@@ -59,12 +59,12 @@ internal partial class McmManager
 
     public static McmRegistry? GetMcmRegistry(ModInfo modInfo)
     {
-        return Registries.GetValueOrDefault(modInfo);
+        return _registries.GetValueOrDefault(modInfo);
     }
 
     public static void AddMcmConfig(ModInfo modInfo, string key, McmSettingEntry entry)
     {
-        if (!Registries.TryGetValue(modInfo, out var registry)) {
+        if (!_registries.TryGetValue(modInfo, out var registry)) {
             return;
         }
 
@@ -73,7 +73,7 @@ internal partial class McmManager
 
     public static T GetMcmConfig<T>(ModInfo modInfo, string key)
     {
-        if (Registries.TryGetValue(modInfo, out var registry) &&
+        if (_registries.TryGetValue(modInfo, out var registry) &&
             registry.Settings.TryGetValue(key, out var entry) &&
             entry.Value is T parsed) {
             return parsed;
@@ -95,7 +95,7 @@ internal partial class McmManager
     /// <param name="value"></param>
     public static void UpdateMcmConfig(ModInfo modInfo, string key, object value)
     {
-        if (!Registries.TryGetValue(modInfo, out var registry)) {
+        if (!_registries.TryGetValue(modInfo, out var registry)) {
             return;
         }
 
@@ -112,7 +112,7 @@ internal partial class McmManager
     /// <param name="modInfo"></param>
     public static void SaveMcmConfig(ModInfo modInfo, bool force = false)
     {
-        if (!Registries.TryGetValue(modInfo, out var registry)) {
+        if (!_registries.TryGetValue(modInfo, out var registry)) {
             return;
         }
 
@@ -140,7 +140,7 @@ internal partial class McmManager
     /// <param name="modInfo"></param>
     public static void ResetMcmConfig(ModInfo modInfo)
     {
-        if (!Registries.TryGetValue(modInfo, out var registry)) {
+        if (!_registries.TryGetValue(modInfo, out var registry)) {
             return;
         }
 

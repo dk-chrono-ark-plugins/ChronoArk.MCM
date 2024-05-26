@@ -3,6 +3,10 @@ using TMPro;
 
 namespace Mcm.Implementation.Displayables;
 
+/// <summary>
+///     Style: default
+/// </summary>
+/// <param name="styleOverride"></param>
 internal class McmText(McmStyle? styleOverride = null) : McmStylable(styleOverride ?? McmStyle.Default()), IText
 {
     private string? _content;

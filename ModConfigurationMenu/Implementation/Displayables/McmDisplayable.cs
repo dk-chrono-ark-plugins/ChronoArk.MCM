@@ -1,4 +1,7 @@
-﻿namespace Mcm.Implementation.Displayables;
+﻿using ChronoArkMod.Helper;
+using Mcm.Implementation.Components;
+
+namespace Mcm.Implementation.Displayables;
 
 internal class McmDisplayable : ScriptRef, IDisplayable
 {
@@ -11,6 +14,11 @@ internal class McmDisplayable : ScriptRef, IDisplayable
     {
         Ref = parent.gameObject;
         _deferredLock = Ref;
+
+        if (McmMod.Instance?._config?.AttachDebugComponent ?? false) {
+            Ref.GetOrAddComponent<ScriptRefHolder>().Holder = this;
+        }
+
         return parent;
     }
 

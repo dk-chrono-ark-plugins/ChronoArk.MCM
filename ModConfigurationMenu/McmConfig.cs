@@ -2,4 +2,5 @@
 
 internal sealed record McmConfig
 {
+    internal bool AttachDebugComponent { get; set; } = true;
 }

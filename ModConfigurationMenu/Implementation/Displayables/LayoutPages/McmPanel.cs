@@ -16,8 +16,6 @@ internal class McmPanel : McmPage
     protected McmPanel(ModInfo modInfo)
         : base(modInfo)
     {
-        Style = McmStyle.Default();
-
         _titleText = new() {
             Content = string.Empty,
             Style = {
@@ -31,19 +29,19 @@ internal class McmPanel : McmPage
             Content = new McmText(Style) {
                 Content = McmLoc.Page.Back,
             },
-            OnClick = McmWindow.Back,
+            OnClick = McmWindow.PageBack,
         };
         var apply = new McmButton {
             Content = new McmText(Style) {
                 Content = McmLoc.Page.Apply,
             },
-            OnClick = McmWindow.Save,
+            OnClick = McmWindow.PageSave,
         };
         var reset = new McmButton {
             Content = new McmText(Style) {
                 Content = McmLoc.Page.Reset,
             },
-            OnClick = McmWindow.Reset,
+            OnClick = McmWindow.PageReset,
         };
 
         _buttons = new(ICompositeLayout.LayoutGroup.Horizontal) {

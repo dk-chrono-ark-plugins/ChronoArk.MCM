@@ -25,18 +25,6 @@ internal class McmWindow : UIBehaviour
     public static ModUI? ModUI { get; private set; }
     public static IModLayout? MyLayout { get; private set; }
 
-    public static void Reset()
-    {
-        if (Instance == null || Instance.TopPage == null) {
-            return;
-        }
-
-        McmManager.ResetMcmConfig(Instance.TopPage.Owner);
-        Instance.TopPage.Elements
-            .OfType<INotifyChange>()
-            .Do(element => element.NotifyReset());
-    }
-
     protected override void Start()
     {
         Instance = this;
@@ -47,7 +35,7 @@ internal class McmWindow : UIBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            Back();
+            PageBack();
         }
     }
 
@@ -82,7 +70,7 @@ internal class McmWindow : UIBehaviour
         this.StartDeferredCoroutine(() => gameObject.SetActive(false));
     }
 
-    public static void Back()
+    public static void PageBack()
     {
         if (Instance == null) {
             return;
@@ -96,7 +84,7 @@ internal class McmWindow : UIBehaviour
         }
     }
 
-    public static void Save()
+    public static void PageSave()
     {
         if (Instance == null || Instance.TopPage == null) {
             return;
@@ -106,6 +94,18 @@ internal class McmWindow : UIBehaviour
         Instance.TopPage.Elements
             .OfType<INotifyChange>()
             .Do(element => element.NotifyApply());
+    }
+
+    public static void PageReset()
+    {
+        if (Instance == null || Instance.TopPage == null) {
+            return;
+        }
+
+        McmManager.ResetMcmConfig(Instance.TopPage.Owner);
+        Instance.TopPage.Elements
+            .OfType<INotifyChange>()
+            .Do(element => element.NotifyReset());
     }
 
     public void RenderPage(IPage? page)
