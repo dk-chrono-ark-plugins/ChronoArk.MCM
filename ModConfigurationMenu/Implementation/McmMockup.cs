@@ -1,6 +1,4 @@
-﻿using ChronoArkMod.Helper;
-
-namespace Mcm.Implementation;
+﻿namespace Mcm.Implementation;
 
 internal static class McmMockup
 {

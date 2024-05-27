@@ -66,6 +66,7 @@ internal class McmToggle : McmConfigurable<bool>, IToggle
         }
 
         var toggle = _configurable.Render(parent);
+        toggle.name = $"McmToggle:{Id}";
         Value = Read();
 
         return base.Render(toggle);

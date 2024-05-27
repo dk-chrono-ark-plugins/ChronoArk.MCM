@@ -1,15 +1,11 @@
-﻿namespace Mcm.Api.Configurables;
+﻿using TMPro;
+
+namespace Mcm.Api.Configurables;
 
 public interface IInputField : IConfigurable<string>
 {
     /// <summary>
-    ///     Current string input
+    ///     Input charset validator
     /// </summary>
-    string CurrentInput { get; }
-
-    /// <summary>
-    ///     Used to determine input validity<br />
-    ///     Default set by Mcm
-    /// </summary>
-    Func<string, bool> InputPredicate { get; set; }
+    TMP_InputField.CharacterValidation CharacterValidation { get; }
 }

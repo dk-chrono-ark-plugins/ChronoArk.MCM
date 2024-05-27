@@ -9,6 +9,8 @@ public interface IBasicEntry
         // CARK supported
         Dropdown,
         Input,
+        InputDecimal,
+        InputInteger,
         Slider,
         Toggle,
 
@@ -32,7 +34,7 @@ public interface IBasicEntry
     string Description { get; }
 
     /// <summary>
-    ///     Self explainatory
+    ///     Self explanatory
     /// </summary>
     EntryType SettingType { get; }
 }

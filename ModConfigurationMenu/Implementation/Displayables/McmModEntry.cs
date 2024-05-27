@@ -36,7 +36,7 @@ internal class McmModEntry : McmStylable
         };
     }
 
-    public ModInfo Owner { get; init; }
+    public ModInfo Owner { get; }
 
     public override Transform Render(Transform parent)
     {

@@ -1,5 +1,4 @@
-﻿using ChronoArkMod.Helper;
-using ChronoArkMod.ModData;
+﻿using ChronoArkMod.ModData;
 using Mcm.Implementation.Components;
 using UnityEngine.UI;
 

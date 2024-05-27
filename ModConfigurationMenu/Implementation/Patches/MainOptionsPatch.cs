@@ -1,5 +1,4 @@
-﻿using ChronoArkMod.Helper;
-using I2.Loc;
+﻿using I2.Loc;
 using Mcm.Implementation.Components;
 using TMPro;
 using UnityEngine.EventSystems;

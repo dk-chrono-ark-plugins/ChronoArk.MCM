@@ -1,4 +1,6 @@
-﻿namespace Mcm.Implementation.Displayables;
+﻿using TMPro;
+
+namespace Mcm.Implementation.Displayables;
 
 /// <summary>
 ///     Style: default
@@ -26,5 +28,6 @@ internal class McmLayerText : McmOverlap
         set => _text.Content = value;
     }
 
+    public TextMeshProUGUI? Text => _text.Text;
     public IImage Layer { get; init; }
 }

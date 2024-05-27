@@ -1,5 +1,4 @@
-﻿using ChronoArkMod.Helper;
-using ChronoArkMod.ModData;
+﻿using ChronoArkMod.ModData;
 using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
 using TMPro;
@@ -9,7 +8,7 @@ namespace Mcm.Implementation.Configurables;
 /// <summary>
 ///     A configurable entry that has name and description ready, but not displayable.
 /// </summary>
-/// <remarks>Must be derived from and render inclusively using <see cref="McmHorizontal"/></remarks>
+/// <remarks>Must be derived from and render inclusively using <see cref="McmHorizontal" /></remarks>
 /// <typeparam name="T"></typeparam>
 internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
 {
@@ -80,10 +79,9 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
         if (_notified) {
             return;
         }
-        AddPrefix();        
-        CoroutineHelper.Deferred(() => {
-            _notified = true;
-        });
+
+        AddPrefix();
+        CoroutineHelper.Deferred(() => { _notified = true; });
     }
 
     public virtual void NotifyApply(object? payload = null)
@@ -91,19 +89,16 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
         if (!_notified) {
             return;
         }
-        RemovePrefix();        
-        CoroutineHelper.Deferred(() => {
-            _notified = false;
-        });
+
+        RemovePrefix();
+        CoroutineHelper.Deferred(() => { _notified = false; });
     }
 
     public virtual void NotifyReset(object? payload = null)
     {
         Value = Read();
         RemovePrefix();
-        CoroutineHelper.Deferred(() => {
-            _notified = false;
-        });
+        CoroutineHelper.Deferred(() => { _notified = false; });
     }
 
     private void AddPrefix()

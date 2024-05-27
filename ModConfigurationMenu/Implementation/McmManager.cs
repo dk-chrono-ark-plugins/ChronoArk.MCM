@@ -8,10 +8,9 @@ namespace Mcm.Implementation;
 internal partial class McmManager
 {
     public const IModConfigurationMenu.Version McmInstanceVersion = IModConfigurationMenu.Version.V1;
+
     private static readonly Lazy<McmManager> _instance = new(() => new());
-
     private static readonly Dictionary<ModInfo, McmRegistry> _registries = [];
-
     public readonly List<IPage> ExtraEntries = [];
 
     private McmManager()
@@ -73,10 +72,28 @@ internal partial class McmManager
 
     public static T GetMcmConfig<T>(ModInfo modInfo, string key)
     {
-        if (_registries.TryGetValue(modInfo, out var registry) &&
-            registry.Settings.TryGetValue(key, out var entry) &&
-            entry.Value is T parsed) {
+        if (!_registries.TryGetValue(modInfo, out var registry) ||
+            !registry.Settings.TryGetValue(key, out var entry)) {
+            return default!;
+        }
+
+        if (entry.Value is T parsed) {
             return parsed;
+        }
+
+        try {
+            // newtonsoft.json!
+            if (typeof(T) == typeof(int)) {
+                return (T)(object)Convert.ToInt32(entry.Value);
+            }
+
+            if (typeof(T) == typeof(float)) {
+                return (T)(object)Convert.ToSingle(entry.Value);
+            }
+
+            return (T)entry.Value;
+        } catch {
+            Debug.Log($"failed to get mcm config of type {typeof(T)}, key {key}");
         }
 
         return default!;
@@ -120,7 +137,7 @@ internal partial class McmManager
             return;
         }
 
-        // force update?
+        // sync to CA configs
         modInfo.settings = registry.Settings
             .ToDictionary(kv => kv.Key, kv => kv.Value.Value);
 
@@ -135,7 +152,7 @@ internal partial class McmManager
     }
 
     /// <summary>
-    ///     Reset all
+    ///     Reset all mcm config to the state of CA configs(if any)
     /// </summary>
     /// <param name="modInfo"></param>
     public static void ResetMcmConfig(ModInfo modInfo)

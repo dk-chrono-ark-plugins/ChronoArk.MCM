@@ -53,16 +53,19 @@ public interface IModLayout
     /// <param name="options">Delegate to fetch a list of options</param>
     /// <returns><see cref="IDropdown" /> can be used to change value externally</returns>
     /// <inheritdoc cref="AddToggleOption" />
-    IDropdown AddDropdownMenu(string key, string name, string description, Func<string[]> options, Action<int> set);
+    IDropdown AddDropdownMenu(string key, string name, string description, Func<string[]> options,
+        int @default,
+        Action<int> set);
 
     /// <summary>
     ///     Add an input field to the index page
     /// </summary>
     /// <remarks>Must use <see cref="string" /> or <see cref="int" /> as type parameter</remarks>
-    /// <param name="default">Placeholder text</param>
     /// <returns><see cref="IInputField" /> can be used to change value externally</returns>
     /// <inheritdoc cref="AddToggleOption" />
-    IInputField AddInputField<T>(string key, string name, string description, string @default, Action<T> set);
+    IInputField AddInputField<T>(string key, string name, string description,
+        T @default,
+        Action<T> set);
 
     /// <summary>
     ///     Add a slider option to the index page
@@ -70,6 +73,7 @@ public interface IModLayout
     /// <returns><see cref="ISlider" /> can be used to change value externally</returns>
     /// <inheritdoc cref="AddToggleOption" />
     ISlider AddSliderOption(string key, string name, string description, float min, float max, float step,
+        float @default,
         Action<float> set);
 
     /// <summary>
@@ -80,5 +84,7 @@ public interface IModLayout
     /// <param name="description">Display description, supports <see cref="I2.Loc" /> keys</param>
     /// <param name="set">Delegate to set value</param>
     /// <returns><see cref="IToggle" /> can be used to change state externally</returns>
-    IToggle AddToggleOption(string key, string name, string description, Action<bool> set);
+    IToggle AddToggleOption(string key, string name, string description,
+        bool @default,
+        Action<bool> set);
 }

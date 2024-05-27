@@ -8,6 +8,7 @@ global using System.Collections.Generic;
 global using System.Linq;
 global using UnityEngine;
 global using Debug = Mcm.Common.Debug;
+global using ChronoArkMod.Helper;
 using ChronoArkMod;
 using ChronoArkMod.ModData;
 using ChronoArkMod.Plugin;

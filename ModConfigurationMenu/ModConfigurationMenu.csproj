@@ -27,6 +27,11 @@
         <Optimize>true</Optimize>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
+    <PropertyGroup>
+      <PostBuildEvent>DEL /F /Q "$(TargetDir)System.dll" 2&gt;NUL
+DEL /F /Q "$(TargetDir)System.Core.dll" 2&gt;NUL
+DEL /F /Q "$(TargetDir)$(AssemblyName).pdb" 2&gt;NUL</PostBuildEvent>
+    </PropertyGroup>
     <ItemGroup>
         <Reference Include="0Harmony">
             <HintPath>..\..\Common\bin\0Harmony.dll</HintPath>
@@ -467,6 +472,7 @@
         <Compile Include="Implementation\Components\ScriptRefHolder.cs"/>
         <Compile Include="Implementation\Configurables\McmConfigurable.cs"/>
         <Compile Include="Implementation\Configurables\McmDropdown.cs"/>
+        <Compile Include="Implementation\Configurables\McmInputField.cs"/>
         <Compile Include="Implementation\Configurables\McmSlider.cs"/>
         <Compile Include="Implementation\Configurables\McmToggle.cs"/>
         <Compile Include="Implementation\Displayables\Composites\McmHorizontal.cs"/>

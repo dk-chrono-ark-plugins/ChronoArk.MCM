@@ -1,6 +1,4 @@
-﻿using ChronoArkMod.Helper;
-
-namespace Mcm.Api.Displayables;
+﻿namespace Mcm.Api.Displayables;
 
 /// <summary>
 ///     Basic renderable component
