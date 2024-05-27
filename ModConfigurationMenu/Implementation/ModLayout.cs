@@ -67,11 +67,11 @@ internal partial class ModLayout
     public void RenderPage(string name)
     {
         var page = GetPage(name);
-        if (page == null || McmWindow.Instance == null) {
+        if (page == null) {
             return;
         }
 
-        McmWindow.Instance.RenderPage(page);
+        McmWindow.Instance?.RenderPage(page);
     }
 
     private string SanitizedName(string name)

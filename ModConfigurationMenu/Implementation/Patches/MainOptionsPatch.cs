@@ -9,7 +9,7 @@ namespace Mcm.Implementation;
 [HarmonyPatch]
 internal static class MainOptionsPatch
 {
-    private const string ButtonEntryName = "MCM Button";
+    private const string ButtonEntryName = "McmWindowEntry";
     private const string ButtonEntryText = "Mods";
     private const string LayoutHierarchy = "Image/Layout";
 

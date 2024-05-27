@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 /// <summary>
 ///     Grid layout page, will return the grid content holder to the render pipe
 /// </summary>
-internal class McmGridPage(ModInfo info) : McmScrollPage(info)
+public class McmGridPage(ModInfo info) : McmScrollPage(info)
 {
     private readonly Vector2 _cellSize = new(320f, 400f);
 

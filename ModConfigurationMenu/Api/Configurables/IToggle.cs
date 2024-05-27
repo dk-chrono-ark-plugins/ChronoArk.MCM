@@ -1,5 +1,3 @@
 ﻿namespace Mcm.Api.Configurables;
 
-public interface IToggle : IConfigurable<bool>
-{
-}
+public interface IToggle : IConfigurable<bool>;

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Components;
 
-internal class ButtonHighlight : HoverBehaviour
+public class ButtonHighlight : HoverBehaviour
 {
     private bool _cancel;
     private Color? _original;

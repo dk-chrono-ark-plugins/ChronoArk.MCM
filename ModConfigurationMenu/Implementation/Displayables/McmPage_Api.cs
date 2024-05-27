@@ -1,7 +1,44 @@
 ﻿namespace Mcm.Implementation.Displayables;
 
-internal partial class McmPage
+public partial class McmPage
 {
+    public IButton AddButton(string content, Action onClick)
+    {
+        var btnStyle = McmStyle.Default() with {
+            Size = McmStyle.SettingLayout.ToggleSingle,
+            TextFontSize = 44f,
+            LayoutPadding = McmStyle.SettingLayout.InputPadding,
+            LayoutSpacing = Vector2.zero,
+            OutlineSize = new(3f, 3f),
+        };
+        var text = new McmText(btnStyle) {
+            Content = content,
+        };
+        return AddButton(text, onClick);
+    }
+
+    public IButton AddButton(IDisplayable content, Action onClick)
+    {
+        var btnStyle = McmStyle.Default() with {
+            Size = McmStyle.SettingLayout.ToggleSingle,
+            TextFontSize = 44f,
+            LayoutPadding = McmStyle.SettingLayout.InputPadding,
+            LayoutSpacing = Vector2.zero,
+            OutlineSize = new(3f, 3f),
+        };
+        var mcmButton = new McmButton(btnStyle) {
+            Content = content,
+            OnClick = onClick,
+        };
+        var btnHolder = new McmHorizontal(btnStyle) {
+            Composites = [
+                new(mcmButton, btnStyle.Size.Value),
+            ],
+        };
+        Add(btnHolder);
+        return mcmButton;
+    }
+
     public IImage AddImage(Color color)
     {
         var mcmImage = new McmImage {
@@ -52,5 +89,10 @@ internal partial class McmPage
         };
         Add(mcmText);
         return mcmText;
+    }
+
+    public IText AddTextLoc(string locKey)
+    {
+        return AddText(Owner.I2Loc(locKey));
     }
 }

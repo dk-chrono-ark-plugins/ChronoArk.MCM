@@ -1,5 +1,3 @@
 ﻿namespace Mcm.Api.Displayables;
 
-public interface ILine : IStylable
-{
-}
+public interface ILine : IStylable;

@@ -8,7 +8,7 @@ global using System.Collections.Generic;
 global using System.Linq;
 global using UnityEngine;
 global using Debug = Mcm.Common.Debug;
-global using ChronoArkMod.Helper;
+global using Mcm.Helper;
 using ChronoArkMod;
 using ChronoArkMod.ModData;
 using ChronoArkMod.Plugin;
@@ -39,9 +39,14 @@ public class McmMod : ChronoArkPlugin
         var layout = mcm.Register(ModId);
 
         // mcm window main entry
-        layout.AddPage("McmEntry", ICompositeLayout.LayoutGroup.Grid).Title = "Mod Configuration Menu";
+        var entry = layout.AddPage("McmEntry", ICompositeLayout.LayoutGroup.Grid);
 
-        McmMockup.Mockup(layout);
-        McmMockup.Stub(layout);
+        CoroutineHelper.Deferred(() => {
+            entry.Title = McmLoc.Entry.Title;
+
+            McmMockup.Mockup(layout);
+            //McmMockup.Stub(layout);
+            McmMockup.NormalRegister(layout);
+        });
     }
 }

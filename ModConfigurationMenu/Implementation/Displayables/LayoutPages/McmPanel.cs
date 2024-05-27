@@ -7,7 +7,7 @@ namespace Mcm.Implementation.Displayables;
 /// <summary>
 ///     Basic page layout, will return a bordered page to the render pipe
 /// </summary>
-internal class McmPanel : McmPage
+public class McmPanel : McmPage
 {
     private readonly McmComposite _buttons;
     private readonly McmText _titleText;

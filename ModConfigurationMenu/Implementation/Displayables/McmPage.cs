@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 ///     Style: null
 /// </summary>
 /// <param name="info"></param>
-internal partial class McmPage(ModInfo info) : McmStylable(McmStyle.Default()), IPage
+public partial class McmPage(ModInfo info) : McmStylable(McmStyle.Default()), IPage
 {
     protected readonly List<IDisplayable> _elements = [];
 

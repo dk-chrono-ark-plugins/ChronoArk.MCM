@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 ///     Style: null
 /// </summary>
 /// <param name="styleOverride"></param>
-internal class McmImage(McmStyle? styleOverride = null) : McmStylable(styleOverride), IImage
+public class McmImage(McmStyle? styleOverride = null) : McmStylable(styleOverride), IImage
 {
     public Sprite? MainSprite { get; init; }
     public Image? Image { get; private set; }

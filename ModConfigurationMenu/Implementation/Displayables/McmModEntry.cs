@@ -26,8 +26,8 @@ internal class McmModEntry : McmStylable
 
         var modEntryInternal = new McmVertical(Style) {
             Composites = [
-                new(cover, new(0f, 320f)),
-                new(text, new(0f, 80f)),
+                new(cover, new(320f, 320f)),
+                new(text, new(320f, 80f)),
             ],
         };
         ModEntry = new() {

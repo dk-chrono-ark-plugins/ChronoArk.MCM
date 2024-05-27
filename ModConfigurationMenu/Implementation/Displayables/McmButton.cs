@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 /// <summary>
 ///     Style: default + 3f, 3f border
 /// </summary>
-internal class McmButton : McmStylable, IButton
+public class McmButton : McmStylable, IButton
 {
     private readonly McmImage _buttonImg;
     private Button? _button;

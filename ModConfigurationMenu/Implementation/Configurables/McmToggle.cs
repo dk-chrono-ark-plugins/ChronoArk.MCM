@@ -3,7 +3,7 @@ using Mcm.Implementation.Displayables;
 
 namespace Mcm.Implementation.Configurables;
 
-internal class McmToggle : McmConfigurable<bool>, IToggle
+public class McmToggle : McmConfigurable<bool>, IToggle
 {
     private readonly McmComposite _configurable;
     private readonly McmImage _off;

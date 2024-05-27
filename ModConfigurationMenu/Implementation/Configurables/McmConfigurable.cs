@@ -10,7 +10,7 @@ namespace Mcm.Implementation.Configurables;
 /// </summary>
 /// <remarks>Must be derived from and render inclusively using <see cref="McmHorizontal" /></remarks>
 /// <typeparam name="T"></typeparam>
-internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
+public class McmConfigurable<T> : McmStylable, IConfigurable<T>
 {
     protected readonly ICompositeLayout.Composite[] _entry;
     private readonly McmText _name;
@@ -35,7 +35,7 @@ internal class McmConfigurable<T> : McmStylable, IConfigurable<T>
 
         var descStyle = textStyle with {
             Size = McmStyle.SettingLayout.DescText,
-            TextFontSize = 30f,
+            TextAutoSize = true,
         };
         var descText = new McmText(descStyle) {
             Content = Description,

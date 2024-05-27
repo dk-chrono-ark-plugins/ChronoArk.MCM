@@ -2,7 +2,7 @@
 
 namespace Mcm.Implementation;
 
-internal class ScriptRef : IScriptRef
+public class ScriptRef : IScriptRef
 {
     protected object? _deferredLock = null;
 

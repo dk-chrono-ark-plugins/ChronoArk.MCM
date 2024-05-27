@@ -6,7 +6,9 @@ public static class RenderHelper
 {
     public static Canvas Setup(GameObject? current = null)
     {
-        if (current == null || current.GetComponent<Canvas>() != null) {
+        if (current == null ||
+            (current.GetComponent<Canvas>() != null &&
+             current.GetComponent<Canvas>().renderMode != RenderMode.ScreenSpaceOverlay)) {
             current = new("McmRenderHelper");
         }
 

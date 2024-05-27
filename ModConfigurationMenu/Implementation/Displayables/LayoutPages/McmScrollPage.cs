@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 /// <summary>
 ///     Scroll rect page, will return a content holder to the render pipe
 /// </summary>
-internal class McmScrollPage(ModInfo info) : McmPanel(info)
+public class McmScrollPage(ModInfo info) : McmPanel(info)
 {
     public override Transform Render(Transform parent)
     {

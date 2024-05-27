@@ -4,7 +4,7 @@ using TMPro;
 
 namespace Mcm.Implementation.Configurables;
 
-internal class McmInputField : McmConfigurable<string>, IInputField
+public class McmInputField : McmConfigurable<string>, IInputField
 {
     private readonly McmImage _bg;
     private readonly McmComposite _configurable;
@@ -21,8 +21,6 @@ internal class McmInputField : McmConfigurable<string>, IInputField
             Size = McmStyle.SettingLayout.Setting,
             LayoutPadding = McmStyle.SettingLayout.InputPadding,
             OutlineSize = null,
-            TextFontSize = 24f,
-            TextAlignment = TextAlignmentOptions.Left,
         };
         _bg = new(bgStyle);
 

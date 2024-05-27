@@ -13,8 +13,8 @@ public static class ConfigCereal
 
             using var sw = new StreamWriter(path);
             sw.Write(JsonConvert.SerializeObject(data, Formatting.Indented));
-        } catch {
-            Debug.Log("internal failure");
+        } catch (Exception ex) {
+            Debug.Log($"internal failure: {ex.Message}");
             // noexcept
         }
     }
@@ -27,8 +27,8 @@ public static class ConfigCereal
                 inferred = JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
                 return true;
             }
-        } catch {
-            Debug.Log("failed to read config");
+        } catch (Exception ex) {
+            Debug.Log($"failed to read config: {ex.Message}");
             throw;
         }
 
@@ -45,8 +45,8 @@ public static class ConfigCereal
             Directory.CreateDirectory(Path.GetDirectoryName(path));
 
             WriteConfig(data, path);
-        } catch {
-            Debug.Log("failed to write config");
+        } catch (Exception ex) {
+            Debug.Log($"failed to write config: {ex.Message}");
             // noexcept
         }
     }
@@ -64,7 +64,7 @@ public static class ConfigCereal
                 return modInfo.ReadMcmConfig<T>();
             }
         } catch {
-            Debug.Log("failed to read config");
+            Debug.Log($"failed to read config");
             throw;
         }
 
@@ -81,8 +81,8 @@ public static class ConfigCereal
             if (File.Exists(configPath)) {
                 File.Copy(configPath, backupPath, true);
             }
-        } catch {
-            Debug.Log("failed to backup config");
+        } catch (Exception ex) {
+            Debug.Log($"failed to backup config: {ex.Message}");
             // noexcept
         }
     }
@@ -96,8 +96,8 @@ public static class ConfigCereal
                 File.Copy(backupPath, configPath, true);
                 return true;
             }
-        } catch {
-            Debug.Log("failed to restore config");
+        } catch (Exception ex) {
+            Debug.Log($"failed to restore config: {ex.Message}");
             // noexcept
         }
 

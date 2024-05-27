@@ -53,7 +53,8 @@ public interface IModLayout
     /// <param name="options">Delegate to fetch a list of options</param>
     /// <returns><see cref="IDropdown" /> can be used to change value externally</returns>
     /// <inheritdoc cref="AddToggleOption" />
-    IDropdown AddDropdownMenu(string key, string name, string description, Func<string[]> options,
+    IDropdown AddDropdownMenu(string key, string name, string description,
+        Func<string[]> options,
         int @default,
         Action<int> set);
 

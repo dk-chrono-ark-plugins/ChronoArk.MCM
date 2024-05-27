@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 ///     Style: default
 /// </summary>
 /// <param name="styleOverride"></param>
-internal class McmLayerText : McmOverlap
+public class McmLayerText : McmOverlap
 {
     private readonly McmText _text;
 

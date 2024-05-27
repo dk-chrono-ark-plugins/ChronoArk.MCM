@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Mcm.Implementation.Configurables;
 
-internal class McmSlider : McmConfigurable<float>, ISlider
+public class McmSlider : McmConfigurable<float>, ISlider
 {
     private readonly McmComposite _configurable;
     private readonly McmLayerText _handle;

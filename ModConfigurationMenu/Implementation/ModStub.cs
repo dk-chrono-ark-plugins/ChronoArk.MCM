@@ -4,7 +4,7 @@ using Mcm.Api.Configurables;
 
 namespace Mcm.Implementation;
 
-public static class ModStub
+internal static class ModStub
 {
     /// <summary>
     ///     Get a stub dict from game's version of mod setting entries<br />
@@ -24,6 +24,7 @@ public static class ModStub
                     case DropdownSetting dropdown:
                         setting.EntryType = IBasicEntry.EntryType.Dropdown;
                         setting.Value = dropdown.Value;
+                        setting.Options = dropdown.Options.ToArray();
                         break;
                     case InputFieldSetting input:
                         setting.EntryType = IBasicEntry.EntryType.Input;
@@ -66,38 +67,45 @@ public static class ModStub
 
         Debug.Log("attempt to generate a stub page...");
 
-        var index = registry.Layout.IndexPage;
+        var layout = registry.Layout;
+        var index = layout.IndexPage;
         index.AddText(McmLoc.Page.StubPrompt);
         index.AddSeparator();
 
         foreach (var (key, entry) in modInfo.StubMcmConfig()) {
             try {
                 switch (entry.EntryType) {
-                    case IBasicEntry.EntryType.Dropdown:
+                    case IBasicEntry.EntryType.Dropdown: {
+                        layout.AddDropdownMenu(key, entry.Name, entry.Description,
+                            () => entry.Options ?? [],
+                            (int)entry.Value,
+                            _ => { }
+                        );
                         break;
+                    }
                     case IBasicEntry.EntryType.Input: {
-                        registry.Layout.AddInputField(key, entry.Name, entry.Description,
+                        layout.AddInputField(key, entry.Name, entry.Description,
                             (string)entry.Value,
                             _ => { }
                         );
                         break;
                     }
                     case IBasicEntry.EntryType.InputDecimal: {
-                        registry.Layout.AddInputField(key, entry.Name, entry.Description,
+                        layout.AddInputField(key, entry.Name, entry.Description,
                             (float)entry.Value,
                             _ => { }
                         );
                         break;
                     }
                     case IBasicEntry.EntryType.InputInteger: {
-                        registry.Layout.AddInputField(key, entry.Name, entry.Description,
+                        layout.AddInputField(key, entry.Name, entry.Description,
                             (int)entry.Value,
                             _ => { }
                         );
                         break;
                     }
                     case IBasicEntry.EntryType.Slider: {
-                        registry.Layout.AddSliderOption(key, entry.Name, entry.Description,
+                        layout.AddSliderOption(key, entry.Name, entry.Description,
                             entry.Min.GetValueOrDefault(),
                             entry.Max.GetValueOrDefault(),
                             entry.Step.GetValueOrDefault(),
@@ -107,7 +115,7 @@ public static class ModStub
                         break;
                     }
                     case IBasicEntry.EntryType.Toggle: {
-                        registry.Layout.AddToggleOption(key, entry.Name, entry.Description,
+                        layout.AddToggleOption(key, entry.Name, entry.Description,
                             (bool)entry.Value,
                             _ => { }
                         );

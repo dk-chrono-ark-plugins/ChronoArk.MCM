@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 /// <summary>
 ///     Grid layout page, will return the layout content holder to the render pipe
 /// </summary>
-internal class McmVerticalPage(ModInfo info) : McmScrollPage(info)
+public class McmVerticalPage(ModInfo info) : McmScrollPage(info)
 {
     public override Transform Render(Transform parent)
     {

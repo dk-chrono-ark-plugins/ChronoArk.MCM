@@ -7,11 +7,24 @@ namespace Mcm.Implementation;
 
 internal partial class ModLayout : IModLayout
 {
-    public IDropdown AddDropdownMenu(string key, string name, string description, Func<string[]> options,
+    public IDropdown AddDropdownMenu(string key, string name, string description,
+        Func<string[]> options,
         int @default,
         Action<int> set)
     {
-        throw new NotImplementedException();
+        var entry = MakeEntry(key, name, description, IBasicEntry.EntryType.Dropdown);
+        entry.Value = @default;
+        var mcmDropdown = new McmDropdown(key, options, entry) {
+            Owner = Owner,
+            Save = value => {
+                set(value);
+                Owner.SetMcmConfig(key, value);
+            },
+            Read = () => Owner.GetMcmConfig<int>(key),
+        };
+        McmManager.AddMcmConfig(Owner, key, entry);
+        IndexPage.Add(mcmDropdown);
+        return mcmDropdown;
     }
 
     public IInputField AddInputField<T>(string key, string name, string description,

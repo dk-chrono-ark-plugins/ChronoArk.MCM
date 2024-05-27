@@ -28,9 +28,10 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
     <PropertyGroup>
-      <PostBuildEvent>DEL /F /Q "$(TargetDir)System.dll" 2&gt;NUL
-DEL /F /Q "$(TargetDir)System.Core.dll" 2&gt;NUL
-DEL /F /Q "$(TargetDir)$(AssemblyName).pdb" 2&gt;NUL</PostBuildEvent>
+        <PostBuildEvent>DEL /F /Q "$(TargetDir)System.dll" 2&gt;NUL
+            DEL /F /Q "$(TargetDir)System.Core.dll" 2&gt;NUL
+            DEL /F /Q "$(TargetDir)$(AssemblyName).pdb" 2&gt;NUL
+        </PostBuildEvent>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="0Harmony">
@@ -465,6 +466,7 @@ DEL /F /Q "$(TargetDir)$(AssemblyName).pdb" 2&gt;NUL</PostBuildEvent>
         <Compile Include="Api\Displayables\IPage.cs"/>
         <Compile Include="Common\McmLoc.cs"/>
         <Compile Include="Common\McmLog.cs"/>
+        <Compile Include="Common\PageHelper.cs"/>
         <Compile Include="Implementation\Components\ButtonHighlight.cs"/>
         <Compile Include="Implementation\Components\HoverBehaviour.cs"/>
         <Compile Include="Implementation\Components\McmWindow.cs"/>

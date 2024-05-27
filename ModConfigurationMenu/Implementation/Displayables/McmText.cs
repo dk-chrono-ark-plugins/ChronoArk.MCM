@@ -6,7 +6,7 @@ namespace Mcm.Implementation.Displayables;
 ///     Style: default
 /// </summary>
 /// <param name="styleOverride"></param>
-internal class McmText(McmStyle? styleOverride = null) : McmStylable(styleOverride ?? McmStyle.Default()), IText
+public class McmText(McmStyle? styleOverride = null) : McmStylable(styleOverride ?? McmStyle.Default()), IText
 {
     private string? _content;
     public TextMeshProUGUI? Text { get; private set; }

@@ -44,6 +44,22 @@ public interface IPage : IStylable
     void Clear();
 
     /// <summary>
+    ///     Add a simple button with only text inside
+    /// </summary>
+    /// <param name="content">Text</param>
+    /// <param name="onClick">Delegate when clicked</param>
+    /// <returns></returns>
+    IButton AddButton(string content, Action onClick);
+
+    /// <summary>
+    ///     Add a button with custom content
+    /// </summary>
+    /// <param name="content"><see cref="IDisplayable" /> content</param>
+    /// <param name="onClick">Delegate when clicked</param>
+    /// <returns></returns>
+    IButton AddButton(IDisplayable content, Action onClick);
+
+    /// <summary>
     ///     Add a simple image element
     /// </summary>
     /// <param name="color">The mask color to display</param>
@@ -79,4 +95,11 @@ public interface IPage : IStylable
     /// <param name="text">The text to display</param>
     /// <returns><see cref="IText" /> can be saved for later modification</returns>
     IText AddText(string text);
+
+    /// <summary>
+    ///     Add text element, localized using I2Loc
+    /// </summary>
+    /// <param name="locKey">The loc key for the text to display</param>
+    /// <returns><see cref="IText" /> can be saved for later modification</returns>
+    IText AddTextLoc(string locKey);
 }

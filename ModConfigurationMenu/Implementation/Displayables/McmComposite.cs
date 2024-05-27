@@ -7,10 +7,10 @@ namespace Mcm.Implementation.Displayables;
 /// </summary>
 /// <param name="compositeLayout"></param>
 /// <param name="styleOverride"></param>
-internal class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmStyle? styleOverride = null)
+public class McmComposite(ICompositeLayout.LayoutGroup compositeLayout, McmStyle? styleOverride = null)
     : McmStylable(styleOverride), ICompositeLayout
 {
-    public ICompositeLayout.Composite[]? Composites { get; set; }
+    public List<ICompositeLayout.Composite>? Composites { get; set; }
     public ICompositeLayout.LayoutGroup Layout => compositeLayout;
 
     public override Transform Render(Transform parent)
