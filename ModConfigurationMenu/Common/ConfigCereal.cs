@@ -36,13 +36,13 @@ public static class ConfigCereal
         return false;
     }
 
-    public static void WriteMcmConfig<T>(this ModInfo modInfo, T data)
+    internal static void WriteMcmConfig<T>(this ModInfo modInfo, T data)
     {
         try {
             modInfo.BackupMcmConfig();
 
             var path = modInfo.GetMcmConfigPath();
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 
             WriteConfig(data, path);
         } catch (Exception ex) {
@@ -51,7 +51,7 @@ public static class ConfigCereal
         }
     }
 
-    public static T? ReadMcmConfig<T>(this ModInfo modInfo)
+    internal static T? ReadMcmConfig<T>(this ModInfo modInfo)
     {
         try {
             var path = modInfo.GetMcmConfigPath();
@@ -64,18 +64,18 @@ public static class ConfigCereal
                 return modInfo.ReadMcmConfig<T>();
             }
         } catch {
-            Debug.Log($"failed to read config");
+            Debug.Log("failed to read config");
             throw;
         }
 
         return default;
     }
 
-    public static void BackupMcmConfig(this ModInfo modInfo)
+    internal static void BackupMcmConfig(this ModInfo modInfo)
     {
         try {
             var backupPath = modInfo.GetMcmBackupPath();
-            Directory.CreateDirectory(Path.GetDirectoryName(backupPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(backupPath)!);
 
             var configPath = modInfo.GetMcmConfigPath();
             if (File.Exists(configPath)) {
@@ -87,7 +87,7 @@ public static class ConfigCereal
         }
     }
 
-    public static bool RestoreMcmConfig(this ModInfo modInfo)
+    internal static bool RestoreMcmConfig(this ModInfo modInfo)
     {
         try {
             var backupPath = modInfo.GetMcmBackupPath();
@@ -104,12 +104,12 @@ public static class ConfigCereal
         return false;
     }
 
-    public static string GetMcmConfigPath(this ModInfo modInfo)
+    internal static string GetMcmConfigPath(this ModInfo modInfo)
     {
         return Path.Combine(Application.persistentDataPath, $"Mod/Mcm/{modInfo.id}.json");
     }
 
-    public static string GetMcmBackupPath(this ModInfo modInfo)
+    internal static string GetMcmBackupPath(this ModInfo modInfo)
     {
         return Path.Combine(Application.persistentDataPath, $"Mod/Mcm/Backups/{modInfo.id}.json");
     }

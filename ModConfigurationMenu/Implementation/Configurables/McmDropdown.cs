@@ -57,6 +57,7 @@ public class McmDropdown : McmConfigurable<int>, IDropdown
     }
 
     public string[] Options => _options();
+    public override IBasicEntry.EntryType SettingType => IBasicEntry.EntryType.Dropdown;
 
     public override Transform Render(Transform parent)
     {

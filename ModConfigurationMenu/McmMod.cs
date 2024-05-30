@@ -35,7 +35,7 @@ public class McmMod : ChronoArkPlugin
         _harmony = new(GetGuid());
         _harmony.PatchAll();
 
-        var mcm = McmProxy.GetInstance(IModConfigurationMenu.Version.V1);
+        var mcm = McmProxy.GetInstance(IModConfigurationMenu.Version.V2);
         var layout = mcm.Register(ModId);
 
         // mcm window main entry

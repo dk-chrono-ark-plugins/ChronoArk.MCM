@@ -1,12 +1,99 @@
 ﻿using System.Globalization;
 using Mcm.Api.Configurables;
+using Mcm.Implementation.Components;
 using Mcm.Implementation.Configurables;
+using Mcm.Implementation.Displayables;
 using TMPro;
 
 namespace Mcm.Implementation;
 
 internal partial class ModLayout : IModLayout
 {
+    public IPage AddPage(string name, ICompositeLayout.LayoutGroup layout, bool showAsEntry = false)
+    {
+        IPage page = layout switch {
+            ICompositeLayout.LayoutGroup.Grid => new McmGridPage(Owner),
+            ICompositeLayout.LayoutGroup.Vertical => new McmVerticalPage(Owner),
+            _ => throw new NotImplementedException(),
+        };
+
+        page.Name = name;
+        var key = SanitizedName(name);
+        if (!_pages.TryAdd(key, page)) {
+            return _pages[key];
+        }
+
+        Debug.Log($"{page.Owner.Title} added page {name}");
+        if (!showAsEntry) {
+            return _pages[key];
+        }
+
+        McmManager.Instance.ExtraEntries.Add(page);
+        Debug.Log("...as separate entry");
+
+        return _pages[key];
+    }
+
+    public IPage? GetPage(string name)
+    {
+        name = SanitizedName(name);
+        var page = _pages.GetValueOrDefault(name);
+        Debug.Log($"retrieving page {name}" + (page == null ? ", but it's null" : ""));
+        return page;
+    }
+
+    public void RemovePage(string name)
+    {
+        if (name == "index") {
+            return;
+        }
+
+        var key = SanitizedName(name);
+        var success = _pages.Remove(key);
+        Debug.Log($"removing page {key}, " + (success ? "success" : "nonexistent"));
+    }
+
+    public void RenderPage(string name)
+    {
+        var page = GetPage(name);
+        if (page == null) {
+            return;
+        }
+
+        McmWindow.Instance?.RenderPage(page);
+    }
+
+    public void ClosePage(string name)
+    {
+        var mcm = McmWindow.Instance;
+        if (mcm?.TopPage is not null && mcm.TopPage == GetPage(name)) {
+            McmWindow.PageBack();
+        }
+    }
+
+    public void CloseAllPage()
+    {
+        var mcm = McmWindow.Instance;
+        while (mcm?.TopPage is not null && mcm.TopPage.Owner == Owner) {
+            McmWindow.PageBack();
+        }
+    }
+
+    public IPage? CurrentActivePage()
+    {
+        return McmWindow.Instance?.TopPage;
+    }
+
+    public bool IsPageActive(string name)
+    {
+        return IsPageActive(GetPage(name));
+    }
+
+    public bool IsPageActive(IPage? page)
+    {
+        return page is not null && page == CurrentActivePage();
+    }
+
     public IDropdown AddDropdownMenu(string key, string name, string description,
         Func<string[]> options,
         int @default,
@@ -14,6 +101,8 @@ internal partial class ModLayout : IModLayout
     {
         var entry = MakeEntry(key, name, description, IBasicEntry.EntryType.Dropdown);
         entry.Value = @default;
+        McmManager.AddMcmConfig(Owner, key, entry);
+        McmManager.ResetMcmConfig(Owner);
         var mcmDropdown = new McmDropdown(key, options, entry) {
             Owner = Owner,
             Save = value => {
@@ -22,9 +111,25 @@ internal partial class ModLayout : IModLayout
             },
             Read = () => Owner.GetMcmConfig<int>(key),
         };
-        McmManager.AddMcmConfig(Owner, key, entry);
+        set(mcmDropdown.Read());
         IndexPage.Add(mcmDropdown);
         return mcmDropdown;
+    }
+
+    public IDropdown AddEnumOption<TE>(string key, string name, string description, 
+        TE @default, 
+        Action<TE> set) where TE : struct
+    {
+        var enumValues = Enum.GetValues(typeof(TE)).OfType<TE>().ToList();
+        var enumStrings = enumValues.Select(e => e.ToString()).ToList();
+        var current = enumStrings.IndexOf(@default.ToString());
+        return AddDropdownMenu(key, name, description,
+            options: () => enumValues.Select(e => e.ToString()).ToArray(),
+            @default: current,
+            set: index => {
+                Enum.TryParse(enumStrings[index], out TE parsed);
+                set(parsed);
+            });
     }
 
     public IInputField AddInputField<T>(string key, string name, string description,
@@ -43,6 +148,8 @@ internal partial class ModLayout : IModLayout
         if (typeof(T) == typeof(string)) {
             entry = MakeEntry(key, name, description, IBasicEntry.EntryType.Input);
             entry.Value = @default;
+            McmManager.AddMcmConfig(Owner, key, entry);
+            McmManager.ResetMcmConfig(Owner);
             mcmInput = new(key, entry) {
                 Owner = Owner,
                 Save = value => {
@@ -52,9 +159,12 @@ internal partial class ModLayout : IModLayout
                 Read = () => Owner.GetMcmConfig<string>(key),
                 CharacterValidation = TMP_InputField.CharacterValidation.None,
             };
+            set((T)(object)Owner.GetMcmConfig<string>(key));
         } else if (typeof(T) == typeof(int)) {
             entry = MakeEntry(key, name, description, IBasicEntry.EntryType.InputInteger);
             entry.Value = @default;
+            McmManager.AddMcmConfig(Owner, key, entry);
+            McmManager.ResetMcmConfig(Owner);
             mcmInput = new(key, entry) {
                 Owner = Owner,
                 Save = value => {
@@ -69,9 +179,12 @@ internal partial class ModLayout : IModLayout
                 Read = () => Owner.GetMcmConfig<int>(key).ToString(),
                 CharacterValidation = TMP_InputField.CharacterValidation.Integer,
             };
+            set((T)(object)Owner.GetMcmConfig<int>(key));
         } else if (typeof(T) == typeof(float)) {
             entry = MakeEntry(key, name, description, IBasicEntry.EntryType.InputDecimal);
             entry.Value = @default;
+            McmManager.AddMcmConfig(Owner, key, entry);
+            McmManager.ResetMcmConfig(Owner);
             mcmInput = new(key, entry) {
                 Owner = Owner,
                 Save = value => {
@@ -86,13 +199,12 @@ internal partial class ModLayout : IModLayout
                 Read = () => Owner.GetMcmConfig<float>(key).ToString(CultureInfo.CurrentCulture),
                 CharacterValidation = TMP_InputField.CharacterValidation.Decimal,
             };
+            set((T)(object)Owner.GetMcmConfig<float>(key));
         }
 
         if (mcmInput is null || entry is null) {
             throw new NotImplementedException();
         }
-
-        McmManager.AddMcmConfig(Owner, key, entry);
         IndexPage.Add(mcmInput);
         return mcmInput;
     }
@@ -103,6 +215,8 @@ internal partial class ModLayout : IModLayout
     {
         var entry = MakeEntry(key, name, description, IBasicEntry.EntryType.Slider);
         entry.Value = @default;
+        McmManager.AddMcmConfig(Owner, key, entry);
+        McmManager.ResetMcmConfig(Owner);
         var mcmSlider = new McmSlider(key, entry) {
             Owner = Owner,
             Save = value => {
@@ -114,7 +228,7 @@ internal partial class ModLayout : IModLayout
             Max = max,
             Step = step,
         };
-        McmManager.AddMcmConfig(Owner, key, entry);
+        set(mcmSlider.Read());
         IndexPage.Add(mcmSlider);
         return mcmSlider;
     }
@@ -125,6 +239,8 @@ internal partial class ModLayout : IModLayout
     {
         var entry = MakeEntry(key, name, description, IBasicEntry.EntryType.Toggle);
         entry.Value = @default;
+        McmManager.AddMcmConfig(Owner, key, entry);
+        McmManager.ResetMcmConfig(Owner);
         var mcmToggle = new McmToggle(key, entry) {
             Owner = Owner,
             Save = value => {
@@ -133,7 +249,7 @@ internal partial class ModLayout : IModLayout
             },
             Read = () => Owner.GetMcmConfig<bool>(key),
         };
-        McmManager.AddMcmConfig(Owner, key, entry);
+        set(mcmToggle.Read());
         IndexPage.Add(mcmToggle);
         return mcmToggle;
     }

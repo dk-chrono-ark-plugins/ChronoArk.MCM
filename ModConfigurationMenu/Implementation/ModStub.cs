@@ -4,7 +4,7 @@ using Mcm.Api.Configurables;
 
 namespace Mcm.Implementation;
 
-internal static class ModStub
+public static class ModStub
 {
     /// <summary>
     ///     Get a stub dict from game's version of mod setting entries<br />

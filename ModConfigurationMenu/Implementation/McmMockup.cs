@@ -42,7 +42,7 @@ internal static class McmMockup
         mockup.AddSeparator();
 
         mockup.AddText(McmLoc.Mockup.Outro);
-        mockup.AddButton("Github", () => { Process.Start("https://github.com/dk-chrono-ark-plugins"); });
+        mockup.AddButton("Github", () => { Process.Start("https://github.com/dk-chrono-ark-plugins/ChronoArk.MCM"); });
     }
 
     internal static void Stub(IModLayout layout)

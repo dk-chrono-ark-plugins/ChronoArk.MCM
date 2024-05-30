@@ -1,12 +1,13 @@
 ﻿using ChronoArkMod.ModData;
 using Mcm.Api.Configurables;
+using Mcm.Api.Versions;
 
 namespace Mcm.Api;
 
 /// <summary>
 ///     Holds a registered mcm mod and its pages
 /// </summary>
-public interface IModLayout
+public interface IModLayout : IModLayoutV2
 {
     /// <summary>
     ///     The default page, reserved name is "index"

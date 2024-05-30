@@ -12,6 +12,7 @@ public interface IModConfigurationMenu
     enum Version
     {
         V1,
+        V2,
     }
 
     /// <summary>

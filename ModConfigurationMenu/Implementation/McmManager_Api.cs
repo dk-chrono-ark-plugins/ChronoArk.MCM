@@ -18,6 +18,8 @@ internal partial class McmManager : IModConfigurationMenu
             throw new InvalidOperationException($"failed to register {mod}");
         }
 
+        ResetMcmConfig(modInfo);
+
         Debug.Log($"registered {modInfo.id}");
         var layout = _registries[modInfo].Layout;
         if (!modInfo.NeedRestartWhenSettingChanged) {

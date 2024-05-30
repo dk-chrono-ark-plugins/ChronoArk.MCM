@@ -1,13 +1,14 @@
 ﻿using ChronoArkMod;
 using ChronoArkMod.ModData;
+using ChronoArkMod.ModEditor;
 using Mcm.Api.Configurables;
 using Mcm.Implementation.Displayables;
-
+using UnityEditor;
 namespace Mcm.Implementation;
 
 internal partial class McmManager
 {
-    public const IModConfigurationMenu.Version McmInstanceVersion = IModConfigurationMenu.Version.V1;
+    public const IModConfigurationMenu.Version McmInstanceVersion = IModConfigurationMenu.Version.V2;
 
     private static readonly Lazy<McmManager> _instance = new(() => new());
     private static readonly Dictionary<ModInfo, McmRegistry> _registries = [];
@@ -76,6 +77,7 @@ internal partial class McmManager
             !registry.Settings.TryGetValue(key, out var entry)) {
             return default!;
         }
+        
 
         if (entry.Value is T parsed) {
             return parsed;

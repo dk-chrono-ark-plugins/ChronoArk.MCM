@@ -14,8 +14,6 @@ public class McmInputField : McmConfigurable<string>, IInputField
     public McmInputField(string key, McmSettingEntry entry)
         : base(key, entry.Name, entry.Description, McmStyle.Default())
     {
-        SettingType = entry.EntryType;
-
         var bgStyle = Style with {
             ColorPrimary = Color.white,
             Size = McmStyle.SettingLayout.Setting,
@@ -37,7 +35,7 @@ public class McmInputField : McmConfigurable<string>, IInputField
     }
 
     public TMP_InputField.CharacterValidation CharacterValidation { get; init; }
-    public override IBasicEntry.EntryType SettingType { get; }
+    public override IBasicEntry.EntryType SettingType => IBasicEntry.EntryType.Input;
 
     public override Transform Render(Transform parent)
     {
